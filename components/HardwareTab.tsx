@@ -86,7 +86,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
           <button
             onClick={onRetry}
             disabled={refreshing}
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all disabled:opacity-50"
+            className="px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all disabled:opacity-50"
           >
             Coba lagi
           </button>
@@ -117,7 +117,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
           <button
             onClick={onRetry}
             disabled={refreshing}
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all disabled:opacity-50"
+            className="px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all disabled:opacity-50"
           >
             Coba lagi
           </button>
@@ -130,15 +130,15 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
             <Server className="w-6 h-6" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-xl font-bold text-white tracking-tight">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
                 apu-arch-server
               </h2>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-mono bg-[#22d3ee]/20 text-[#67e8f9] border border-[#22d3ee]/30">
                 {systemData.os}
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-1 flex items-center gap-3">
+            <p className="text-xs text-slate-400 mt-1 flex items-center gap-3 flex-wrap">
               <span className="flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5 text-slate-500" /> Uptime: {systemData.uptime}
               </span>
@@ -155,7 +155,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
             onClick={onManualRefresh}
             disabled={refreshing}
             aria-label="Muat ulang data"
-            className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all disabled:opacity-50"
+            className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all disabled:opacity-50"
             title="Muat Ulang Data"
           >
             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-[#22d3ee]' : ''}`} />
@@ -164,7 +164,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
       </div>
 
       {/* Metric Cards Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {/* CPU Card */}
         <div className="floating-card relative overflow-hidden h-full stagger-in">
           <div className="flex items-center justify-between mb-3">
@@ -357,10 +357,10 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
 
       {/* Real-time Time Series Chart */}
       <div className="floating-card">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="font-bold text-white text-sm flex items-center gap-2">
-              <Activity className="w-4 h-4 text-[#22d3ee]" />
+        <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+          <div className="min-w-0">
+            <h3 className="font-bold text-white text-sm flex items-center gap-2 flex-wrap">
+              <Activity className="w-4 h-4 text-[#22d3ee] flex-shrink-0" />
               Real-time Performance Telemetry (Last 15 ticks)
             </h3>
             <p className="text-xs text-slate-400 mt-0.5">

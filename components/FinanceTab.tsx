@@ -341,7 +341,7 @@ export const FinanceTab: React.FC = () => {
           <button
             onClick={handleAnalyzeFinance}
             disabled={analyzingFinance}
-            className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#22d3ee]/30 text-[#cffafe] border border-[#22d3ee]/40 hover:bg-[#22d3ee]/50 shadow-md transition-all"
+            className="flex items-center justify-center gap-2 px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee]/30 text-[#cffafe] border border-[#22d3ee]/40 hover:bg-[#22d3ee]/50 shadow-md transition-all"
           >
             <BrainCircuit className="w-4 h-4 text-[#22d3ee]" />
             {analyzingFinance ? 'Menganalisis...' : 'Analisa AI'}
@@ -350,20 +350,20 @@ export const FinanceTab: React.FC = () => {
           <button
             onClick={() => handleSendNotification('telegram')}
             disabled={sendingNotify}
-            className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#22d3ee]/20 text-[#67e8f9] border border-[#22d3ee]/30 hover:bg-[#22d3ee]/30 transition-all"
+            className="flex items-center justify-center gap-2 px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-semibold bg-[#22d3ee]/20 text-[#67e8f9] border border-[#22d3ee]/30 hover:bg-[#22d3ee]/30 transition-all"
           >
             <Send className="w-3.5 h-3.5" /> Kirim TG
           </button>
           <button
             onClick={() => handleSendNotification('whatsapp')}
             disabled={sendingNotify}
-            className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-600/30 transition-all"
+            className="flex items-center justify-center gap-2 px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-semibold bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-600/30 transition-all"
           >
             <MessageSquare className="w-3.5 h-3.5" /> Kirim WA
           </button>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 shadow-lg shadow-emerald-500/20 transition-all"
+            className="flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 shadow-lg shadow-emerald-500/20 transition-all"
           >
             <Plus className="w-4 h-4" /> Manual
           </button>
@@ -553,7 +553,7 @@ export const FinanceTab: React.FC = () => {
                 setCopiedWebhookUrl(true);
                 setTimeout(() => setCopiedWebhookUrl(false), 2000);
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 text-xs font-mono font-semibold transition-all"
+              className="flex items-center gap-1.5 px-3.5 py-2.5 min-h-[44px] rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 text-xs font-mono font-semibold transition-all"
             >
               {copiedWebhookUrl ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
               {copiedWebhookUrl ? 'Copied URL!' : 'Copy Webhook URL'}
@@ -566,12 +566,12 @@ export const FinanceTab: React.FC = () => {
           <div className="flex items-center gap-2 text-[#67e8f9]">
             <Terminal className="w-4 h-4 text-[#67e8f9] flex-shrink-0" />
             <span className="text-slate-300">Endpoint:</span>
-            <span className="text-emerald-400 font-bold bg-slate-900 px-2 py-1 rounded border border-slate-800">
+            <span className="text-emerald-400 font-bold bg-slate-900 px-2 py-1 rounded border border-slate-800 break-all">
               https://apu.web.id/api/v1/webhook/bot
             </span>
           </div>
-          <div className="text-[11px] text-slate-400">
-            Telegram Webhook Cmd: <code className="text-[#67e8f9]">setWebhook?url=https://apu.web.id/api/v1/webhook/bot</code>
+          <div className="text-[11px] text-slate-400 break-all">
+            Telegram Webhook Cmd: <code className="text-[#67e8f9] break-all">setWebhook?url=https://apu.web.id/api/v1/webhook/bot</code>
           </div>
         </div>
 
@@ -607,12 +607,12 @@ export const FinanceTab: React.FC = () => {
               value={webhookSimulatorMessage}
               onChange={(e) => setWebhookSimulatorMessage(e.target.value)}
               placeholder="Isi pesan transaksi webhook..."
-              className="flex-1 w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
+              className="flex-1 w-full px-3.5 py-2.5 min-h-[44px] rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
             />
             <button
               onClick={handleTriggerWebhookSimulate}
               disabled={simulatingWebhook || !webhookSimulatorMessage.trim()}
-              className="w-full md:w-auto flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-md disabled:opacity-50 transition-all whitespace-nowrap"
+              className="w-full md:w-auto flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-md disabled:opacity-50 transition-all whitespace-nowrap"
             >
               <Send className="w-3.5 h-3.5" />
               {simulatingWebhook ? 'Mengirim Webhook...' : 'Kirim Webhook POST'}
@@ -752,13 +752,13 @@ export const FinanceTab: React.FC = () => {
           <div className="flex items-center justify-end gap-2">
             <button
               onClick={() => handleSendNotification('telegram')}
-              className="px-3 py-1.5 rounded-lg bg-[#22d3ee]/20 text-[#67e8f9] border border-[#22d3ee]/30 text-xs font-semibold hover:bg-[#22d3ee]/30"
+              className="px-3 py-2 min-h-[44px] rounded-lg bg-[#22d3ee]/20 text-[#67e8f9] border border-[#22d3ee]/30 text-xs font-semibold hover:bg-[#22d3ee]/30 flex items-center gap-1.5"
             >
               Broadcast Laporan ke Telegram
             </button>
             <button
               onClick={() => handleSendNotification('whatsapp')}
-              className="px-3 py-1.5 rounded-lg bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold hover:bg-emerald-600/30"
+              className="px-3 py-2 min-h-[44px] rounded-lg bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold hover:bg-emerald-600/30 flex items-center gap-1.5"
             >
               Broadcast Laporan ke WhatsApp
             </button>
@@ -785,7 +785,7 @@ export const FinanceTab: React.FC = () => {
                 type="date"
                 value={tanggal}
                 onChange={(e) => setTanggal(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
+                className="w-full px-3 py-2.5 min-h-[44px] rounded-xl bg-slate-800 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
                 required
               />
             </div>
@@ -797,7 +797,7 @@ export const FinanceTab: React.FC = () => {
               <select
                 value={tipe}
                 onChange={(e) => setTipe(e.target.value as any)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+                className="w-full px-3 py-2.5 min-h-[44px] rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
               >
                 <option value="Pemasukan">Pemasukan (Income)</option>
                 <option value="Pengeluaran">Pengeluaran (Expense)</option>
@@ -813,7 +813,7 @@ export const FinanceTab: React.FC = () => {
                 value={kategori}
                 onChange={(e) => setKategori(e.target.value)}
                 placeholder="Misal: Hosting, Client Payment, Listrik"
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+                className="w-full px-3 py-2.5 min-h-[44px] rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
                 required
               />
             </div>
@@ -827,7 +827,7 @@ export const FinanceTab: React.FC = () => {
                 value={jumlah}
                 onChange={(e) => setJumlah(e.target.value)}
                 placeholder="Contoh: 1500000"
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
+                className="w-full px-3 py-2.5 min-h-[44px] rounded-xl bg-slate-800 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
                 required
               />
             </div>
@@ -841,7 +841,7 @@ export const FinanceTab: React.FC = () => {
                 value={metode}
                 onChange={(e) => setMetode(e.target.value)}
                 placeholder="Bank Transfer, Midtrans, Cash"
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+                className="w-full px-3 py-2.5 min-h-[44px] rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
               />
             </div>
 
@@ -854,7 +854,7 @@ export const FinanceTab: React.FC = () => {
                 value={keterangan}
                 onChange={(e) => setKeterangan(e.target.value)}
                 placeholder="Deskripsi transaksi..."
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+                className="w-full px-3 py-2.5 min-h-[44px] rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
                 required
               />
             </div>
@@ -864,7 +864,7 @@ export const FinanceTab: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="px-4 py-2 rounded-xl text-xs text-slate-400 hover:text-white hover:bg-slate-800"
+              className="px-4 py-2.5 min-h-[44px] rounded-xl text-xs text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
             >
               Batal
             </button>
@@ -901,7 +901,7 @@ export const FinanceTab: React.FC = () => {
               </div>
               <button
                 onClick={fetchFinancialData}
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
+                className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
               >
                 Coba lagi
               </button>
@@ -999,13 +999,13 @@ export const FinanceTab: React.FC = () => {
           <div className="flex items-center gap-2 w-full md:w-auto">
             {/* Search Input */}
             <div className="relative flex-1 md:w-56">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
+              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3.5" />
               <input
                 type="text"
                 placeholder="Cari transaksi..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+                className="w-full pl-8 pr-3 py-2.5 min-h-[44px] rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
               />
             </div>
 
@@ -1061,7 +1061,7 @@ export const FinanceTab: React.FC = () => {
                       <button
                         onClick={() => setShowForm(true)}
                         aria-label="Tambah transaksi manual"
-                        className="px-4 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
+                        className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
                       >
                         + Tambah Transaksi
                       </button>
@@ -1142,7 +1142,7 @@ export const FinanceTab: React.FC = () => {
               <button
                 onClick={() => setShowForm(true)}
                 aria-label="Tambah transaksi manual dari kosong"
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
+                className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
               >
                 + Tambah Transaksi
               </button>
@@ -1226,7 +1226,7 @@ export const FinanceTab: React.FC = () => {
               <button
                 onClick={() => setSelectedTx(null)}
                 aria-label="Tutup detail transaksi"
-                className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
+                className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1283,7 +1283,7 @@ export const FinanceTab: React.FC = () => {
 
             <button
               onClick={() => setSelectedTx(null)}
-              className="w-full px-4 py-2.5 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
+              className="w-full flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
             >
               Tutup
             </button>

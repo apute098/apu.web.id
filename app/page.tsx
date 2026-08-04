@@ -187,9 +187,10 @@ export default function Home() {
         {isHome && (
           <>
             {/* ===== Hero Section ===== */}
-            <section className="relative rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-[#07071a]/90 via-[#05050d]/70 to-transparent mb-8">
-              <ParticleField className="apu-hero-canvas absolute inset-0 w-full h-full" />
-              <div className="relative z-10 px-5 py-12 sm:px-10 sm:py-16 lg:py-24 text-center">
+            <section className="relative rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-[#07071a]/90 via-[#05050d]/70 to-transparent mb-6 md:mb-8">
+              {/* Canvas partikel: maks 260px di HP, penuh di desktop */}
+              <ParticleField className="apu-hero-canvas absolute inset-x-0 top-0 h-[260px] md:h-full w-full" />
+              <div className="relative z-10 px-4 py-10 sm:px-10 sm:py-16 lg:py-24 text-center">
                 <motion.div
                   initial={{ opacity: 0, y: 18 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -208,7 +209,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: 22 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.65, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="apu-hero text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.05]"
+                  className="apu-hero text-[1.7rem] leading-[1.12] sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white"
                 >
                   apu<span className="aurora-text">.web.id</span>
                 </motion.h1>
@@ -217,7 +218,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: 22 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.65, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                  className="mt-5 text-sm sm:text-base text-slate-400 max-w-2xl mx-auto leading-relaxed"
+                  className="mt-4 sm:mt-5 text-sm sm:text-base text-slate-400 max-w-2xl mx-auto leading-relaxed"
                 >
                   Master Server Portal &mdash; pusat komando telemetri hardware, keuangan AI,
                   dan 9Router Gateway dalam satu antarmuka orbital.
@@ -227,19 +228,19 @@ export default function Home() {
                   initial={{ opacity: 0, y: 22 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.65, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3"
+                  className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full sm:w-auto"
                 >
                   <button
                     onClick={() => switchTab('hardware')}
-                    className="group inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold text-[#030309] bg-gradient-to-r from-cyan-400 to-cyan-500 hover:from-cyan-300 hover:to-cyan-400 shadow-lg shadow-cyan-500/30 transition-all hover:shadow-cyan-400/50 hover:-translate-y-0.5"
+                    className="group inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[48px] w-full sm:w-auto rounded-2xl text-sm font-bold text-[#030309] bg-gradient-to-r from-cyan-400 to-cyan-500 hover:from-cyan-300 hover:to-cyan-400 shadow-lg shadow-cyan-500/30 transition-all hover:shadow-cyan-400/50 hover:-translate-y-0.5"
                   >
-                    <Server className="w-4 h-4" />
+                    <Server className="w-4 h-4 flex-shrink-0" />
                     Lihat Telemetri
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 flex-shrink-0" />
                   </button>
                   <button
                     onClick={() => switchTab('keuangan')}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold text-violet-200 bg-violet-500/10 border border-violet-400/30 hover:bg-violet-500/20 hover:border-violet-400/50 backdrop-blur-md transition-all hover:-translate-y-0.5"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[48px] w-full sm:w-auto rounded-2xl text-sm font-bold text-violet-200 bg-violet-500/10 border border-violet-400/30 hover:bg-violet-500/20 hover:border-violet-400/50 backdrop-blur-md transition-all hover:-translate-y-0.5"
                   >
                     <Sparkles className="w-4 h-4 text-violet-300" />
                     Keuangan AI
@@ -311,24 +312,24 @@ export default function Home() {
         {/* Router — embedded 9router gateway (iframe, bukan tab baru) */}
         {activeTab === 'router' && (
           <div className="floating-card p-2 md:p-3">
-            <div className="flex items-center justify-between px-2 py-2.5">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-300">
-                  <Terminal className="w-4 h-4" />
-                </div>
-                <div>
-                  <h2 className="text-sm font-bold text-white">9Router Gateway</h2>
-                  <p className="text-xs text-slate-400">router.apu.web.id — embedded</p>
-                </div>
-              </div>
-              <a
-                href="https://router.apu.web.id"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10 transition-all"
-              >
-                Buka di tab baru ↗
-              </a>
+            <div className="flex items-center justify-between px-2 py-2.5 gap-2 flex-wrap">
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-9 h-9 rounded-xl bg-cyan-400/10 border border-cyan-400/30 flex items-center justify-center text-cyan-300">
+                                <Terminal className="w-4 h-4" />
+                              </div>
+                              <div>
+                                <h2 className="text-sm font-bold text-white">9Router Gateway</h2>
+                                <p className="text-xs text-slate-400">router.apu.web.id — embedded</p>
+                              </div>
+                            </div>
+                            <a
+                              href="https://router.apu.web.id"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center justify-center px-4 py-2.5 min-h-[44px] rounded-lg text-[11px] font-semibold bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10 transition-all"
+                            >
+                              Buka di tab baru ↗
+                            </a>
             </div>
             <iframe
               src="https://router.apu.web.id"
@@ -345,7 +346,7 @@ export default function Home() {
         {/* Garis neon atas footer */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {/* Brand + Status Server Live (data REAL dari systemData) */}
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2.5">
@@ -360,7 +361,7 @@ export default function Home() {
               Master Server Portal &mdash; telemetri hardware, keuangan AI, dan 9Router Gateway
               dalam satu antarmuka orbital.
             </p>
-            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+            <div className="mt-4 inline-flex flex-wrap items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
               <span className="relative flex w-2 h-2">
                 <span
                   className={`absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping ${
@@ -457,7 +458,7 @@ export default function Home() {
                 <li key={s.name}>
                   <a
                     href={s.href}
-                    className={`inline-flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-400 transition-all ${s.hover}`}
+                    className={`inline-flex items-center justify-center gap-2.5 px-3.5 py-2.5 min-h-[44px] rounded-xl bg-white/5 border border-white/10 text-xs text-slate-400 transition-all ${s.hover}`}
                   >
                     {s.icon} {s.name}
                   </a>
