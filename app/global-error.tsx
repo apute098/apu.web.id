@@ -12,11 +12,11 @@ export default function GlobalError({
   return (
     <html lang="id">
       <body
-        className="bg-[#0B0F0D]"
+        className="bg-[#05050d]"
         style={{ margin: 0, minHeight: '100vh' }}
       >
         <main className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
-          <div className="max-w-md w-full rounded-2xl border border-[#FF6B2C]/20 bg-[#111714] p-8 shadow-xl">
+          <div className="max-w-md w-full rounded-2xl border border-[#22d3ee]/20 bg-[#111714] p-8 shadow-xl">
             <h1 className="text-2xl font-bold font-mono text-rose-400 mb-2">
               Terjadi Kesalahan Fatal
             </h1>
@@ -26,7 +26,7 @@ export default function GlobalError({
             <button
               type="button"
               onClick={() => window.location.reload()}
-              className="px-5 py-2.5 rounded-xl bg-[#FF6B14] text-white font-mono text-xs font-bold hover:bg-[#E85D0B] transition-all cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-[#FF6B14] text-white font-mono text-xs font-bold hover:bg-[#0ea5e9] transition-all cursor-pointer"
             >
               Muat Ulang
             </button>

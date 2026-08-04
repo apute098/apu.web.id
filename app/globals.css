@@ -1,35 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* Hume Smart Home — dark green-black + vibrant orange */
-  --bg-base: #0B0F0D;
-  --bg-elevated: #10160F;
-  --bg-card: rgba(20, 28, 22, 0.72);
-  --bg-card-solid: #141C16;
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-strong: rgba(255, 255, 255, 0.12);
-  --text-primary: #F5F7F4;
-  --text-secondary: #9BA89E;
-  --text-muted: #6B7A70;
-  --accent: #FF6B2C;
-  --accent-soft: rgba(255, 107, 44, 0.14);
-  --accent-glow: rgba(255, 107, 44, 0.35);
+  /* Deep Space — futuristic dark mode */
+  --bg-base: #030309;
+  --bg-elevated: #05050d;
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --bg-card-solid: #0a0a16;
+  --border-subtle: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text-primary: #eef2f8;
+  --text-secondary: #94a3b8;
+  --text-muted: #5b6b85;
+  --accent: #22d3ee;        /* neon cyan */
+  --accent-2: #a78bfa;      /* electric violet */
+  --accent-soft: rgba(34, 211, 238, 0.12);
+  --accent-glow: rgba(34, 211, 238, 0.35);
+  --violet-glow: rgba(167, 139, 250, 0.35);
   --green: #22C55E;
   --red: #EF4444;
   --amber: #F59E0B;
   --sky: #38BDF8;
-  --radius-card: 1.75rem;
+  --radius-card: 1.5rem;
   --radius-pill: 999px;
-  --shadow-card: 0 20px 50px -20px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'Fira Code', ui-monospace, 'JetBrains Mono', monospace;
+  --shadow-card: 0 24px 60px -24px rgba(0, 0, 0, 0.8), 0 0 24px -12px rgba(34, 211, 238, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --font-sans: 'Plus Jakarta Sans', 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Fira Code', monospace;
 }
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
   }
   body {
     background-color: var(--bg-base);
@@ -37,6 +40,10 @@
     font-family: var(--font-sans);
     overflow-x: hidden;
     min-height: 100dvh;
+  }
+  ::selection {
+    background: var(--accent);
+    color: #030309;
   }
   /* Safe area for mobile bottom nav */
   .pb-safe {
@@ -48,31 +55,75 @@
   }
 }
 
-/* ============ Hume Glass Card ============ */
+/* ============ Deep Space Ambient Background ============ */
+.space-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(34, 211, 238, 0.08), transparent 60%),
+    radial-gradient(ellipse 60% 45% at 85% 25%, rgba(167, 139, 250, 0.07), transparent 60%),
+    radial-gradient(ellipse 70% 60% at 15% 80%, rgba(167, 139, 250, 0.05), transparent 60%),
+    linear-gradient(rgba(148, 163, 184, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.045) 1px, transparent 1px),
+    var(--bg-base);
+  background-size: auto, auto, auto, 46px 46px, 46px 46px, auto;
+  mask-image: radial-gradient(ellipse 90% 75% at 50% 0%, black 25%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 75% at 50% 0%, black 25%, transparent 78%);
+}
+.space-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* ============ Glassmorphism Card ============ */
 .floating-card {
   background: var(--bg-card);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   padding: 1.1rem;
   box-shadow: var(--shadow-card);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
 @media (min-width: 768px) {
   .floating-card {
-    border-radius: 1.85rem;
+    border-radius: 1.75rem;
     padding: 1.5rem;
   }
 }
 
 .floating-card:hover {
-  border-color: var(--border-strong);
+  border-color: rgba(34, 211, 238, 0.28);
   transform: translateY(-2px);
+  box-shadow: 0 28px 64px -24px rgba(0, 0, 0, 0.85), 0 0 32px -10px rgba(34, 211, 238, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.09);
 }
 
-/* ============ Progress bars (Hume orange) ============ */
+/* Neon top edge line on hover */
+.floating-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.7), rgba(167, 139, 250, 0.7), transparent);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  border-radius: var(--radius-card);
+}
+.floating-card:hover::before {
+  opacity: 1;
+}
+
+/* ============ Progress bars (neon cyan) ============ */
 .progress-track {
   width: 100%;
   height: 10px;
@@ -86,7 +137,7 @@
   height: 100%;
   border-radius: var(--radius-pill);
   transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  background: linear-gradient(90deg, var(--accent), #FF8A4C);
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
   box-shadow: 0 0 12px var(--accent-glow);
 }
 
@@ -95,7 +146,7 @@
 .bar-green { background: linear-gradient(90deg, #4ADE80, #22C55E); box-shadow: 0 0 12px rgba(34, 197, 94, 0.4); }
 .bar-sky   { background: linear-gradient(90deg, #38BDF8, #0EA5E9); box-shadow: 0 0 12px rgba(56, 189, 248, 0.4); }
 
-/* ============ Hume Toggle Switch ============ */
+/* ============ Toggle Switch ============ */
 .hume-toggle {
   width: 48px;
   height: 28px;
@@ -129,10 +180,10 @@
   background: #fff;
 }
 
-/* ============ Hume Pill Button ============ */
+/* ============ Pill Button ============ */
 .hume-pill {
-  background: var(--accent);
-  color: #fff;
+  background: linear-gradient(90deg, var(--accent), #0ea5e9);
+  color: #030309;
   border: none;
   border-radius: var(--radius-pill);
   padding: 0.8rem 1.4rem;
@@ -143,7 +194,7 @@
   box-shadow: 0 8px 24px -6px var(--accent-glow);
   min-height: 44px;
 }
-.hume-pill:hover { background: #FF7A40; transform: translateY(-1px); }
+.hume-pill:hover { filter: brightness(1.12); transform: translateY(-1px); }
 .hume-pill:active { transform: scale(0.97); }
 .hume-pill.ghost {
   background: rgba(255, 255, 255, 0.06);
@@ -153,7 +204,7 @@
 }
 .hume-pill.ghost:hover { background: rgba(255, 255, 255, 0.1); }
 
-/* ============ Hume Status Dot ============ */
+/* ============ Status Dot ============ */
 .hume-dot {
   width: 8px; height: 8px;
   border-radius: 50%;
@@ -179,16 +230,70 @@
   from { opacity: 0; transform: translateY(14px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .stagger-in, .hume-dot { animation: none; }
-  .floating-card { transition: none; }
+
+/* ============ Floating / glow micro-animations ============ */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
 }
+.floaty { animation: floaty 6s ease-in-out infinite; }
+.floaty-delay { animation: floaty 7s ease-in-out 1.2s infinite; }
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+.glow-pulse { animation: glowPulse 3.5s ease-in-out infinite; }
+
+/* Aurora text gradient */
+.aurora-text {
+  background: linear-gradient(100deg, #22d3ee 0%, #a78bfa 50%, #22d3ee 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: auroraShift 6s linear infinite;
+}
+@keyframes auroraShift {
+  from { background-position: 0% 0; }
+  to { background-position: 200% 0; }
+}
+
+/* Bento card */
+.bento-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  cursor: pointer;
+}
+.bento-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(34, 211, 238, 0.35);
+  box-shadow: 0 24px 56px -20px rgba(0, 0, 0, 0.8), 0 0 36px -8px rgba(34, 211, 238, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+}
+.bento-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), rgba(34, 211, 238, 0.1), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.bento-card:hover::after { opacity: 1; }
 
 /* ============ Custom Scrollbar ============ */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg-base); }
-::-webkit-scrollbar-thumb { background: #1F2A22; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #2C3A30; }
+::-webkit-scrollbar-thumb { background: #182238; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #223356; }
 
 /* Scrollbar hidden utility */
 .scrollbar-none { scrollbar-width: none; }
@@ -201,10 +306,10 @@
   left: 0;
   right: 0;
   z-index: 60;
-  background: rgba(11, 15, 13, 0.85);
+  background: rgba(5, 5, 13, 0.82);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding: 0.4rem 0.5rem;
   padding-bottom: calc(0.4rem + env(safe-area-inset-bottom, 0px));
 }
@@ -229,9 +334,19 @@
 .hume-bottom-item.active {
   color: var(--accent);
   background: var(--accent-soft);
+  text-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
 }
 .hume-bottom-item svg { width: 20px; height: 20px; }
 
 @media (min-width: 768px) {
   .hume-bottombar { display: none; }
+}
+
+/* ============ Reduced motion ============ */
+@media (prefers-reduced-motion: reduce) {
+  .stagger-in, .hume-dot, .floaty, .floaty-delay, .glow-pulse, .aurora-text {
+    animation: none;
+  }
+  .floating-card, .bento-card { transition: none; }
+  html { scroll-behavior: auto; }
 }

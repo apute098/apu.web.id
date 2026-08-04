@@ -325,7 +325,7 @@ export const FinanceTab: React.FC = () => {
           <div>
             <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
               Keuangan
-              <span className="px-2 py-0.5 rounded-full text-[10px] bg-[#FF6B2C]/20 text-[#FF8A4C] border border-[#FF6B2C]/30 font-mono">
+              <span className="px-2 py-0.5 rounded-full text-[10px] bg-[#22d3ee]/20 text-[#67e8f9] border border-[#22d3ee]/30 font-mono">
                 Integrated
               </span>
             </h2>
@@ -341,16 +341,16 @@ export const FinanceTab: React.FC = () => {
           <button
             onClick={handleAnalyzeFinance}
             disabled={analyzingFinance}
-            className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#FF6B2C]/30 text-[#FFD9C2] border border-[#FF6B2C]/40 hover:bg-[#FF6B2C]/50 shadow-md transition-all"
+            className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#22d3ee]/30 text-[#cffafe] border border-[#22d3ee]/40 hover:bg-[#22d3ee]/50 shadow-md transition-all"
           >
-            <BrainCircuit className="w-4 h-4 text-[#FF6B2C]" />
+            <BrainCircuit className="w-4 h-4 text-[#22d3ee]" />
             {analyzingFinance ? 'Menganalisis...' : 'Analisa AI'}
           </button>
 
           <button
             onClick={() => handleSendNotification('telegram')}
             disabled={sendingNotify}
-            className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#FF6B2C]/20 text-[#FF8A4C] border border-[#FF6B2C]/30 hover:bg-[#FF6B2C]/30 transition-all"
+            className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#22d3ee]/20 text-[#67e8f9] border border-[#22d3ee]/30 hover:bg-[#22d3ee]/30 transition-all"
           >
             <Send className="w-3.5 h-3.5" /> Kirim TG
           </button>
@@ -378,10 +378,10 @@ export const FinanceTab: React.FC = () => {
       )}
 
       {/* AI BOT AUTO-CHAT DETECTOR SECTION (HERMES AGENT + 9ROUTER) — collapsible biar HP ringkas */}
-      <details className="floating-card bg-slate-900 border-[#FF6B2C]/40 space-y-4 group">
+      <details className="floating-card bg-slate-900 border-[#22d3ee]/40 space-y-4 group">
         <summary className="cursor-pointer list-none flex items-center justify-between gap-2 py-1 select-none">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-[#FF6B2C]/10 text-[#FF6B2C] border border-[#FF6B2C]/30">
+            <div className="p-2 rounded-xl bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/30">
               <Bot className="w-4 h-4" />
             </div>
             <div>
@@ -396,14 +396,14 @@ export const FinanceTab: React.FC = () => {
               </p>
             </div>
           </div>
-          <span className="text-[#FF6B2C] transition-transform group-open:rotate-180">
+          <span className="text-[#22d3ee] transition-transform group-open:rotate-180">
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </span>
         </summary>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-[#FF6B2C]/10 text-[#FF6B2C] border border-[#FF6B2C]/30">
+            <div className="p-2 rounded-xl bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/30">
               <Bot className="w-4 h-4" />
             </div>
             <div>
@@ -434,7 +434,7 @@ export const FinanceTab: React.FC = () => {
               onClick={() => setSelectedBotSource('Telegram Bot')}
               className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
                 selectedBotSource === 'Telegram Bot'
-                  ? 'bg-[#FF6B2C] text-white'
+                  ? 'bg-[#22d3ee] text-white'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -448,7 +448,7 @@ export const FinanceTab: React.FC = () => {
           <span className="text-slate-500 font-mono text-[11px] whitespace-nowrap">Contoh Chat Bot:</span>
           <button
             onClick={() => handleBotChatParse('Beli token listrik PLN server 250rb via QRIS')}
-            className="px-2.5 py-1 rounded-lg bg-slate-800 text-[#FF8A4C] hover:bg-slate-700 border border-slate-700 whitespace-nowrap font-mono text-[11px]"
+            className="px-2.5 py-1 rounded-lg bg-slate-800 text-[#67e8f9] hover:bg-slate-700 border border-slate-700 whitespace-nowrap font-mono text-[11px]"
           >
             &quot;Beli token listrik PLN server 250rb via QRIS&quot;
           </button>
@@ -474,12 +474,12 @@ export const FinanceTab: React.FC = () => {
             onChange={(e) => setBotMessage(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleBotChatParse()}
             placeholder={`Ketik pesan dari ${selectedBotSource} (e.g. "Bayar perpanjangan SSL 150rb via Credit Card")...`}
-            className="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-[#FF6B2C]/40 font-mono"
+            className="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40 font-mono"
           />
           <button
             onClick={() => handleBotChatParse()}
             disabled={parsingBot || !botMessage.trim()}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-[#FF6B2C] text-white hover:bg-[#FF6B2C] shadow-md disabled:opacity-50 transition-all whitespace-nowrap"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#22d3ee] shadow-md disabled:opacity-50 transition-all whitespace-nowrap"
           >
             <Sparkles className="w-4 h-4" />
             {parsingBot ? 'Parsing Chat...' : 'Kirim Ke Bot'}
@@ -505,16 +505,16 @@ export const FinanceTab: React.FC = () => {
       </details>
 
       {/* DIRECT WEBHOOK ENDPOINT & SIMULATOR CONSOLE */}
-      <details className="floating-card bg-slate-900 border-[#FF6B2C]/40 space-y-4 group">
+      <details className="floating-card bg-slate-900 border-[#22d3ee]/40 space-y-4 group">
         <summary className="cursor-pointer list-none flex items-center justify-between gap-2 py-1 select-none">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-[#FF6B2C]/10 text-[#FF8A4C] border border-[#FF6B2C]/30">
+            <div className="p-2 rounded-xl bg-[#22d3ee]/10 text-[#67e8f9] border border-[#22d3ee]/30">
               <Cloud className="w-4 h-4" />
             </div>
             <div>
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 Webhook Endpoint & Simulator
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-[#FF6B2C]/20 text-[#FF8A4C] border border-[#FF6B2C]/30">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-[#22d3ee]/20 text-[#67e8f9] border border-[#22d3ee]/30">
                   Developer Tools
                 </span>
               </h3>
@@ -523,20 +523,20 @@ export const FinanceTab: React.FC = () => {
               </p>
             </div>
           </div>
-          <span className="text-[#FF6B2C] transition-transform group-open:rotate-180">
+          <span className="text-[#22d3ee] transition-transform group-open:rotate-180">
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </span>
         </summary>
 
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-[#FF6B2C]/10 text-[#FF8A4C] border border-[#FF6B2C]/30">
+            <div className="p-2 rounded-xl bg-[#22d3ee]/10 text-[#67e8f9] border border-[#22d3ee]/30">
               <Cloud className="w-4 h-4" />
             </div>
             <div>
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 Server Webhook Endpoint Receiver (`/api/v1/webhook/bot`)
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-[#FF6B2C]/20 text-[#FF8A4C] border border-[#FF6B2C]/30">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-[#22d3ee]/20 text-[#67e8f9] border border-[#22d3ee]/30">
                   HTTP POST / GET Webhook
                 </span>
               </h3>
@@ -563,15 +563,15 @@ export const FinanceTab: React.FC = () => {
 
         {/* Webhook Endpoint Info Box */}
         <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs font-mono">
-          <div className="flex items-center gap-2 text-[#FF8A4C]">
-            <Terminal className="w-4 h-4 text-[#FF8A4C] flex-shrink-0" />
+          <div className="flex items-center gap-2 text-[#67e8f9]">
+            <Terminal className="w-4 h-4 text-[#67e8f9] flex-shrink-0" />
             <span className="text-slate-300">Endpoint:</span>
             <span className="text-emerald-400 font-bold bg-slate-900 px-2 py-1 rounded border border-slate-800">
               https://apu.web.id/api/v1/webhook/bot
             </span>
           </div>
           <div className="text-[11px] text-slate-400">
-            Telegram Webhook Cmd: <code className="text-[#FF8A4C]">setWebhook?url=https://apu.web.id/api/v1/webhook/bot</code>
+            Telegram Webhook Cmd: <code className="text-[#67e8f9]">setWebhook?url=https://apu.web.id/api/v1/webhook/bot</code>
           </div>
         </div>
 
@@ -579,7 +579,7 @@ export const FinanceTab: React.FC = () => {
         <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-white flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-[#FF6B2C]" /> Simulasikan Pesan Masuk Webhook dari WhatsApp / Telegram
+              <Zap className="w-3.5 h-3.5 text-[#22d3ee]" /> Simulasikan Pesan Masuk Webhook dari WhatsApp / Telegram
             </span>
             <div className="flex items-center gap-2 text-xs font-mono">
               <button
@@ -593,7 +593,7 @@ export const FinanceTab: React.FC = () => {
               <button
                 onClick={() => setWebhookPlatform('Telegram')}
                 className={`px-2.5 py-0.5 rounded text-[11px] transition-all ${
-                  webhookPlatform === 'Telegram' ? 'bg-[#FF6B2C] text-white font-bold' : 'bg-slate-800 text-slate-400'
+                  webhookPlatform === 'Telegram' ? 'bg-[#22d3ee] text-white font-bold' : 'bg-slate-800 text-slate-400'
                 }`}
               >
                 Telegram Payload
@@ -607,12 +607,12 @@ export const FinanceTab: React.FC = () => {
               value={webhookSimulatorMessage}
               onChange={(e) => setWebhookSimulatorMessage(e.target.value)}
               placeholder="Isi pesan transaksi webhook..."
-              className="flex-1 w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-mono focus:outline-none focus:border-[#FF6B2C]/40"
+              className="flex-1 w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
             />
             <button
               onClick={handleTriggerWebhookSimulate}
               disabled={simulatingWebhook || !webhookSimulatorMessage.trim()}
-              className="w-full md:w-auto flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-[#FF6B2C] text-white hover:bg-[#E85D0B] shadow-md disabled:opacity-50 transition-all whitespace-nowrap"
+              className="w-full md:w-auto flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-md disabled:opacity-50 transition-all whitespace-nowrap"
             >
               <Send className="w-3.5 h-3.5" />
               {simulatingWebhook ? 'Mengirim Webhook...' : 'Kirim Webhook POST'}
@@ -621,8 +621,8 @@ export const FinanceTab: React.FC = () => {
 
           {/* Simulated Result Box */}
           {simulatedWebhookResult && (
-            <div className="p-3.5 rounded-xl bg-slate-900 border border-[#FF6B2C]/40 text-xs font-mono space-y-2">
-              <div className="flex items-center justify-between text-[#FF8A4C] font-bold">
+            <div className="p-3.5 rounded-xl bg-slate-900 border border-[#22d3ee]/40 text-xs font-mono space-y-2">
+              <div className="flex items-center justify-between text-[#67e8f9] font-bold">
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" /> HTTP 200 OK — Webhook Processed
                 </span>
@@ -639,11 +639,11 @@ export const FinanceTab: React.FC = () => {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-300 flex items-center gap-1.5 font-mono">
-              <FileText className="w-3.5 h-3.5 text-[#FF6B2C]" /> Webhook Activity Logs (Real-time Audit Trail)
+              <FileText className="w-3.5 h-3.5 text-[#22d3ee]" /> Webhook Activity Logs (Real-time Audit Trail)
             </span>
             <button
               onClick={fetchWebhookLogs}
-              className="text-[11px] font-mono text-[#FF6B2C] hover:underline"
+              className="text-[11px] font-mono text-[#22d3ee] hover:underline"
             >
               Refresh Logs
             </button>
@@ -675,7 +675,7 @@ export const FinanceTab: React.FC = () => {
                       <td className="p-2.5">
                         <span
                           className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                            log.platform === 'WhatsApp' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-[#FF6B2C]/20 text-[#FF8A4C]'
+                            log.platform === 'WhatsApp' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-[#22d3ee]/20 text-[#67e8f9]'
                           }`}
                         >
                           {log.platform}
@@ -702,10 +702,10 @@ export const FinanceTab: React.FC = () => {
 
       {/* AI ANALISA MANDIRI MODAL / CARD */}
       {aiAnalysisResult && (
-        <div className="floating-card bg-slate-900 border-[#FF6B2C]/40/50 space-y-4">
+        <div className="floating-card bg-slate-900 border-[#22d3ee]/40/50 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <div className="flex items-center gap-2">
-              <BrainCircuit className="w-5 h-5 text-[#FF6B2C]" />
+              <BrainCircuit className="w-5 h-5 text-[#22d3ee]" />
               <h3 className="text-sm font-bold text-white">
                 Analisa Mandiri & Laporan Eksekutif (Hermes Financial AI)
               </h3>
@@ -733,7 +733,7 @@ export const FinanceTab: React.FC = () => {
             </div>
             <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
               <div className="text-[10px] text-slate-400 font-mono uppercase">Laba Bersih</div>
-              <div className="text-sm font-bold text-[#FF8A4C] font-mono">
+              <div className="text-sm font-bold text-[#67e8f9] font-mono">
                 {formatRupiah(aiAnalysisResult.summary?.labaBersih || 0)}
               </div>
             </div>
@@ -752,7 +752,7 @@ export const FinanceTab: React.FC = () => {
           <div className="flex items-center justify-end gap-2">
             <button
               onClick={() => handleSendNotification('telegram')}
-              className="px-3 py-1.5 rounded-lg bg-[#FF6B2C]/20 text-[#FF8A4C] border border-[#FF6B2C]/30 text-xs font-semibold hover:bg-[#FF6B2C]/30"
+              className="px-3 py-1.5 rounded-lg bg-[#22d3ee]/20 text-[#67e8f9] border border-[#22d3ee]/30 text-xs font-semibold hover:bg-[#22d3ee]/30"
             >
               Broadcast Laporan ke Telegram
             </button>
@@ -770,7 +770,7 @@ export const FinanceTab: React.FC = () => {
       {showForm && (
         <form
           onSubmit={handleAddTransaction}
-          className="floating-card border-[#FF6B2C]/40 bg-slate-900/90 space-y-4"
+          className="floating-card border-[#22d3ee]/40 bg-slate-900/90 space-y-4"
         >
           <h3 className="text-sm font-bold text-white flex items-center gap-2">
             <Plus className="w-4 h-4 text-emerald-400" /> Tambah Transaksi Keuangan Manual
@@ -785,7 +785,7 @@ export const FinanceTab: React.FC = () => {
                 type="date"
                 value={tanggal}
                 onChange={(e) => setTanggal(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-[#FF6B2C]/40"
+                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
                 required
               />
             </div>
@@ -797,7 +797,7 @@ export const FinanceTab: React.FC = () => {
               <select
                 value={tipe}
                 onChange={(e) => setTipe(e.target.value as any)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#FF6B2C]/40"
+                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
               >
                 <option value="Pemasukan">Pemasukan (Income)</option>
                 <option value="Pengeluaran">Pengeluaran (Expense)</option>
@@ -813,7 +813,7 @@ export const FinanceTab: React.FC = () => {
                 value={kategori}
                 onChange={(e) => setKategori(e.target.value)}
                 placeholder="Misal: Hosting, Client Payment, Listrik"
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#FF6B2C]/40"
+                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
                 required
               />
             </div>
@@ -827,7 +827,7 @@ export const FinanceTab: React.FC = () => {
                 value={jumlah}
                 onChange={(e) => setJumlah(e.target.value)}
                 placeholder="Contoh: 1500000"
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-[#FF6B2C]/40"
+                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
                 required
               />
             </div>
@@ -841,7 +841,7 @@ export const FinanceTab: React.FC = () => {
                 value={metode}
                 onChange={(e) => setMetode(e.target.value)}
                 placeholder="Bank Transfer, Midtrans, Cash"
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#FF6B2C]/40"
+                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
               />
             </div>
 
@@ -854,7 +854,7 @@ export const FinanceTab: React.FC = () => {
                 value={keterangan}
                 onChange={(e) => setKeterangan(e.target.value)}
                 placeholder="Deskripsi transaksi..."
-                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#FF6B2C]/40"
+                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
                 required
               />
             </div>
@@ -871,7 +871,7 @@ export const FinanceTab: React.FC = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2 rounded-xl text-xs font-bold bg-[#FF6B2C] text-white hover:bg-[#FF6B2C] shadow-md shadow-[#FF6B2C]/40 disabled:opacity-50"
+              className="px-5 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#22d3ee] shadow-md shadow-[#22d3ee]/40 disabled:opacity-50"
             >
               {submitting ? 'Menyimpan...' : 'Simpan Transaksi'}
             </button>
@@ -901,7 +901,7 @@ export const FinanceTab: React.FC = () => {
               </div>
               <button
                 onClick={fetchFinancialData}
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#FF6B2C] text-white hover:bg-[#E85D0B] shadow-lg shadow-[#FF6B2C]/30 transition-all"
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
               >
                 Coba lagi
               </button>
@@ -944,13 +944,13 @@ export const FinanceTab: React.FC = () => {
         <div className="floating-card">
           <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
             <span className="flex items-center gap-1.5 font-medium">
-              <DollarSign className="w-4 h-4 text-[#FF6B2C]" /> Laba Bersih (Net)
+              <DollarSign className="w-4 h-4 text-[#22d3ee]" /> Laba Bersih (Net)
             </span>
-            <span className="text-[10px] bg-[#FF6B2C]/10 text-[#FF6B2C] px-2 py-0.5 rounded font-mono">
+            <span className="text-[10px] bg-[#22d3ee]/10 text-[#22d3ee] px-2 py-0.5 rounded font-mono">
               NET PROFIT
             </span>
           </div>
-          <div className="text-2xl md:text-3xl font-extrabold text-[#FF8A4C] font-mono">
+          <div className="text-2xl md:text-3xl font-extrabold text-[#67e8f9] font-mono">
             {formatRupiah(data?.summary?.labaBersih || 0)}
           </div>
         </div>
@@ -1005,7 +1005,7 @@ export const FinanceTab: React.FC = () => {
                 placeholder="Cari transaksi..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#FF6B2C]/40"
+                className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
               />
             </div>
 
@@ -1017,7 +1017,7 @@ export const FinanceTab: React.FC = () => {
                   onClick={() => setFilterType(type)}
                   className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
                     filterType === type
-                      ? 'bg-[#FF6B2C] text-white'
+                      ? 'bg-[#22d3ee] text-white'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
@@ -1048,8 +1048,8 @@ export const FinanceTab: React.FC = () => {
                 <tr>
                   <td colSpan={8} className="py-14 text-center">
                     <div className="flex flex-col items-center gap-4">
-                      <div className="w-16 h-16 rounded-2xl bg-[#FF6B2C]/10 border border-[#FF6B2C]/20 flex items-center justify-center">
-                        <Wallet className="w-8 h-8 text-[#FF6B2C]/60" />
+                      <div className="w-16 h-16 rounded-2xl bg-[#22d3ee]/10 border border-[#22d3ee]/20 flex items-center justify-center">
+                        <Wallet className="w-8 h-8 text-[#22d3ee]/60" />
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-slate-300">Belum ada transaksi</p>
@@ -1061,7 +1061,7 @@ export const FinanceTab: React.FC = () => {
                       <button
                         onClick={() => setShowForm(true)}
                         aria-label="Tambah transaksi manual"
-                        className="px-4 py-2 rounded-xl text-xs font-bold bg-[#FF6B2C] text-white hover:bg-[#E85D0B] shadow-lg shadow-[#FF6B2C]/30 transition-all"
+                        className="px-4 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
                       >
                         + Tambah Transaksi
                       </button>
@@ -1077,7 +1077,7 @@ export const FinanceTab: React.FC = () => {
                   >
                     <td className="py-3 px-4 font-mono text-slate-400">{tx.tanggal}</td>
                     <td className="py-3 px-4">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[10px] bg-slate-800 text-[#FF8A4C] border border-slate-700">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[10px] bg-slate-800 text-[#67e8f9] border border-slate-700">
                         <Bot className="w-3 h-3 text-emerald-400" />
                         {tx.source || 'Manual'}
                       </span>
@@ -1129,8 +1129,8 @@ export const FinanceTab: React.FC = () => {
         <div className="md:hidden space-y-3">
           {data?.transactions?.length === 0 ? (
             <div className="flex flex-col items-center gap-4 py-10 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-[#FF6B2C]/10 border border-[#FF6B2C]/20 flex items-center justify-center">
-                <Wallet className="w-8 h-8 text-[#FF6B2C]/60" />
+              <div className="w-16 h-16 rounded-2xl bg-[#22d3ee]/10 border border-[#22d3ee]/20 flex items-center justify-center">
+                <Wallet className="w-8 h-8 text-[#22d3ee]/60" />
               </div>
               <div>
                 <p className="text-sm font-semibold text-slate-300">Belum ada transaksi</p>
@@ -1142,7 +1142,7 @@ export const FinanceTab: React.FC = () => {
               <button
                 onClick={() => setShowForm(true)}
                 aria-label="Tambah transaksi manual dari kosong"
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#FF6B2C] text-white hover:bg-[#E85D0B] shadow-lg shadow-[#FF6B2C]/30 transition-all"
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
               >
                 + Tambah Transaksi
               </button>
@@ -1170,7 +1170,7 @@ export const FinanceTab: React.FC = () => {
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-white truncate">{tx.keterangan}</p>
                     <p className="text-[10px] text-slate-400 mt-0.5 flex items-center gap-1.5">
-                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded font-mono bg-slate-800 text-[#FF8A4C] border border-slate-700">
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded font-mono bg-slate-800 text-[#67e8f9] border border-slate-700">
                         <Bot className="w-2.5 h-2.5 text-emerald-400" />
                         {tx.source || 'Manual'}
                       </span>
@@ -1213,7 +1213,7 @@ export const FinanceTab: React.FC = () => {
           onClick={() => setSelectedTx(null)}
         >
           <div
-            className="floating-card stagger-in w-full max-w-md mx-auto bg-slate-900/95 border-[#FF6B2C]/40 p-6 space-y-5"
+            className="floating-card stagger-in w-full max-w-md mx-auto bg-slate-900/95 border-[#22d3ee]/40 p-6 space-y-5"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -1283,7 +1283,7 @@ export const FinanceTab: React.FC = () => {
 
             <button
               onClick={() => setSelectedTx(null)}
-              className="w-full px-4 py-2.5 rounded-xl text-xs font-bold bg-[#FF6B2C] text-white hover:bg-[#E85D0B] shadow-lg shadow-[#FF6B2C]/30 transition-all"
+              className="w-full px-4 py-2.5 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
             >
               Tutup
             </button>

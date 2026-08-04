@@ -86,7 +86,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
           <button
             onClick={onRetry}
             disabled={refreshing}
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-[#FF6B2C] text-white hover:bg-[#E85D0B] shadow-lg shadow-[#FF6B2C]/30 transition-all disabled:opacity-50"
+            className="px-4 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all disabled:opacity-50"
           >
             Coba lagi
           </button>
@@ -95,7 +95,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
     }
     return (
       <div className="flex flex-col items-center justify-center p-12 text-slate-400 gap-3">
-        <RefreshCw className="w-8 h-8 animate-spin text-[#FF6B2C]" />
+        <RefreshCw className="w-8 h-8 animate-spin text-[#22d3ee]" />
         <p className="text-sm font-medium">Memuat data sensor Arch Linux Server...</p>
       </div>
     );
@@ -117,7 +117,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
           <button
             onClick={onRetry}
             disabled={refreshing}
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-[#FF6B2C] text-white hover:bg-[#E85D0B] shadow-lg shadow-[#FF6B2C]/30 transition-all disabled:opacity-50"
+            className="px-4 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all disabled:opacity-50"
           >
             Coba lagi
           </button>
@@ -126,7 +126,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
       {/* Top Action & Server Banner */}
       <div className="floating-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-800/80">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-[#FF6B2C]/10 border border-[#FF6B2C]/30 flex items-center justify-center text-[#FF6B2C]">
+          <div className="w-12 h-12 rounded-2xl bg-[#22d3ee]/10 border border-[#22d3ee]/30 flex items-center justify-center text-[#22d3ee]">
             <Server className="w-6 h-6" />
           </div>
           <div>
@@ -134,7 +134,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
               <h2 className="text-xl font-bold text-white tracking-tight">
                 apu-arch-server
               </h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono bg-[#FF6B2C]/20 text-[#FF8A4C] border border-[#FF6B2C]/30">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono bg-[#22d3ee]/20 text-[#67e8f9] border border-[#22d3ee]/30">
                 {systemData.os}
               </span>
             </div>
@@ -158,7 +158,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
             className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all disabled:opacity-50"
             title="Muat Ulang Data"
           >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-[#FF6B2C]' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin text-[#22d3ee]' : ''}`} />
           </button>
         </div>
       </div>
@@ -169,7 +169,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
         <div className="floating-card relative overflow-hidden h-full stagger-in">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
-              <Cpu className="w-4 h-4 text-[#FF6B2C]" /> CPU Usage
+              <Cpu className="w-4 h-4 text-[#22d3ee]" /> CPU Usage
             </span>
             <span className="text-xs font-mono text-slate-500">{cpu?.cores} Cores</span>
           </div>
@@ -298,7 +298,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
         <div className="floating-card">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Wifi className="w-5 h-5 text-[#FF6B2C]" />
+              <Wifi className="w-5 h-5 text-[#22d3ee]" />
               <h3 className="font-bold text-white text-sm">Network Traffic Speed</h3>
             </div>
             <span className="text-xs font-mono text-slate-400">{network?.interface}</span>
@@ -315,7 +315,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
             </div>
             <div className="p-3 rounded-xl bg-slate-800/50 border border-slate-700/60">
               <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
-                <ArrowUpRight className="w-4 h-4 text-[#FF6B2C]" /> Upload
+                <ArrowUpRight className="w-4 h-4 text-[#22d3ee]" /> Upload
               </div>
               <div className="text-2xl font-mono font-bold text-white">
                 {(network?.uploadKbps / 1024).toFixed(2)}{' '}
@@ -346,7 +346,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
             </div>
             <div className="p-3 rounded-xl bg-slate-800/50 border border-slate-700/60">
               <div className="text-xs text-slate-400 mb-1">Disk Write Rate</div>
-              <div className="text-2xl font-mono font-bold text-[#FF6B2C]">
+              <div className="text-2xl font-mono font-bold text-[#22d3ee]">
                 {diskIO?.writeMBps}{' '}
                 <span className="text-xs font-normal text-slate-400">MB/s</span>
               </div>
@@ -360,7 +360,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="font-bold text-white text-sm flex items-center gap-2">
-              <Activity className="w-4 h-4 text-[#FF6B2C]" />
+              <Activity className="w-4 h-4 text-[#22d3ee]" />
               Real-time Performance Telemetry (Last 15 ticks)
             </h3>
             <p className="text-xs text-slate-400 mt-0.5">
@@ -368,7 +368,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
             </p>
           </div>
           <div className="flex items-center gap-3 text-[10px] font-medium text-slate-400">
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#FF6B2C]" /> CPU</span>
+            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#22d3ee]" /> CPU</span>
             <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> RAM</span>
             <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-sky-400" /> Temp</span>
           </div>
@@ -385,8 +385,8 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
             <AreaChart data={chartHistory} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
               <defs>
                 <linearGradient id="cpuGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#FF6B2C" stopOpacity={0.45} />
-                  <stop offset="95%" stopColor="#FF6B2C" stopOpacity={0.0} />
+                  <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.45} />
+                  <stop offset="95%" stopColor="#22d3ee" stopOpacity={0.0} />
                 </linearGradient>
                 <linearGradient id="ramGrad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#10b981" stopOpacity={0.45} />
@@ -416,10 +416,10 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
                 type="monotone"
                 dataKey="cpu"
                 name="CPU %"
-                stroke="#FF6B2C"
+                stroke="#22d3ee"
                 strokeWidth={2.5}
                 dot={false}
-                activeDot={{ r: 4, strokeWidth: 0, fill: '#FF6B2C' }}
+                activeDot={{ r: 4, strokeWidth: 0, fill: '#22d3ee' }}
                 fillOpacity={1}
                 fill="url(#cpuGrad)"
                 isAnimationActive
