@@ -5,7 +5,7 @@ import { Navbar, SubdomainTab } from '@/components/Navbar';
 import { HardwareTab } from '@/components/HardwareTab';
 import { FinanceTab } from '@/components/FinanceTab';
 import ParticleField from '@/components/ParticleField';
-import { TestimonialsSection, PricingSection } from '@/components/LandingSections';
+import { TestimonialsSection } from '@/components/LandingSections';
 import { motion } from 'motion/react';
 import {
   ShieldCheck,
@@ -296,9 +296,6 @@ export default function Home() {
 
             {/* ===== Testimonials / Case Studies — auto-rotate carousel ===== */}
             <TestimonialsSection />
-
-            {/* ===== Pricing Table — glass panel, highlight paket populer ===== */}
-            <PricingSection />
           </>
         )}
 
