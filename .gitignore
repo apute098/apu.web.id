@@ -1,0 +1,17 @@
+# deps & build
+node_modules/
+.next/
+out/
+
+# secrets & data
+.env*
+!.env.example
+data/*.db
+data/*.db-wal
+data/*.db-shm
+data/oauth.json
+data/*.bak*
+
+# logs & editor
+*.log
+.DS_Store

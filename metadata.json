@@ -1,0 +1,6 @@
+{
+  "name": "System Monitoring & Financial Portal",
+  "description": "Master Control Portal for Arch Linux PC Server, Financial Analytics, Process Management, 9Router AI Gateway & Hermes Agent",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

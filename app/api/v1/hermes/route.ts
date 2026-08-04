@@ -1,0 +1,97 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { isAuthorized, unauthorized } from '@/lib/auth';
+import { GoogleGenAI } from '@google/genai';
+
+async function realServerContext() {
+  try {
+    const [svc, fin] = await Promise.all([
+      fetch(`http://localhost:3100/api/v1/system-status`, { cache: 'no-store', signal: AbortSignal.timeout(15000) }).then((r) => r.json()).catch(() => null),
+      fetch(`http://localhost:3100/api/v1/keuangan`, { cache: 'no-store', signal: AbortSignal.timeout(15000) }).then((r) => r.json()).catch(() => null),
+    ]);
+    return { svc, fin };
+  } catch {
+    return { svc: null, fin: null };
+  }
+}
+
+export async function POST(req: NextRequest) {
+  if (!isAuthorized(req)) return unauthorized();
+  let prompt: unknown;
+  let context: unknown;
+  try {
+    const body = await req.json();
+    prompt = body?.prompt;
+    context = body?.context;
+  } catch {
+    return NextResponse.json({ success: false, error: 'Body JSON tidak valid' }, { status: 400 });
+  }
+
+  if (!prompt || typeof prompt !== 'string') {
+    return NextResponse.json({ success: false, error: 'Prompt wajib diisi' }, { status: 400 });
+  }
+
+  try {
+
+    const { svc, fin } = await realServerContext();
+    const c = svc?.cpu || {}, r = svc?.ram || {}, h = svc?.hdd || {}, t = svc?.temperature || {};
+    const s = fin?.summary;
+
+    const systemPrompt = `Anda adalah "Hermes Agent", AI Server Assistant & Finance Analyst yang terintegrasi dengan Arch Linux Server (apu.web.id).
+Jawab dengan bahasa Indonesia yang jelas dan to the point. Gunakan data real berikut:
+
+Server (real-time): ${svc ? `OS ${svc.os}, CPU ${c.model} (${c.cores} core, ${c.usagePercent}% load), RAM ${r.usedGB}/${r.totalGB} GB (${r.usagePercent}%), disk ${h.usedTB}/${h.totalTB} TB (${h.usagePercent}%), suhu ${t.currentC}°C, uptime ${svc.uptime}` : 'tidak tersedia'}
+Keuangan (SQLite WAL): ${s ? `pemasukan Rp ${s.totalPemasukan}, pengeluaran Rp ${s.totalPengeluaran}, laba bersih Rp ${s.labaBersih}, ${s.totalTransaksi} transaksi` : 'tidak tersedia'}
+AI Gateway: 9Router (localhost:20128)
+Additional Context: ${JSON.stringify(context || {})}`;
+
+    let aiResponseText = '';
+
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        const ai = new GoogleGenAI({
+          apiKey: process.env.GEMINI_API_KEY,
+          httpOptions: { headers: { 'User-Agent': 'aistudio-build' } },
+        });
+        const response = await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: `${systemPrompt}\n\nPertanyaan Pengguna: ${prompt}`,
+        });
+        aiResponseText = response.text || '';
+      } catch (geminiError: unknown) {
+        console.warn('Gemini API call failed, falling back to local response:', geminiError);
+      }
+    }
+
+    // Fallback jujur — komposisi dari data real, bukan angka mock.
+    if (!aiResponseText) {
+      const pLower = prompt.toLowerCase();
+      if (pLower.includes('laba') || pLower.includes('keuangan') || pLower.includes('pengeluaran') || pLower.includes('pemasukan')) {
+        aiResponseText = s
+          ? `📊 **Hermes Financial Insight** (data real SQLite WAL):\n- **Total Pemasukan**: Rp ${s.totalPemasukan.toLocaleString('id-ID')}\n- **Total Pengeluaran**: Rp ${s.totalPengeluaran.toLocaleString('id-ID')}\n- **Laba Bersih**: Rp ${s.labaBersih.toLocaleString('id-ID')}\n- **Transaksi**: ${s.totalTransaksi} | **Margin**: ${s.profitMargin}%`
+          : '📊 Data keuangan belum tersedia.';
+      } else if (pLower.includes('cpu') || pLower.includes('ram') || pLower.includes('suhu') || pLower.includes('status') || pLower.includes('hardware')) {
+        aiResponseText = svc
+          ? `🖥️ **Hermes Server Health** (data real):\n- **CPU**: ${c.model} (${c.cores} core, ${c.usagePercent}% load)\n- **RAM**: ${r.usedGB} / ${r.totalGB} GB (${r.usagePercent}%)\n- **Disk**: ${h.usedTB} / ${h.totalTB} TB (${h.usagePercent}%, ${h.filesystem})\n- **Suhu CPU**: ${t.currentC}°C (${t.status})\n- **Uptime**: ${svc.uptime}`
+          : '🖥️ Data server belum tersedia.';
+      } else if (pLower.includes('restart') || pLower.includes('nginx') || pLower.includes('service') || pLower.includes('cloudflared')) {
+        aiResponseText = '⚙️ Manajemen service tidak dieksekusi dari endpoint ini (read-only). Gunakan systemctl langsung atau endpoint /api/v1/processes.';
+      } else {
+        aiResponseText = `🤖 **Hermes Agent Ready** (apu.web.id). Data server & keuangan tersedia untuk analisis real-time. Coba tanya: "Cek suhu CPU dan RAM", "Berapa laba bersih?", atau "Ringkas pengeluaran".`;
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      prompt,
+      response: aiResponseText,
+      modelUsed: process.env.GEMINI_API_KEY ? 'gemini-2.5-flash' : 'hermes-local-fallback',
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error: unknown) {
+    console.error('Query Hermes Agent gagal:', error instanceof Error ? error.message : error);
+    return NextResponse.json(
+      { success: false, error: 'Gagal memproses query Hermes Agent — coba lagi nanti.' },
+      { status: 500 }
+    );
+  }
+}
