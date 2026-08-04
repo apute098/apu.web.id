@@ -5,6 +5,7 @@ import { Navbar, SubdomainTab } from '@/components/Navbar';
 import { HardwareTab } from '@/components/HardwareTab';
 import { FinanceTab } from '@/components/FinanceTab';
 import ParticleField from '@/components/ParticleField';
+import { TestimonialsSection, PricingSection } from '@/components/LandingSections';
 import { motion } from 'motion/react';
 import {
   ShieldCheck,
@@ -17,6 +18,10 @@ import {
   Cpu,
   ArrowRight,
   Sparkles,
+  MessageCircle,
+  Send,
+  Github,
+  Heart,
 } from 'lucide-react';
 
 const BENTO_MODULES: {
@@ -288,6 +293,12 @@ export default function Home() {
                 ))}
               </div>
             </section>
+
+            {/* ===== Testimonials / Case Studies — auto-rotate carousel ===== */}
+            <TestimonialsSection />
+
+            {/* ===== Pricing Table — glass panel, highlight paket populer ===== */}
+            <PricingSection />
           </>
         )}
 
@@ -335,28 +346,142 @@ export default function Home() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-white/10 bg-[#05050d]/80 backdrop-blur-xl py-4 px-6 text-xs text-slate-400 mt-8">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="relative flex w-2 h-2">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
-              <span className="relative inline-flex rounded-full w-2 h-2 bg-emerald-400" />
-            </span>
-            <span className="font-bold text-white">apu.web.id Master Server Portal</span>
-            <span>&bull;</span>
-            <span className="font-mono text-slate-400">
-              Arch Linux x86_64 (HDD WAL Mode)
-            </span>
+      {/* ===== Footer Lengkap ===== */}
+      <footer className="apu-footer relative z-10 border-t border-white/10 bg-[#05050d]/80 backdrop-blur-xl mt-8">
+        {/* Garis neon atas footer */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Brand + Status Server Live (data REAL dari systemData) */}
+          <div className="sm:col-span-2 lg:col-span-1">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 via-sky-500 to-violet-500 flex items-center justify-center text-[#030309] shadow-lg shadow-cyan-500/30">
+                <Server className="w-4 h-4" />
+              </div>
+              <h3 className="font-bold text-white">
+                apu<span className="aurora-text">.web.id</span>
+              </h3>
+            </div>
+            <p className="mt-3 text-xs text-slate-400 leading-relaxed">
+              Master Server Portal &mdash; telemetri hardware, keuangan AI, dan 9Router Gateway
+              dalam satu antarmuka orbital.
+            </p>
+            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+              <span className="relative flex w-2 h-2">
+                <span
+                  className={`absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping ${
+                    systemData?.status === 'online' ? 'bg-emerald-400' : 'bg-amber-400'
+                  }`}
+                />
+                <span
+                  className={`relative inline-flex rounded-full w-2 h-2 ${
+                    systemData?.status === 'online' ? 'bg-emerald-400' : 'bg-amber-400'
+                  }`}
+                />
+              </span>
+              <span className="text-[11px] font-mono text-slate-300">
+                {systemData?.status === 'online' ? 'Server Online' : 'Menghubungkan...'}
+              </span>
+              <span className="text-[10px] font-mono text-slate-500">
+                uptime {systemData?.uptime ?? '—'} &middot; {systemData?.os?.split(' (')[0] ?? 'Arch Linux'}
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-4 text-slate-500 font-mono text-[11px]">
-            <span className="flex items-center gap-1 text-slate-400">
-              <Cloud className="w-3.5 h-3.5 text-cyan-300" /> Cloudflare Tunnel
-            </span>
-            <span className="flex items-center gap-1 text-slate-400">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> 9Router &amp; Hermes AI
-            </span>
+          {/* Navigasi Modul */}
+          <div>
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Modul</h4>
+            <ul className="space-y-2.5">
+              <li>
+                <button
+                  onClick={() => switchTab('hardware')}
+                  className="text-xs text-slate-400 hover:text-cyan-300 transition-colors flex items-center gap-2"
+                >
+                  <Cpu className="w-3.5 h-3.5 text-cyan-300" /> Telemetri Hardware
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => switchTab('keuangan')}
+                  className="text-xs text-slate-400 hover:text-cyan-300 transition-colors flex items-center gap-2"
+                >
+                  <Wallet className="w-3.5 h-3.5 text-violet-300" /> Keuangan AI
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => switchTab('router')}
+                  className="text-xs text-slate-400 hover:text-cyan-300 transition-colors flex items-center gap-2"
+                >
+                  <Terminal className="w-3.5 h-3.5 text-cyan-300" /> 9Router Gateway
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Teknologi — status layanan REAL dari API system-status */}
+          <div>
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Teknologi</h4>
+            <ul className="space-y-2.5">
+              {[
+                { name: 'Cloudflare Tunnel', key: 'cloudflared', icon: <Cloud className="w-3.5 h-3.5 text-cyan-300" /> },
+                { name: '9Router', key: '9router', icon: <Terminal className="w-3.5 h-3.5 text-violet-300" /> },
+                { name: 'Hermes AI', key: 'hermes-gateway', icon: <Bot className="w-3.5 h-3.5 text-emerald-300" /> },
+              ].map((svc) => {
+                const raw = systemData?.services?.[svc.key];
+                const active = typeof raw === 'string' && raw.includes('active');
+                return (
+                  <li key={svc.key} className="flex items-center gap-2 text-xs text-slate-400">
+                    {svc.icon}
+                    <span>{svc.name}</span>
+                    <span className={`ml-auto w-1.5 h-1.5 rounded-full ${active ? 'bg-emerald-400 shadow-[0_0_6px_rgba(34,197,94,0.8)]' : 'bg-slate-600'}`} />
+                    <span className="font-mono text-[10px] text-slate-500">{active ? 'active' : '—'}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
+          {/* Media Sosial — slot placeholder */}
+          <div>
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Media Sosial</h4>
+            <ul className="space-y-2.5">
+              {[
+                {
+                  // ISI KONTEN DI SINI — ganti href dengan link WhatsApp asli
+                  name: 'WhatsApp', href: '#', icon: <MessageCircle className="w-4 h-4" />, hover: 'hover:border-emerald-400/40 hover:text-emerald-300',
+                },
+                {
+                  // ISI KONTEN DI SINI — ganti href dengan link Telegram asli
+                  name: 'Telegram', href: '#', icon: <Send className="w-4 h-4" />, hover: 'hover:border-sky-400/40 hover:text-sky-300',
+                },
+                {
+                  // ISI KONTEN DI SINI — ganti href dengan link GitHub asli
+                  name: 'GitHub', href: '#', icon: <Github className="w-4 h-4" />, hover: 'hover:border-white/30 hover:text-white',
+                },
+              ].map((s) => (
+                <li key={s.name}>
+                  <a
+                    href={s.href}
+                    className={`inline-flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-400 transition-all ${s.hover}`}
+                  >
+                    {s.icon} {s.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Copyright */}
+        <div className="border-t border-white/5">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p className="text-[11px] text-slate-500 font-mono">
+              &copy; {new Date().getFullYear()} apu.web.id &mdash; Master Server Portal. Arch Linux x86_64 (HDD WAL Mode).
+            </p>
+            <p className="text-[11px] text-slate-600 font-mono flex items-center gap-1">
+              Dibangun dengan <Heart className="w-3 h-3 text-cyan-400" /> di atas Cloudflare Tunnel &amp; 9Router
+            </p>
           </div>
         </div>
       </footer>
