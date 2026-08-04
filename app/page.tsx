@@ -5,7 +5,6 @@ import { Navbar, SubdomainTab } from '@/components/Navbar';
 import { HardwareTab } from '@/components/HardwareTab';
 import { FinanceTab } from '@/components/FinanceTab';
 import ParticleField from '@/components/ParticleField';
-import { TestimonialsSection } from '@/components/LandingSections';
 import { motion } from 'motion/react';
 import {
   ShieldCheck,
@@ -294,8 +293,6 @@ export default function Home() {
               </div>
             </section>
 
-            {/* ===== Testimonials / Case Studies — auto-rotate carousel ===== */}
-            <TestimonialsSection />
           </>
         )}
 
