@@ -2,8 +2,8 @@
 # Backup DB + data apu-webid-next. Jalan tiap hari via systemd user timer.
 set -euo pipefail
 
-SRC="$HOME/projects/apu-webid-next/data"
-DST="$HOME/Backups/apu-webid-next"
+SRC="$HOME/projects/apu.web.id/data"
+DST="$HOME/Backups/apu.web.id"
 KEEP=14
 
 mkdir -p "$DST"

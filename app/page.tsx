@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, SubdomainTab } from '@/components/Navbar';
 import { HardwareTab } from '@/components/HardwareTab';
-import { FinanceTab } from '@/components/FinanceTab';
+import { FinanceTab } from '@/components/finance/FinanceTab';
 import ParticleField from '@/components/ParticleField';
 import { motion } from 'motion/react';
 import {
