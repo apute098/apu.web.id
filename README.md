@@ -1,20 +1,43 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# apu.web.id
 
-# Run and deploy your AI Studio app
+Portal pribadi & master gateway — dashboard, telemetri hardware, dan financial telemetry hub. Self-hosted di homelab APU (Arch Linux, Cloudflare Tunnel, SQLite WAL).
 
-This contains everything you need to run your app locally.
+## Tech Stack
 
-View your app in AI Studio: https://ai.studio/apps/56b62b56-bbd2-4ede-8798-dff060db805e
+| Layer | Stack |
+|-------|-------|
+| Framework | Next.js 15 + TypeScript |
+| UI | Tailwind CSS |
+| DB | SQLite (WAL mode) |
+| AI | Hermes Orchestrator + 9router gateway |
+| Proxy | Caddy → Cloudflare Tunnel |
 
-## Run Locally
+## Struktur
 
-**Prerequisites:**  Node.js
+```
+apu-webid-next/
+├── app/          # Next.js app router (pages + API routes)
+├── components/   # UI components
+├── hooks/        # React hooks
+├── lib/          # Shared logic
+├── data/         # SQLite DB
+└── scripts/      # Utility scripts
+```
 
+## Endpoint Utama (API v1)
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- `GET/POST /api/v1/keuangan` — transaksi, AI parse chat, analisa finansial
+- `GET/POST /api/v1/system-status` — telemetri CPU/RAM/temp/HDD/network
+- `GET/POST /api/v1/processes` — monitoring & kontrol proses/systemd
+- `POST /api/v1/webhook/bot` — webhook Telegram/WhatsApp bot
+- `GET /api/v1/export-json` — export bundle deploy
+
+## Run
+
+```bash
+bun install
+bun run dev     # dev
+bun run build && bun run start   # production
+```
+
+Deploy: unit systemd `apu-webid-next`, Caddy reverse proxy ke :3100, tunnel Cloudflare. Detail: `AGENTS.md`.
