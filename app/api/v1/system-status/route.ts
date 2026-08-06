@@ -216,7 +216,7 @@ function getUptimeSeconds(): number {
 
 function getServices(): Record<string, string> {
   const userUnits = [
-    'apu-webid-next',
+    'apu-webid',
     'apu-ecosystem',
     '9router',
     'mitm-router',
