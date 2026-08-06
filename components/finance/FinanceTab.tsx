@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { authedPost } from '@/lib/api';
 import { Transaction } from './shared';
-import { FinanceHeader } from './FinanceHeader';
-import { BotChatParser } from './BotChatParser';
-import { WebhookConsole } from './WebhookConsole';
-import { AiAnalysisCard } from './AiAnalysisCard';
 import { TransactionForm } from './TransactionForm';
 import { OverviewCards } from './OverviewCards';
 import { TransactionList } from './TransactionList';
@@ -19,14 +15,6 @@ export const FinanceTab: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
   const [showForm, setShowForm] = useState(false);
-
-  // Notification status state
-  const [notifyStatus, setNotifyStatus] = useState<string | null>(null);
-  const [sendingNotify, setSendingNotify] = useState(false);
-
-  // AI Analisa Mandiri Report State
-  const [analyzingFinance, setAnalyzingFinance] = useState(false);
-  const [aiAnalysisResult, setAiAnalysisResult] = useState<any>(null);
 
   // Close transaction detail modal on Escape
   useEffect(() => {
@@ -93,65 +81,8 @@ export const FinanceTab: React.FC = () => {
     }
   };
 
-  const handleSendNotification = async (platform: 'telegram' | 'whatsapp') => {
-    try {
-      setSendingNotify(true);
-      setNotifyStatus(null);
-      const reportMessage = `📊 *Laporan Keuangan apu.web.id*\n- Total Pemasukan: Rp ${data?.summary?.totalPemasukan?.toLocaleString('id-ID')}\n- Total Pengeluaran: Rp ${data?.summary?.totalPengeluaran?.toLocaleString('id-ID')}\n- *Laba Bersih*: Rp ${data?.summary?.labaBersih?.toLocaleString('id-ID')}\n\nDisimpan di SQLite WAL Mode (HDD Optimized).`;
-
-      const res = await authedPost('/api/v1/notifications', {
-        platform,
-        message: reportMessage,
-      });
-      const json = await res.json();
-      if (json.success) {
-        setNotifyStatus(json.status);
-      }
-    } catch (err) {
-      setNotifyStatus('Gagal mengirim notifikasi.');
-    } finally {
-      setSendingNotify(false);
-    }
-  };
-
-  const handleAnalyzeFinance = async () => {
-    try {
-      setAnalyzingFinance(true);
-      const res = await authedPost('/api/v1/keuangan', { action: 'ai_analyze_finance' });
-      const json = await res.json();
-      if (json.success) {
-        setAiAnalysisResult(json);
-      }
-    } catch (err) {
-      console.error('Failed to run AI financial analysis', err);
-    } finally {
-      setAnalyzingFinance(false);
-    }
-  };
-
   return (
     <div className="space-y-6">
-      <FinanceHeader
-        analyzing={analyzingFinance}
-        onAnalyze={handleAnalyzeFinance}
-        sendingNotify={sendingNotify}
-        onSendNotify={handleSendNotification}
-        showForm={showForm}
-        onToggleForm={() => setShowForm(!showForm)}
-        notifyStatus={notifyStatus}
-      />
-
-      <BotChatParser onRecorded={fetchFinancialData} />
-      <WebhookConsole onWebhookProcessed={fetchFinancialData} />
-
-      {aiAnalysisResult && (
-        <AiAnalysisCard
-          result={aiAnalysisResult}
-          onClose={() => setAiAnalysisResult(null)}
-          onBroadcast={handleSendNotification}
-        />
-      )}
-
       {showForm && <TransactionForm onClose={() => setShowForm(false)} onSaved={fetchFinancialData} />}
 
       {/* Data area: skeleton while first load */}
