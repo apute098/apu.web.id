@@ -7,7 +7,7 @@ Dokumen ini adalah panduan instruksi utama untuk **Hermes Orchestrator Agent** d
 ## 1. ARSITEKTUR HERMES ORCHESTRATOR
 Hermes Orchestrator bertindak sebagai Master Controller yang mengatur interaksi antara:
 1. **Webhook Ingestion Layer**: Memproses pesan masuk dari WhatsApp Gateway & Telegram Bot API via `POST /api/v1/webhook/bot`.
-2. **AI Deductive Parser Engine**: Memanggil Gemini 3.6 Flash / Rule Engine untuk mengabstraksi pesan natural language menjadi entitas transaksi terstruktur (`tipe`, `jumlah`, `kategori`, `keterangan`, `metode`).
+2. **AI Deductive Parser Engine**: Memanggil gemini-2.5-flash / Rule Engine untuk mengabstraksi pesan natural language menjadi entitas transaksi terstruktur (`tipe`, `jumlah`, `kategori`, `keterangan`, `metode`).
 3. **SQLite WAL Persistence Layer**: Menyimpan hasil parsial transaksi secara langsung ke database HDD dalam mode Write-Ahead Logging (WAL) tanpa mock data.
 4. **AI Financial Analysis Orchestrator**: Menghitung metrics keuangan (Total Pemasukan, Total Pengeluaran, Laba Bersih, Profit Margin) dan menghasilkan **Analisa Mandiri AI Finansial** secara independen.
 5. **Auto-Reply Broadcast Dispatcher**: Mengirimkan konfirmasi transaksi dan ringkasan kondisi keuangan server kembali ke pengguna via Telegram/WhatsApp.
@@ -45,5 +45,5 @@ https://apu.web.id/api/v1/webhook/bot
    - `POST /api/v1/keuangan` (`action: "ai_analyze_finance"`): Memicu pembuatan laporan analisa finansial independen.
    - `GET /api/v1/system-status`: Mengambil statistik telemetri Arch Linux x86_64 (CPU, RAM, Temp, HDD I/O, Tunnel).
    - `GET /api/v1/processes`: Memantau proses Linux & systemd service (Cloudflared, Nginx, Hermes Agent, 9Router).
-   - `GET /api/v1/export-json`: Ekspor bundle `project.json` untuk deployment 1-line extractor.
+   - `GET /api/v1/notifications` — notifikasi Telegram
 

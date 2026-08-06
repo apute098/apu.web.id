@@ -27,16 +27,17 @@ export const WebhookConsole: React.FC<Props> = ({ onWebhookProcessed }) => {
     try {
       const res = await fetch('/api/v1/webhook/bot');
       const json = await res.json();
-      if (json.webhookLogs) {
-        setWebhookLogs(json.webhookLogs);
-      }
+      return json.webhookLogs ?? null;
     } catch (err) {
       console.error('Failed to fetch webhook logs', err);
+      return null;
     }
   };
 
   useEffect(() => {
-    fetchWebhookLogs();
+    void fetchWebhookLogs().then((logs) => {
+      if (logs) setWebhookLogs(logs);
+    });
   }, []);
 
   const handleTriggerWebhookSimulate = async () => {

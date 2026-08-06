@@ -12,6 +12,9 @@ data/*.db-shm
 data/oauth.json
 data/*.bak*
 
+# build
+tsconfig.tsbuildinfo
+
 # logs & editor
 *.log
 .DS_Store

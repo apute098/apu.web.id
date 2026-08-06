@@ -18,7 +18,6 @@ import {
   ArrowRight,
   Sparkles,
   MessageCircle,
-  Send,
   Github,
   Heart,
 } from 'lucide-react';
@@ -133,14 +132,6 @@ export default function Home() {
     const interval = setInterval(() => {
       loadInitialData();
     }, 3000);
-
-    // Auto-buka tab Keuangan kalau diakses via keuangan.apu.web.id (fallback safety)
-    if (
-      typeof window !== 'undefined' &&
-      window.location.hostname === 'keuangan.apu.web.id'
-    ) {
-      setActiveTab('keuangan');
-    }
 
     // Sync hash → tab saat navigasi hash berubah (#keuangan / #router)
     const onHashChange = () => {
@@ -260,7 +251,7 @@ export default function Home() {
               >
                 <span className="w-1.5 h-5 rounded-full bg-gradient-to-b from-cyan-400 to-violet-400 shadow-[0_0_12px_rgba(34,211,238,0.6)]" />
                 Modul Portal
-                <span className="text-xs font-mono text-slate-500 font-normal">// 6 modul aktif</span>
+                <span className="text-xs font-mono text-slate-500 font-normal">{'// 6 modul aktif'}</span>
               </motion.h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 md:gap-4">
                 {BENTO_MODULES.map((mod, i) => (
@@ -437,22 +428,16 @@ export default function Home() {
             </ul>
           </div>
 
-          {/* Media Sosial — slot placeholder */}
+          {/* Media Sosial */}
           <div>
             <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Media Sosial</h4>
             <ul className="space-y-2.5">
               {[
                 {
-                  // ISI KONTEN DI SINI — ganti href dengan link WhatsApp asli
-                  name: 'WhatsApp', href: '#', icon: <MessageCircle className="w-4 h-4" />, hover: 'hover:border-emerald-400/40 hover:text-emerald-300',
+                  name: 'WhatsApp', href: 'https://wa.me/62877511509544', icon: <MessageCircle className="w-4 h-4" />, hover: 'hover:border-emerald-400/40 hover:text-emerald-300',
                 },
                 {
-                  // ISI KONTEN DI SINI — ganti href dengan link Telegram asli
-                  name: 'Telegram', href: '#', icon: <Send className="w-4 h-4" />, hover: 'hover:border-sky-400/40 hover:text-sky-300',
-                },
-                {
-                  // ISI KONTEN DI SINI — ganti href dengan link GitHub asli
-                  name: 'GitHub', href: '#', icon: <Github className="w-4 h-4" />, hover: 'hover:border-white/30 hover:text-white',
+                  name: 'GitHub', href: 'https://github.com/apute098', icon: <Github className="w-4 h-4" />, hover: 'hover:border-white/30 hover:text-white',
                 },
               ].map((s) => (
                 <li key={s.name}>

@@ -15,7 +15,7 @@ Portal pribadi & master gateway — dashboard, telemetri hardware, dan financial
 ## Struktur
 
 ```
-apu-webid-next/
+|apu-webid/
 ├── app/          # Next.js app router (pages + API routes)
 ├── components/   # UI components
 ├── hooks/        # React hooks
@@ -30,7 +30,10 @@ apu-webid-next/
 - `GET/POST /api/v1/system-status` — telemetri CPU/RAM/temp/HDD/network
 - `GET/POST /api/v1/processes` — monitoring & kontrol proses/systemd
 - `POST /api/v1/webhook/bot` — webhook Telegram/WhatsApp bot
-- `GET /api/v1/export-json` — export bundle deploy
+- `GET/POST /api/v1/notifications` — notifikasi Telegram
+- `GET/POST /api/v1/hermes` — Hermes AI orchestrator endpoint
+- `GET/POST /api/oauth/authorize` — OAuth authorization
+- `GET/POST /api/oauth/token` — OAuth token exchange
 
 ## Run
 
@@ -40,4 +43,4 @@ bun run dev     # dev
 bun run build && bun run start   # production
 ```
 
-Deploy: unit systemd `apu-webid-next`, Caddy reverse proxy ke :3100, tunnel Cloudflare. Detail: `AGENTS.md`.
+Deploy: unit systemd `apu-webid.service`, Caddy reverse proxy ke :3100, tunnel Cloudflare. Detail: `AGENTS.md`.
