@@ -139,7 +139,7 @@ export const BotChatParser: React.FC<Props> = ({ onRecorded }) => {
         <button
           onClick={() => handleBotChatParse()}
           disabled={parsingBot || !botMessage.trim()}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#22d3ee] shadow-md disabled:opacity-50 transition-all whitespace-nowrap"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#22d3ee] disabled:opacity-50 transition-all whitespace-nowrap"
         >
           <Sparkles className="w-4 h-4" />
           {parsingBot ? 'Parsing Chat...' : 'Kirim Ke Bot'}
@@ -148,7 +148,7 @@ export const BotChatParser: React.FC<Props> = ({ onRecorded }) => {
 
       {/* Live Bot Parse Result Card */}
       {botParseResult && (
-        <div className="p-4 rounded-xl bg-slate-950 border border-emerald-500/40 space-y-2 animate-fadeIn">
+        <div className="p-4 rounded-xl bg-slate-950 border border-emerald-500/40 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4" /> Transaksi Berhasil Dideteksi & Dicatat Otomatis!

@@ -54,7 +54,7 @@ export const FinanceHeader: React.FC<Props> = ({
         <button
           onClick={onAnalyze}
           disabled={analyzing}
-          className="flex items-center justify-center gap-2 px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee]/30 text-[#cffafe] border border-[#22d3ee]/40 hover:bg-[#22d3ee]/50 shadow-md transition-all"
+          className="flex items-center justify-center gap-2 px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee]/30 text-[#cffafe] border border-[#22d3ee]/40 hover:bg-[#22d3ee]/50 transition-all"
         >
           <BrainCircuit className="w-4 h-4 text-[#22d3ee]" />
           {analyzing ? 'Menganalisis...' : 'Analisa AI'}
@@ -76,7 +76,7 @@ export const FinanceHeader: React.FC<Props> = ({
         </button>
         <button
           onClick={onToggleForm}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 shadow-lg shadow-emerald-500/20 transition-all"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all"
         >
           <Plus className="w-4 h-4" /> {showForm ? 'Tutup' : 'Manual'}
         </button>

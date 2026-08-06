@@ -148,7 +148,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
         <button
           type="submit"
           disabled={submitting}
-          className="px-5 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#22d3ee] shadow-md shadow-[#22d3ee]/40 disabled:opacity-50"
+          className="px-5 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#22d3ee] disabled:opacity-50"
         >
           {submitting ? 'Menyimpan...' : 'Simpan Transaksi'}
         </button>

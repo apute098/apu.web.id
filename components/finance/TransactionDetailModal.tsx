@@ -13,7 +13,7 @@ export const TransactionDetailModal: React.FC<Props> = ({ tx, onClose }) => (
     onClick={onClose}
   >
     <div
-      className="floating-card stagger-in w-full max-w-md mx-auto bg-slate-900/95 border-[#22d3ee]/40 p-6 space-y-5"
+      className="floating-card w-full max-w-md mx-auto bg-slate-900/95 border-[#22d3ee]/40 p-6 space-y-5"
       onClick={(e) => e.stopPropagation()}
       role="dialog"
       aria-modal="true"
@@ -83,7 +83,7 @@ export const TransactionDetailModal: React.FC<Props> = ({ tx, onClose }) => (
 
       <button
         onClick={onClose}
-        className="w-full flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
+        className="w-full flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] transition-all"
       >
         Tutup
       </button>

@@ -94,7 +94,7 @@ export const TransactionList: React.FC<Props> = ({
                   <button
                     onClick={onAdd}
                     aria-label="Tambah transaksi manual"
-                    className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
+                    className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] transition-all"
                   >
                     + Tambah Transaksi
                   </button>
@@ -175,7 +175,7 @@ export const TransactionList: React.FC<Props> = ({
           <button
             onClick={onAdd}
             aria-label="Tambah transaksi manual dari kosong"
-            className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] transition-all"
           >
             + Tambah Transaksi
           </button>

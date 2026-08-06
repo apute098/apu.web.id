@@ -26,7 +26,6 @@ export async function loadConfig(): Promise<OAuthConfig> {
 
 // Store in-memory shared antar route (globalThis singleton — aman untuk server runtime)
 declare global {
-  // eslint-disable-next-line no-var
   var __oauthStore: { codes: Map<string, AuthEntry>; tokens: Map<string, AuthEntry> } | undefined;
 }
 

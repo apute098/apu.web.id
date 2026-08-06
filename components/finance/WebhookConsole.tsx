@@ -187,7 +187,7 @@ export const WebhookConsole: React.FC<Props> = ({ onWebhookProcessed }) => {
           <button
             onClick={handleTriggerWebhookSimulate}
             disabled={simulatingWebhook || !webhookSimulatorMessage.trim()}
-            className="w-full md:w-auto flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-md disabled:opacity-50 transition-all whitespace-nowrap"
+            className="w-full md:w-auto flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] disabled:opacity-50 transition-all whitespace-nowrap"
           >
             <Send className="w-3.5 h-3.5" />
             {simulatingWebhook ? 'Mengirim Webhook...' : 'Kirim Webhook POST'}

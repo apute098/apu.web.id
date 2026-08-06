@@ -73,7 +73,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
   if (!systemData) {
     if (error) {
       return (
-        <div className="floating-card border-rose-500/40 bg-rose-500/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-6">
+        <div className="border border-rose-500/30 bg-rose-500/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl">
           <div className="flex items-center gap-3">
             <AlertTriangle className="w-5 h-5 text-rose-400 flex-shrink-0" />
             <div>
@@ -86,7 +86,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
           <button
             onClick={onRetry}
             disabled={refreshing}
-            className="px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all disabled:opacity-50"
+            className="px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 transition-all disabled:opacity-50"
           >
             Coba lagi
           </button>
@@ -107,7 +107,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
   return (
     <div className="space-y-6">
       {error && (
-        <div className="floating-card border-rose-500/40 bg-rose-500/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="border border-rose-500/30 bg-rose-500/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl">
           <div className="flex items-center gap-3">
             <AlertTriangle className="w-5 h-5 text-rose-400 flex-shrink-0" />
             <p className="text-sm font-semibold text-rose-300">
@@ -117,24 +117,24 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
           <button
             onClick={onRetry}
             disabled={refreshing}
-            className="px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] shadow-lg shadow-[#22d3ee]/30 transition-all disabled:opacity-50"
+            className="px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 transition-all disabled:opacity-50"
           >
             Coba lagi
           </button>
         </div>
       )}
       {/* Top Action & Server Banner */}
-      <div className="floating-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-800/80">
+      <div className="border border-slate-700/50 bg-slate-900/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-4 rounded-2xl">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-[#22d3ee]/10 border border-[#22d3ee]/30 flex items-center justify-center text-[#22d3ee]">
+          <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-[#22d3ee]">
             <Server className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+              <h2 className="text-lg font-bold text-white tracking-tight">
                 apu-arch-server
               </h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono bg-[#22d3ee]/20 text-[#67e8f9] border border-[#22d3ee]/30">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono bg-slate-800 text-slate-300 border border-slate-700">
                 {systemData.os}
               </span>
             </div>
@@ -142,7 +142,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
               <span className="flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5 text-slate-500" /> Uptime: {systemData.uptime}
               </span>
-              <span>&bull;</span>
+              <span>·</span>
               <span className="flex items-center gap-1 text-emerald-400">
                 <Database className="w-3.5 h-3.5" /> SQLite WAL Mode Active (HDD Optimized)
               </span>
@@ -166,7 +166,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
       {/* Metric Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {/* CPU Card */}
-        <div className="floating-card relative overflow-hidden h-full stagger-in">
+        <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
               <Cpu className="w-4 h-4 text-[#22d3ee]" /> CPU Usage
@@ -174,14 +174,13 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
             <span className="text-xs font-mono text-slate-500">{cpu?.cores} Cores</span>
           </div>
           <div className="flex items-baseline justify-between mb-2">
-            <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+            <span className="text-2xl font-extrabold text-white font-mono">
               {cpu?.usagePercent}%
             </span>
             <span className="text-xs text-slate-400 truncate max-w-[140px]" title={cpu?.model}>
               {cpu?.model || 'CPU'}
             </span>
           </div>
-          {/* Progress Bar */}
           <div className="progress-track">
             <div
               className={`progress-bar ${
@@ -197,7 +196,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
         </div>
 
         {/* RAM Card */}
-        <div className="floating-card relative overflow-hidden h-full stagger-in glow-green">
+        <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
               <Layers className="w-4 h-4 text-emerald-400" /> RAM Memory
@@ -207,7 +206,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
             </span>
           </div>
           <div className="flex items-baseline justify-between mb-2">
-            <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+            <span className="text-2xl font-extrabold text-white font-mono">
               {ram?.usagePercent}%
             </span>
             <span className="text-xs text-emerald-400 font-mono">
@@ -223,17 +222,17 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
         </div>
 
         {/* HDD Storage Card */}
-        <div className="floating-card relative overflow-hidden h-full stagger-in">
+        <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
               <HardDrive className="w-4 h-4 text-sky-400" /> HDD Storage
             </span>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-sky-500/10 text-sky-400 border border-sky-500/20">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-sky-400 border border-slate-700">
               WAL MODE
             </span>
           </div>
           <div className="flex items-baseline justify-between mb-2">
-            <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+            <span className="text-2xl font-extrabold text-white font-mono">
               {hdd?.usagePercent}%
             </span>
             <span className="text-xs text-slate-400">
@@ -249,7 +248,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
         </div>
 
         {/* Temperature Card */}
-        <div className="floating-card relative overflow-hidden h-full">
+        <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
               <Thermometer
@@ -263,7 +262,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
           </div>
           <div className="flex items-baseline justify-between mb-2">
             <span
-              className={`text-2xl sm:text-3xl font-extrabold font-mono ${
+              className={`text-2xl font-extrabold font-mono ${
                 temperature?.currentC > 70
                   ? 'text-red-400'
                   : temperature?.currentC > 60
@@ -295,7 +294,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
       {/* Network & Disk I/O Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Network Traffic */}
-        <div className="floating-card">
+        <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Wifi className="w-5 h-5 text-[#22d3ee]" />
@@ -326,13 +325,13 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
         </div>
 
         {/* Disk I/O WAL Mode Status */}
-        <div className="floating-card">
+        <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <HardDrive className="w-5 h-5 text-sky-400" />
               <h3 className="font-bold text-white text-sm">HDD Disk I/O & WAL Mode</h3>
             </div>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-emerald-400 border border-slate-700">
               WAL ACTIVE
             </span>
           </div>
@@ -356,7 +355,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
       </div>
 
       {/* Real-time Time Series Chart */}
-      <div className="floating-card">
+      <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
         <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
           <div className="min-w-0">
             <h3 className="font-bold text-white text-sm flex items-center gap-2 flex-wrap">
@@ -408,7 +407,6 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
                   color: '#fff',
                   fontSize: '12px',
                   boxShadow: '0 8px 24px -4px rgba(0,0,0,0.5)',
-                  backdropFilter: 'blur(8px)',
                 }}
                 labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
               />
@@ -458,7 +456,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
       </div>
 
       {/* Services Status Grid */}
-      <div className="floating-card">
+      <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
         <h3 className="font-bold text-white text-sm mb-4 flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-400" />
           Arch Systemd Services Status
