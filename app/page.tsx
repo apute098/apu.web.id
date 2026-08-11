@@ -1,195 +1,265 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React, { useState, useEffect } from 'react';
+import { Navbar, SubdomainTab } from '@/components/Navbar';
 import { HardwareTab } from '@/components/HardwareTab';
 import { FinanceTab } from '@/components/finance/FinanceTab';
-import { Server, Wallet, Terminal, ArrowUpRight } from 'lucide-react';
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { Server, Wallet, Terminal } from 'lucide-react';
 
 export default function Home() {
-  const container = useRef(null);
+  const getInitialTab = (): SubdomainTab => {
+    if (typeof window !== 'undefined') {
+      if (
+        window.location.hostname === 'keuangan.apu.web.id' ||
+        window.location.hash === '#keuangan'
+      ) {
+        return 'keuangan';
+      }
+      if (window.location.hash === '#router') return 'router';
+    }
+    return 'hardware';
+  };
+  const [activeTab, setActiveTab] = useState<SubdomainTab>(getInitialTab);
   const [systemData, setSystemData] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState<'hardware' | 'keuangan' | 'router'>('hardware');
+  const [refreshing, setRefreshing] = useState(false);
+  const [systemError, setSystemError] = useState<string | null>(null);
+
+  const fetchSystemData = async () => {
+    try {
+      setRefreshing(true);
+      setSystemError(null);
+      const res = await fetch('/api/v1/system-status');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      setSystemData(json);
+    } catch (err) {
+      console.error('Failed to fetch system metrics', err);
+      setSystemError('Gagal memuat data sistem. Periksa koneksi server lalu coba lagi.');
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
     const loadInitialData = async () => {
       try {
+        setRefreshing(true);
+        setSystemError(null);
         const res = await fetch('/api/v1/system-status');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
         if (isMounted) setSystemData(json);
-      } catch (err) {}
+      } catch (err) {
+        console.error('Failed to fetch system metrics', err);
+        if (isMounted) setSystemError('Gagal memuat data sistem. Periksa koneksi server lalu coba lagi.');
+      } finally {
+        if (isMounted) setRefreshing(false);
+      }
     };
+
     loadInitialData();
-    const interval = setInterval(loadInitialData, 5000);
-    return () => { isMounted = false; clearInterval(interval); };
+
+    const interval = setInterval(() => {
+      loadInitialData();
+    }, 3000);
+
+    const onHashChange = () => {
+      const h = window.location.hash;
+      if (h === '#keuangan') setActiveTab('keuangan');
+      else if (h === '#router') setActiveTab('router');
+      else if (h === '#home' || h === '') setActiveTab('hardware');
+    };
+    window.addEventListener('hashchange', onHashChange);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+      window.removeEventListener('hashchange', onHashChange);
+    };
   }, []);
 
-  useGSAP(() => {
-    // Hero Entrance
-    gsap.fromTo('.hero-text', { y: 100, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2, stagger: 0.2, ease: 'power4.out' });
-    gsap.fromTo('.hero-image', { scale: 0.8, opacity: 0, rotation: 5 }, { scale: 1, opacity: 1, rotation: 0, duration: 1.5, ease: 'expo.out', delay: 0.4 });
-    
-    // Bento Grid Hover Physics & Stagger
-    gsap.fromTo('.bento-card', 
-      { y: 50, opacity: 0 }, 
-      { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.bento-grid', start: 'top 80%' } }
-    );
+  const switchTab = (tab: SubdomainTab) => {
+    setActiveTab(tab);
+    if (typeof window !== 'undefined') {
+      const hash = tab === 'hardware' ? '#home' : tab === 'keuangan' ? '#keuangan' : '#router';
+      if (window.location.hash !== hash) window.location.hash = hash;
+    }
+  };
 
-    // Pinning Section
-    ScrollTrigger.create({
-      trigger: '.pin-section',
-      start: 'top top',
-      end: '+=1000',
-      pin: '.pin-left',
-      scrub: 1
-    });
-
-  }, { scope: container });
+  const isHome = activeTab === 'hardware';
 
   return (
-    <main ref={container} className="overflow-x-hidden w-full max-w-full bg-[#030303] text-white font-sans selection:bg-white selection:text-black">
-      
-      {/* Navigation */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center justify-between px-6 py-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full w-full max-w-5xl">
-        <div className="font-bold tracking-tighter text-lg">APU.WEB.ID</div>
-        <div className="flex gap-6 text-sm font-medium text-white/60">
-          <button onClick={() => { document.getElementById('bento')?.scrollIntoView({behavior:'smooth'}); setActiveTab('hardware') }} className="hover:text-white transition">Telemetry</button>
-          <button onClick={() => { document.getElementById('bento')?.scrollIntoView({behavior:'smooth'}); setActiveTab('keuangan') }} className="hover:text-white transition">Finance</button>
-          <button onClick={() => { document.getElementById('pin')?.scrollIntoView({behavior:'smooth'}); setActiveTab('router') }} className="hover:text-white transition">Router</button>
-        </div>
-        <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
-      </nav>
+    <div className="min-h-screen text-slate-100 flex flex-col font-sans selection:bg-[#22d3ee] selection:text-[#030309]">
+      {/* Navigation Bar */}
+      <Navbar
+        activeTab={activeTab}
+        setActiveTab={switchTab}
+        serverOnline={systemData?.status === 'online'}
+      />
 
-      {/* Attention: Hero */}
-      <section className="relative min-h-screen flex items-center pt-32 pb-48 px-6 md:px-12 lg:px-24">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_var(--tw-gradient-stops))] from-indigo-900/20 via-[#030303] to-[#030303] -z-10" />
-        
-        <div className="w-full max-w-6xl flex flex-col md:flex-row justify-between items-center gap-16 relative">
-          <div className="w-full md:w-2/3 z-10">
-            <h1 className="hero-text text-[clamp(3rem,6vw,6rem)] leading-[0.95] font-black tracking-tighter mb-8">
-              Intelligence <span className="inline-block w-24 h-12 md:w-32 md:h-16 rounded-full align-middle mx-3 bg-cover bg-center border border-white/20" style={{backgroundImage: 'url(https://picsum.photos/seed/server/800/400?grayscale)'}}></span>
-              <br />& Operations.
-            </h1>
-            <p className="hero-text text-xl md:text-2xl text-white/50 font-light max-w-xl mb-12">
-              Master control portal merging deep financial AI analytics with zero-latency hardware telemetry.
-            </p>
-            <div className="hero-text flex gap-4">
-              <button className="bg-white text-black px-8 py-4 rounded-full font-semibold flex items-center gap-2 hover:scale-105 transition-transform duration-500 ease-out">
-                Enter System <ArrowUpRight className="w-5 h-5" />
-              </button>
-              <button className="bg-white/10 text-white px-8 py-4 rounded-full font-semibold border border-white/10 hover:bg-white/20 transition-colors duration-500 ease-out">
-                View Architecture
-              </button>
-            </div>
-          </div>
-          
-          <div className="hero-image absolute md:relative right-0 -bottom-24 md:bottom-auto w-full md:w-1/3 aspect-[3/4] opacity-30 md:opacity-100 mix-blend-luminosity -z-10 md:z-10">
-            <div className="w-full h-full rounded-[2rem] overflow-hidden bg-white/5 border border-white/10 relative">
-              <img src="https://picsum.photos/seed/abstract/800/1200?grayscale" className="object-cover w-full h-full scale-110" alt="Abstract" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#030303] to-transparent" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Infinite Marquee */}
-      <section className="py-8 bg-white text-black overflow-hidden flex items-center whitespace-nowrap">
-        <div className="flex animate-[marquee_20s_linear_infinite] font-bold text-4xl tracking-tighter uppercase items-center gap-12">
-          <span>Arch Linux x86_64</span> <Server />
-          <span>Cloudflare Tunnel</span> <Terminal />
-          <span>Hermes Orchestrator</span> <Wallet />
-          <span>Arch Linux x86_64</span> <Server />
-          <span>Cloudflare Tunnel</span> <Terminal />
-          <span>Hermes Orchestrator</span> <Wallet />
-        </div>
-      </section>
-
-      {/* Interest: Bento Grid */}
-      <section id="bento" className="bento-grid py-32 md:py-48 px-6 md:px-12 lg:px-24">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-16">System <br/>Modules.</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 grid-flow-dense gap-6 auto-rows-[300px]">
-            {/* Main Interactive Tab Container (Spans 2 cols, 2 rows) */}
-            <div className="bento-card group col-span-1 md:col-span-2 row-span-2 rounded-[2rem] bg-[#0A0A0A] border border-white/5 overflow-hidden relative">
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-br from-indigo-500/10 to-transparent pointer-events-none" />
-              <div className="p-8 h-full flex flex-col relative z-10 overflow-y-auto custom-scrollbar">
-                {activeTab === 'hardware' && <HardwareTab systemData={systemData} refreshing={false} onManualRefresh={()=>{}} error={null} onRetry={()=>{}} />}
-                {activeTab === 'keuangan' && <FinanceTab />}
-                {activeTab === 'router' && (
-                  <div className="w-full h-full">
-                    <iframe src="https://router.apu.web.id" className="w-full h-full min-h-[400px] rounded-xl border border-white/5" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Quick Stats Card */}
-            <div className="bento-card group col-span-1 row-span-1 rounded-[2rem] bg-white/5 border border-white/10 overflow-hidden relative p-8 flex flex-col justify-end">
-              <div className="w-full h-full absolute inset-0 bg-cover bg-center opacity-20 group-hover:scale-105 transition-transform duration-700 ease-out" style={{backgroundImage: 'url(https://picsum.photos/seed/cpu/600/600?grayscale)'}} />
-              <div className="relative z-10">
-                <div className="text-sm font-medium text-white/50 mb-2">Core Usage</div>
-                <div className="text-5xl font-black">{systemData?.cpu?.usagePercent ?? '...'}%</div>
-              </div>
-            </div>
-
-            {/* Action Card */}
-            <div className="bento-card group col-span-1 row-span-1 rounded-[2rem] bg-white text-black overflow-hidden relative p-8 flex flex-col justify-between cursor-pointer hover:scale-[0.98] transition-transform duration-500">
-              <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center text-white">
-                <ArrowUpRight className="w-6 h-6 group-hover:rotate-45 transition-transform duration-500" />
-              </div>
-              <h3 className="text-3xl font-bold tracking-tight">Full <br/>Report</h3>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Desire: GSAP Pinned Section */}
-      <section id="pin" className="pin-section relative min-h-screen py-32 px-6 md:px-12 lg:px-24 bg-[#050505]">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 relative h-full">
-          <div className="pin-left w-full md:w-1/3 h-screen flex flex-col justify-center pb-32">
-            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter leading-[0.9]">Deep<br/>Analysis.</h2>
-            <p className="text-white/40 mt-8 text-lg max-w-sm">
-              The Hermes agent continuously parses natural language inputs into structured SQLite ledgers, computing absolute financial reality.
-            </p>
-          </div>
-          <div className="w-full md:w-2/3 flex flex-col gap-12 md:pl-24 pt-[50vh] pb-[50vh]">
-            {[1,2,3,4].map((i) => (
-              <div key={i} className="aspect-[16/9] w-full rounded-2xl bg-white/5 border border-white/10 overflow-hidden relative group">
-                <img src={`https://picsum.photos/seed/finance${i}/1000/600?grayscale`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-60 mix-blend-screen" alt="" />
-                <div className="absolute bottom-8 left-8">
-                  <div className="text-4xl font-bold">Node {i}</div>
-                  <div className="text-white/50">Processing sequence</div>
+      {/* Main Content Area */}
+      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto p-3 sm:p-4 md:p-6 lg:p-8 pb-24 md:pb-8">
+        {isHome && (
+          <>
+            {/* ===== Minimal Hero Header ===== */}
+            <header className="mb-6 md:mb-8 px-1">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                    apu.web.id
+                  </h1>
+                  <p className="text-xs text-slate-400 mt-1 flex items-center gap-2">
+                    <span className="relative flex w-2 h-2">
+                      <span className={`absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping ${systemData?.status === 'online' ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                      <span className={`relative inline-flex rounded-full w-2 h-2 ${systemData?.status === 'online' ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                    </span>
+                    {systemData?.status === 'online' ? 'Server Online' : 'Menghubungkan...'}
+                    <span className="text-slate-600">·</span>
+                    Arch Linux x86_64
+                    <span className="text-slate-600">·</span>
+                    Cloudflare Tunnel
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => switchTab('hardware')}
+                    className="px-4 py-2 min-h-[44px] rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition-all"
+                  >
+                    <Server className="w-3.5 h-3.5 inline mr-1.5" />
+                    Telemetri
+                  </button>
+                  <button
+                    onClick={() => switchTab('keuangan')}
+                    className="px-4 py-2 min-h-[44px] rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition-all"
+                  >
+                    <Wallet className="w-3.5 h-3.5 inline mr-1.5" />
+                    Keuangan
+                  </button>
+                  <button
+                    onClick={() => switchTab('router')}
+                    className="px-4 py-2 min-h-[44px] rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition-all"
+                  >
+                    <Terminal className="w-3.5 h-3.5 inline mr-1.5" />
+                    Router
+                  </button>
                 </div>
               </div>
-            ))}
+            </header>
+          </>
+        )}
+
+        {activeTab === 'hardware' && (
+          <HardwareTab
+            systemData={systemData}
+            refreshing={refreshing}
+            onManualRefresh={fetchSystemData}
+            error={systemError}
+            onRetry={fetchSystemData}
+          />
+        )}
+
+        {activeTab === 'keuangan' && <FinanceTab />}
+
+        {/* Router — embedded 9router gateway (iframe, bukan tab baru) */}
+        {activeTab === 'router' && (
+          <div className="rounded-2xl border border-white/10 bg-[#05050d] p-2 md:p-3">
+            <div className="flex items-center justify-between px-2 py-2.5 gap-2 flex-wrap mb-2">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300">
+                  <Terminal className="w-4 h-4" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-bold text-white">9Router Gateway</h2>
+                  <p className="text-xs text-slate-400">router.apu.web.id — embedded</p>
+                </div>
+              </div>
+              <a
+                href="https://router.apu.web.id"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-4 py-2.5 min-h-[44px] rounded-lg text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition-all"
+              >
+                Buka di tab baru ↗
+              </a>
+            </div>
+            <iframe
+              src="https://router.apu.web.id"
+              title="9Router Gateway"
+              className="w-full h-[72vh] min-h-[480px] rounded-xl border border-white/5 bg-[#030309]"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+            />
+          </div>
+        )}
+      </main>
+
+      {/* ===== Footer Sederhana ===== */}
+      <footer className="relative z-10 border-t border-white/10 bg-[#05050d]/80 mt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {/* Brand */}
+          <div>
+            <div className="flex items-center gap-2.5 mb-3">
+              <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300">
+                <Server className="w-4 h-4" />
+              </div>
+              <h3 className="font-bold text-white text-sm">apu.web.id</h3>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Master Server Portal — telemetri hardware, keuangan AI, dan 9Router Gateway.
+            </p>
+            <div className="mt-3 inline-flex flex-wrap items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/50 border border-slate-700/50">
+              <span className="relative flex w-2 h-2">
+                <span
+                  className={`absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping ${
+                    systemData?.status === 'online' ? 'bg-emerald-400' : 'bg-amber-400'
+                  }`}
+                />
+                <span
+                  className={`relative inline-flex rounded-full w-2 h-2 ${
+                    systemData?.status === 'online' ? 'bg-emerald-400' : 'bg-amber-400'
+                  }`}
+                />
+              </span>
+              <span className="text-[11px] font-mono text-slate-300">
+                {systemData?.status === 'online' ? 'Server Online' : 'Menghubungkan...'}
+              </span>
+              <span className="text-[10px] font-mono text-slate-500">
+                uptime {systemData?.uptime ?? '—'}
+              </span>
+            </div>
+          </div>
+
+          {/* Media Sosial */}
+          <div>
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Media Sosial</h4>
+            <ul className="space-y-2.5">
+              <li>
+                <a
+                  href="https://wa.me/62877511509544"
+                  className="inline-flex items-center gap-2.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+                >
+                  WhatsApp
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/apute098"
+                  className="inline-flex items-center gap-2.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+                >
+                  GitHub
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Copyright */}
+          <div className="sm:col-span-2 lg:col-span-1 flex flex-col justify-end items-start lg:items-end">
+            <p className="text-[11px] text-slate-600 font-mono">
+              &copy; {new Date().getFullYear()} apu.web.id
+            </p>
           </div>
         </div>
-      </section>
-
-      {/* Action: Footer */}
-      <footer className="py-32 md:py-48 px-6 md:px-12 lg:px-24 bg-white text-black flex flex-col items-center justify-center text-center">
-        <h2 className="text-[clamp(4rem,8vw,10rem)] font-black tracking-tighter leading-none mb-8">INITIATE.</h2>
-        <button className="bg-black text-white px-12 py-6 rounded-full font-bold text-xl hover:scale-105 transition-transform duration-500 ease-out flex items-center gap-4">
-          Connect to Server <ArrowUpRight className="w-6 h-6" />
-        </button>
-        <div className="mt-24 text-black/40 font-medium">© {new Date().getFullYear()} apu.web.id. Orchestrated by Hermes.</div>
       </footer>
-      
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-      `}} />
-    </main>
+    </div>
   );
 }
