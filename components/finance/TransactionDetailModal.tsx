@@ -36,15 +36,15 @@ export const TransactionDetailModal: React.FC<Props> = ({ tx, onClose }) => (
         <span
           className={`px-2.5 py-1 rounded font-mono text-[10px] ${
             tx.tipe === 'Pemasukan'
-              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-              : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+              ? 'bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]/20'
+              : 'bg-[#f43f5e]/10 text-[#f43f5e] border border-[#f43f5e]/20'
           }`}
         >
           {tx.tipe}
         </span>
         <span
           className={`font-mono font-bold text-xl ${
-            tx.tipe === 'Pemasukan' ? 'text-emerald-400' : 'text-rose-400'
+            tx.tipe === 'Pemasukan' ? 'text-[#22C55E]' : 'text-[#f43f5e]'
           }`}
         >
           {tx.tipe === 'Pemasukan' ? '+' : '-'} {formatRupiah(tx.jumlah)}
@@ -83,7 +83,7 @@ export const TransactionDetailModal: React.FC<Props> = ({ tx, onClose }) => (
 
       <button
         onClick={onClose}
-        className="w-full flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] transition-all"
+        className="w-full flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#06b6d4] transition-all"
       >
         Tutup
       </button>
