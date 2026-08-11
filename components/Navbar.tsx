@@ -61,7 +61,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
-                Cloudflare Tunnel Active · Arch Linux x86_64
+                Cloudflare Tunnel Active <span className="text-slate-500/60">·</span> Arch Linux x86_64
               </p>
             </div>
           </div>

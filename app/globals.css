@@ -1,27 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* Flat dark palette */
-  --bg-base: #0a0a10;
-  --bg-elevated: #0f0f18;
-  --bg-card: rgba(255, 255, 255, 0.03);
-  --bg-card-solid: #111118;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
+  --accent: #22d3ee;
+  --accent-soft: rgba(34, 211, 238, 0.1);
   --text-primary: #e2e8f0;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
-  --accent: #22d3ee;
-  --accent-soft: rgba(34, 211, 238, 0.1);
-  --green: #22C55E;
-  --red: #EF4444;
-  --amber: #F59E0B;
-  --sky: #38BDF8;
+  --border-subtle: rgba(255, 255, 255, 0.08);
   --radius-card: 0.75rem;
   --radius-pill: 999px;
-  --font-sans: 'Plus Jakarta Sans', 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'Fira Code', monospace;
+  --font-sans: 'Geist Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'Fira Code', monospace;
 }
 
 @layer base {
@@ -31,7 +21,7 @@
     scroll-behavior: smooth;
   }
   body {
-    background-color: var(--bg-base);
+    background-color: #0a0a10;
     color: var(--text-primary);
     font-family: var(--font-sans);
     overflow-x: hidden;
@@ -51,7 +41,7 @@
 
 /* ============ Flat Card ============ */
 .floating-card {
-  background: var(--bg-card);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   padding: 1rem;
@@ -144,13 +134,13 @@
 .hume-dot {
   width: 8px; height: 8px;
   border-radius: 50%;
-  background: var(--green);
+  background: #22C55E;
   display: inline-block;
 }
 
 /* ============ Scrollbar ============ */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-track { background: #0a0a10; }
 ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #334155; }
 .scrollbar-none { scrollbar-width: none; }

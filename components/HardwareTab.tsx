@@ -142,7 +142,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
               <span className="flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5 text-slate-500" /> Uptime: {systemData.uptime}
               </span>
-              <span>·</span>
+              <span className="text-slate-500/60">·</span>
               <span className="flex items-center gap-1 text-emerald-400">
                 <Database className="w-3.5 h-3.5" /> SQLite WAL Mode Active (HDD Optimized)
               </span>
@@ -163,10 +163,10 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
         </div>
       </div>
 
-      {/* Metric Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-        {/* CPU Card */}
-        <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
+      {/* Metric Cards Grid — asymmetric: wide CPU + narrow siblings */}
+      <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 md:gap-4">
+        {/* CPU Card — wide col (2/5) */}
+        <div className="sm:col-span-2 border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
               <Cpu className="w-4 h-4 text-[#22d3ee]" /> CPU Usage
