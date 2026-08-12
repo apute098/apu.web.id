@@ -50,7 +50,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
       className="floating-card border-[#22d3ee]/40 bg-slate-900/90 space-y-4"
     >
       <h3 className="text-sm font-bold text-white flex items-center gap-2">
-        <Plus className="w-4 h-4 text-[#22d3ee]" /> Tambah Transaksi Keuangan Manual
+        <Plus className="w-4 h-4 text-[#22C55E]" /> Tambah Transaksi Keuangan Manual
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -148,7 +148,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
         <button
           type="submit"
           disabled={submitting}
-          className="px-5 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#22d3ee] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-5 py-2 rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#22d3ee] disabled:opacity-50"
         >
           {submitting ? 'Menyimpan...' : 'Simpan Transaksi'}
         </button>

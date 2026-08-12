@@ -97,7 +97,7 @@ export const FinanceTab: React.FC = () => {
           {error && (
             <div className="floating-card border-rose-500/40 bg-rose-500/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <AlertTriangle className="w-5 h-5 text-rose-400 flex-shrink-0" />
+                <AlertTriangle className="w-5 h-5 text-[#f43f5e] flex-shrink-0" />
                 <div>
                   <p className="text-sm font-semibold text-rose-300">Gagal memuat data keuangan</p>
                   <p className="text-xs text-slate-400 mt-0.5">
@@ -107,7 +107,7 @@ export const FinanceTab: React.FC = () => {
               </div>
               <button
                 onClick={fetchFinancialData}
-                className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#0ea5e9] transition-all"
+                className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#06b6d4] transition-all"
               >
                 Coba lagi
               </button>
