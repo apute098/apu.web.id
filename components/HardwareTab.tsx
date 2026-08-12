@@ -123,8 +123,8 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
           </button>
         </div>
       )}
-      {/* Top Action & Server Banner */}
-      <div className="border border-slate-700/50 bg-slate-900/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-4 rounded-2xl">
+      {/* Top Action & Server Banner — animated conic gradient border */}
+      <div className="border-glow flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-4 rounded-2xl">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-[#22d3ee]">
             <Server className="w-6 h-6" />
@@ -166,7 +166,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
       {/* Metric Cards Grid — asymmetric: wide CPU + narrow siblings */}
       <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 md:gap-4">
         {/* CPU Card — wide col (2/5) */}
-        <div className="sm:col-span-2 border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
+        <div className="sm:col-span-2 gradient-border p-4 rounded-2xl">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
               <Cpu className="w-4 h-4 text-[#22d3ee]" /> CPU Usage
@@ -196,7 +196,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
         </div>
 
         {/* RAM Card */}
-        <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
+        <div className="gradient-border p-4 rounded-2xl">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
               <Layers className="w-4 h-4 text-emerald-400" /> RAM Memory
@@ -222,7 +222,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
         </div>
 
         {/* HDD Storage Card */}
-        <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
+        <div className="gradient-border p-4 rounded-2xl">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
               <HardDrive className="w-4 h-4 text-sky-400" /> HDD Storage
@@ -248,7 +248,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
         </div>
 
         {/* Temperature Card */}
-        <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-2xl">
+        <div className="gradient-border p-4 rounded-2xl">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
               <Thermometer

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Activity, Server, Wallet, Terminal } from 'lucide-react';
+import Logo3D from '@/components/Logo3D';
 
 export type SubdomainTab =
   | 'hardware'
@@ -49,8 +50,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           {/* Brand & Live Status */}
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300">
-              <Activity className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center overflow-hidden">
+              <Logo3D size={40} />
             </div>
             <div>
               <div className="flex items-center gap-2">
