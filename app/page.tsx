@@ -6,9 +6,12 @@ import React, { useState, useEffect } from 'react';
 import { Navbar, SubdomainTab } from '@/components/Navbar';
 import { AdminControlTab } from '@/components/AdminControlTab';
 import { AiHubTab } from '@/components/AiHubTab';
+import LandingPage from '@/components/landing/LandingPage';
 import { Lock, LogIn, ShieldAlert, KeyRound } from 'lucide-react';
 
 export default function Home() {
+  // view: 'landing' (website profesional, default) | 'app' (dashboard)
+  const [view, setView] = useState<'landing' | 'app'>('landing');
   const [activeTab, setActiveTab] = useState<SubdomainTab>('ai-hub');
   const [systemData, setSystemData] = useState<any>(null);
   const [systemError, setSystemError] = useState<string | null>(null);
@@ -32,9 +35,15 @@ export default function Home() {
         setIsAdminSession(true);
       }
       const hash = window.location.hash;
+      // Hash app → dashboard langsung; selain itu landing
       if (hash === '#admin') {
+        setView('app');
         setActiveTab('admin');
+      } else if (hash === '#ai-hub' || hash === '#app') {
+        setView('app');
+        setActiveTab('ai-hub');
       } else {
+        setView('landing');
         setActiveTab('ai-hub');
       }
     }
@@ -119,8 +128,17 @@ export default function Home() {
 
     const onHashChange = () => {
       const h = window.location.hash;
-      if (h === '#admin') setActiveTab('admin');
-      else setActiveTab('ai-hub');
+      // Landing anchors (#about/#skills/...) tidak mengganti view
+      if (h === '#admin') {
+        setView('app');
+        setActiveTab('admin');
+      } else if (h === '#ai-hub' || h === '#app') {
+        setView('app');
+        setActiveTab('ai-hub');
+      } else if (h === '' || h === '#') {
+        // kosong saat di app → tetap app; saat di landing → tetap landing
+        setActiveTab('ai-hub');
+      }
     };
     window.addEventListener('hashchange', onHashChange);
 
@@ -131,7 +149,7 @@ export default function Home() {
     };
   }, []);
 
-  // IntersectionObserver for scroll reveals
+  // IntersectionObserver for scroll reveals — re-run saat view berubah
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -151,7 +169,7 @@ export default function Home() {
       elements.forEach((el) => observer.unobserve(el));
       observer.disconnect();
     };
-  }, []);
+  }, [view]);
 
   const switchTab = (tab: SubdomainTab) => {
     setActiveTab(tab);
@@ -160,6 +178,11 @@ export default function Home() {
       if (window.location.hash !== hash) window.location.hash = hash;
     }
   };
+
+  // Landing = pintu depan profesional; app = dashboard (2 tab)
+  if (view === 'landing') {
+    return <LandingPage />;
+  }
 
   return (
     <div className="min-h-screen text-slate-100 flex flex-col font-sans selection:bg-[#22d3ee] selection:text-[#030309] bg-slate-950">

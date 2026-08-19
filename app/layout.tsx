@@ -4,8 +4,9 @@ import './globals.css'; // Global styles
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'APU Dashboard — Server Monitor, Finance & AI Hub',
-  description: 'apu.web.id — Arch Linux server monitor, finance tracker, process manager & AI hub',
+  title: 'apu.web.id — Homelab Engineer & AI Tinkerer',
+  description:
+    'apu.web.id — Arch Linux homelab, AI gateway (9Router), Hermes agent, server monitor & finance tracker. Portfolio + dashboard live.',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
