@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { Globe, Bot, Network } from 'lucide-react';
 
 // ============================================================
 // Landing + Portfolio page untuk apu.web.id
@@ -33,6 +34,7 @@ const PROJECTS = [
       'Self-hosted web portal: server monitor, finance tracker, AI hub & dashboard terpadu.',
     githubLink: 'https://github.com/apute098',
     tag: 'Next.js 16',
+    icon: Globe,
   },
   {
     title: 'Hermes AI Agent',
@@ -40,8 +42,16 @@ const PROJECTS = [
       'AI assistant agent (Nous Research) dengan durable session, memory & tool-use.',
     githubLink: 'https://github.com/apute098',
     tag: 'AI Agent',
+    icon: Bot,
   },
-  // ISI KONTEN DI SINI: tambah project lain (repo GitHub apute098)
+  {
+    title: '9Router AI Gateway',
+    description:
+      'AI gateway dengan routing provider & fallback untuk agent dan tools.',
+    githubLink: 'https://github.com/apute098',
+    tag: 'AI Gateway',
+    icon: Network,
+  },
 ];
 
 const EXPERIENCE = [
@@ -109,14 +119,14 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen text-slate-100 flex flex-col font-sans bg-slate-950 overflow-x-hidden">
       {/* Ambient orbs, tema app */}
-      <div className="fixed top-1/4 -left-1/4 w-[600px] h-[600px] rounded-none bg-cyan-500/8 pointer-events-none z-0 animate-float-orb" />
+      <div className="fixed top-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-cyan-500/8 pointer-events-none z-0 animate-float-orb" />
       <div
-        className="fixed bottom-1/4 -right-1/4 w-[500px] h-[500px] rounded-none bg-cyan-500/8 pointer-events-none z-0 animate-float-orb-reverse"
+        className="fixed bottom-1/4 -right-1/4 w-[500px] h-[500px] rounded-full bg-cyan-500/8 pointer-events-none z-0 animate-float-orb-reverse"
         style={{ animationDelay: '3s' }}
       />
 
       {/* ===== NAV ===== */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/10 py-4 px-6 md:px-8">
+      <nav className="fixed top-0 left-0 right-0 z-50 liquid-glass border-b border-white/10 py-4 px-6 md:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between flex-col md:flex-row gap-4 md:gap-0">
           <button onClick={() => scrollTo('hero')} className="text-left focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none">
             <span className="text-xl font-bold tracking-tighter text-cyan-400">
@@ -146,7 +156,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => enterDashboard('ai-hub')}
-              className="px-4 py-2 rounded-none bg-cyan-400 text-slate-950 font-sans text-xs font-bold hover:bg-cyan-300 transition-all shadow-lg shadow-cyan-500/20 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
+              className="px-4 py-2 rounded-full bg-cyan-400 text-slate-950 font-sans text-xs font-bold hover:bg-cyan-300 transition-all shadow-lg shadow-cyan-500/20 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
               Dashboard
             </button>
@@ -193,13 +203,13 @@ export default function LandingPage() {
           <div className="inline-flex flex-wrap items-center justify-center gap-4">
             <button
               onClick={() => enterDashboard('ai-hub')}
-              className="gradient-border px-6 py-3 rounded-none bg-slate-950/60 text-cyan-400 font-sans text-xs font-bold hover:brightness-125 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
+              className="gradient-border px-6 py-3 rounded-full bg-slate-950/60 text-cyan-400 font-sans text-xs font-bold hover:brightness-125 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
               Buka Dashboard
             </button>
             <button
               onClick={() => scrollTo('projects')}
-              className="px-6 py-3 rounded-none bg-slate-900 border border-white/10 text-white font-sans text-xs font-bold hover:bg-slate-950 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
+              className="px-6 py-3 rounded-full bg-slate-900 border border-white/10 text-white font-sans text-xs font-bold hover:bg-slate-950 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
               Lihat Project
             </button>
@@ -220,8 +230,8 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <article className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all lg:col-span-2">
-              <div className="w-12 h-12 rounded-none bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
+            <article className="group liquid-glass border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all lg:col-span-2">
+              <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" strokeWidth={1.5}>
                   <path d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
@@ -234,8 +244,8 @@ export default function LandingPage() {
               </p>
             </article>
 
-            <article className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all">
-              <div className="w-12 h-12 rounded-none bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
+            <article className="group liquid-glass border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all">
+              <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" strokeWidth={1.5}>
                   <path d="M12 3v18M3 12h18" />
                 </svg>
@@ -248,8 +258,8 @@ export default function LandingPage() {
               </p>
             </article>
 
-            <article className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all">
-              <div className="w-12 h-12 rounded-none bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
+            <article className="group liquid-glass border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all">
+              <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" strokeWidth={1.5}>
                   <path d="M12 8v4l3 3M12 21a9 9 0 100-18 9 9 0 000 18z" />
                 </svg>
@@ -280,7 +290,7 @@ export default function LandingPage() {
             {SKILLS.map((label, i) => (
               <div
                 key={i}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 border border-white/10 text-sm"
+                className="flex items-center gap-2 px-4 py-2 rounded-full liquid-glass border border-white/10 text-sm"
               >
                 <span className="w-3 h-3 rounded-full flex-shrink-0 bg-cyan-400" />
                 {label}
@@ -305,10 +315,13 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {PROJECTS.map((project, i) => (
               <article
-                key={i}
-                className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all flex flex-col"
-              >
-                <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
+                                key={i}
+                                className="group liquid-glass border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all flex flex-col"
+                              >
+                                <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
+                                  <project.icon className="w-6 h-6 text-cyan-400" strokeWidth={1.5} />
+                                </div>
+                                <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
                   {project.title}
                 </h3>
                 <p className="text-slate-400 text-sm mt-2 flex-1">{project.description}</p>
@@ -317,7 +330,7 @@ export default function LandingPage() {
                     href={project.githubLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-none bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium hover:bg-cyan-500/30 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
+                    className="px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium hover:bg-cyan-500/30 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
                   >
                     GitHub
                   </a>
@@ -335,7 +348,7 @@ export default function LandingPage() {
               href="https://github.com/apute098"
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-slate-900/30 border border-dashed border-white/15 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/40 transition-all flex flex-col items-center justify-center text-center min-h-[180px] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
+              className="group liquid-glass border border-dashed border-white/15 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/40 transition-all flex flex-col items-center justify-center text-center min-h-[180px] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
               <svg className="w-8 h-8 text-slate-500 group-hover:text-cyan-400 transition-colors mb-3" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z" />
@@ -372,7 +385,7 @@ export default function LandingPage() {
                   }`}
                 >
                   <span className="absolute left-2 md:left-1/2 top-1.5 w-4 h-4 rounded-full bg-cyan-400 border-4 border-slate-950 md:-translate-x-1/2" />
-                  <div className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:border-cyan-500/30 transition-all">
+                  <div className="group liquid-glass border border-white/10 rounded-2xl p-6 hover:border-cyan-500/30 transition-all">
                     <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
                       {entry.role}
                     </h3>
@@ -400,9 +413,9 @@ export default function LandingPage() {
               href="https://wa.me/62877511509544"
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-5 hover:border-green-500/40 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
+              className="group liquid-glass border border-white/10 rounded-2xl p-5 hover:border-green-500/40 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
-              <div className="w-10 h-10 rounded-none bg-green-500/20 border border-green-500/30 flex items-center justify-center mx-auto mb-3">
+              <div className="w-10 h-10 rounded-full bg-green-500/20 border border-green-500/30 flex items-center justify-center mx-auto mb-3">
                 <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                 </svg>
@@ -416,9 +429,9 @@ export default function LandingPage() {
               href="https://t.me/locomaniac_bot"
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-5 hover:border-cyan-500/40 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
+              className="group liquid-glass border border-white/10 rounded-2xl p-5 hover:border-cyan-500/40 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
-              <div className="w-10 h-10 rounded-none bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center mx-auto mb-3">
+              <div className="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center mx-auto mb-3">
                 <svg className="w-5 h-5 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
                 </svg>
@@ -428,8 +441,8 @@ export default function LandingPage() {
               <div className="text-xs text-slate-500 mt-2">Bot aktif 24/7</div>
             </a>
 
-            <div className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
-              <div className="w-10 h-10 rounded-none bg-slate-400/30 flex items-center justify-center mx-auto mb-3">
+            <div className="group liquid-glass border border-white/10 rounded-2xl p-5">
+              <div className="w-10 h-10 rounded-full bg-slate-400/30 flex items-center justify-center mx-auto mb-3">
                 <svg className="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" strokeWidth={1.5}>
                   <path d="M3 8l9 6 9-6M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z" />
                 </svg>
@@ -444,9 +457,9 @@ export default function LandingPage() {
               href="https://github.com/apute098"
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-5 hover:border-cyan-500/40 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
+              className="group liquid-glass border border-white/10 rounded-2xl p-5 hover:border-cyan-500/40 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
-              <div className="w-10 h-10 rounded-none bg-slate-400/30 flex items-center justify-center mx-auto mb-3">
+              <div className="w-10 h-10 rounded-full bg-slate-400/30 flex items-center justify-center mx-auto mb-3">
                 <svg className="w-5 h-5 text-slate-300" fill="currentColor" viewBox="0 0 16 16">
                   <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z" />
                 </svg>
@@ -470,7 +483,7 @@ export default function LandingPage() {
           </p>
           <button
             onClick={() => enterDashboard('ai-hub')}
-            className="gradient-border px-6 py-3 rounded-none bg-slate-950/60 text-cyan-400 font-sans text-xs font-bold hover:brightness-125 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
+            className="gradient-border px-6 py-3 rounded-full bg-slate-950/60 text-cyan-400 font-sans text-xs font-bold hover:brightness-125 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
           >
             Buka Dashboard
           </button>
