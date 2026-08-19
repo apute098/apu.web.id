@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 // ============================================================
 // Landing + Portfolio page untuk apu.web.id
 // Pintu depan profesional; dashboard (ai-hub/admin) tetap di belakang.
-// Entrance ke dashboard: set hash '#ai-hub' / '#admin' — page.tsx yang listen.
+// Entrance ke dashboard: set hash '#ai-hub' / '#admin'. page.tsx yang listen.
 // ============================================================
 
 // ==== ISI KONTEN DI SINI: ganti placeholder di bawah dengan data pribadi ====
@@ -47,28 +47,28 @@ const PROJECTS = [
 const EXPERIENCE = [
   {
     role: 'Store Ops & Service Crew',
-    company: 'Seblak Dower — Purwokerto',
-    period: '2022 — sekarang',
+    company: 'Seblak Dower, Purwokerto',
+    period: '2022 - sekarang',
     description:
       'Operasional store, service & tim. // ISI KONTEN DI SINI: deskripsi singkat pekerjaan.',
   },
   {
     role: 'Service Crew',
-    company: 'RM Pempek Ny Kamto — Yogyakarta',
-    period: '2019 — 2022',
+    company: 'RM Pempek Ny Kamto, Yogyakarta',
+    period: '2019 - 2022',
     description:
       'Service crew restoran. // ISI KONTEN DI SINI: deskripsi singkat pekerjaan.',
   },
   {
     role: 'Staf Operasional',
     company: 'PT Propack Kreasi Mandiri',
-    period: '2018 — 2019',
+    period: '2018 - 2019',
     description:
       'Staf operasional produksi. // ISI KONTEN DI SINI: deskripsi singkat pekerjaan.',
   },
   {
     role: 'Homelab Engineer',
-    company: 'Self-Hosted — apu.web.id',
+    company: 'Self-Hosted, apu.web.id',
     period: 'Aktif',
     description:
       'Merawat server Arch Linux x86_64, 9Router AI Gateway (localhost:20128), Hermes agent & layanan self-hosted lain.',
@@ -108,7 +108,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen text-slate-100 flex flex-col font-sans bg-slate-950 overflow-x-hidden">
-      {/* Ambient orbs — tema app */}
+      {/* Ambient orbs, tema app */}
       <div className="fixed top-1/4 -left-1/4 w-[600px] h-[600px] rounded-none bg-cyan-500/8 pointer-events-none z-0 animate-float-orb" />
       <div
         className="fixed bottom-1/4 -right-1/4 w-[500px] h-[500px] rounded-none bg-cyan-500/8 pointer-events-none z-0 animate-float-orb-reverse"
@@ -118,7 +118,7 @@ export default function LandingPage() {
       {/* ===== NAV ===== */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/10 py-4 px-6 md:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between flex-col md:flex-row gap-4 md:gap-0">
-          <button onClick={() => scrollTo('hero')} className="text-left">
+          <button onClick={() => scrollTo('hero')} className="text-left focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none">
             <span className="text-xl font-bold tracking-tighter text-cyan-400">
               apu<span className="text-green-500">.web.id</span>
             </span>
@@ -136,7 +136,7 @@ export default function LandingPage() {
               <button
                 key={id}
                 onClick={() => scrollTo(id)}
-                className="text-slate-400 hover:text-cyan-400 transition-colors text-sm font-medium"
+                className="text-slate-400 hover:text-cyan-400 transition-colors text-sm font-medium focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
               >
                 {label}
               </button>
@@ -146,7 +146,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => enterDashboard('ai-hub')}
-              className="px-4 py-2 rounded-none bg-cyan-400 text-slate-950 font-sans text-xs font-bold hover:bg-cyan-300 transition-all shadow-lg shadow-cyan-500/20"
+              className="px-4 py-2 rounded-none bg-cyan-400 text-slate-950 font-sans text-xs font-bold hover:bg-cyan-300 transition-all shadow-lg shadow-cyan-500/20 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
               Dashboard
             </button>
@@ -193,13 +193,13 @@ export default function LandingPage() {
           <div className="inline-flex flex-wrap items-center justify-center gap-4">
             <button
               onClick={() => enterDashboard('ai-hub')}
-              className="gradient-border px-6 py-3 rounded-none bg-slate-950/60 text-cyan-400 font-sans text-xs font-bold hover:brightness-125 transition-all focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-slate-950"
+              className="gradient-border px-6 py-3 rounded-none bg-slate-950/60 text-cyan-400 font-sans text-xs font-bold hover:brightness-125 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
               Buka Dashboard
             </button>
             <button
               onClick={() => scrollTo('projects')}
-              className="px-6 py-3 rounded-none bg-slate-900 border border-white/10 text-white font-sans text-xs font-bold hover:bg-slate-950 transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:ring-offset-slate-950"
+              className="px-6 py-3 rounded-none bg-slate-900 border border-white/10 text-white font-sans text-xs font-bold hover:bg-slate-950 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
               Lihat Project
             </button>
@@ -220,7 +220,7 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <article className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all">
+            <article className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all lg:col-span-2">
               <div className="w-12 h-12 rounded-none bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" strokeWidth={1.5}>
                   <path d="M4 6h16M4 12h16M4 18h16" />
@@ -230,7 +230,7 @@ export default function LandingPage() {
                 Arch Linux Homelab
               </h3>
               <p className="text-slate-400 text-sm mt-1">
-                Server Arch Linux x86_64 di apu.web.id — server monitor, finance tracker, AI hub & bot.
+                Server Arch Linux x86_64 di apu.web.id: server monitor, finance tracker, AI hub & bot.
               </p>
             </article>
 
@@ -317,7 +317,7 @@ export default function LandingPage() {
                     href={project.githubLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-none bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium hover:bg-cyan-500/30 transition-all"
+                    className="px-3 py-1.5 rounded-none bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium hover:bg-cyan-500/30 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
                   >
                     GitHub
                   </a>
@@ -335,7 +335,7 @@ export default function LandingPage() {
               href="https://github.com/apute098"
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-slate-900/30 border border-dashed border-white/15 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/40 transition-all flex flex-col items-center justify-center text-center min-h-[180px]"
+              className="group bg-slate-900/30 border border-dashed border-white/15 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/40 transition-all flex flex-col items-center justify-center text-center min-h-[180px] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
               <svg className="w-8 h-8 text-slate-500 group-hover:text-cyan-400 transition-colors mb-3" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z" />
@@ -392,7 +392,7 @@ export default function LandingPage() {
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">Kontak</h2>
           <p className="text-slate-400 text-lg max-w-xl mx-auto leading-relaxed">
-            Bot aktif 24/7 — konsultasi, kolaborasi, atau sekadar ngobrol.
+            Bot aktif 24/7. Konsultasi, kolaborasi, atau sekadar ngobrol.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
@@ -400,7 +400,7 @@ export default function LandingPage() {
               href="https://wa.me/62877511509544"
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-5 hover:border-green-500/40 transition-all"
+              className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-5 hover:border-green-500/40 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
               <div className="w-10 h-10 rounded-none bg-green-500/20 border border-green-500/30 flex items-center justify-center mx-auto mb-3">
                 <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 24 24">
@@ -416,7 +416,7 @@ export default function LandingPage() {
               href="https://t.me/locomaniac_bot"
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-5 hover:border-cyan-500/40 transition-all"
+              className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-5 hover:border-cyan-500/40 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
               <div className="w-10 h-10 rounded-none bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center mx-auto mb-3">
                 <svg className="w-5 h-5 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
@@ -444,7 +444,7 @@ export default function LandingPage() {
               href="https://github.com/apute098"
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-5 hover:border-cyan-500/40 transition-all"
+              className="group bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-5 hover:border-cyan-500/40 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
               <div className="w-10 h-10 rounded-none bg-slate-400/30 flex items-center justify-center mx-auto mb-3">
                 <svg className="w-5 h-5 text-slate-300" fill="currentColor" viewBox="0 0 16 16">
@@ -466,11 +466,11 @@ export default function LandingPage() {
             Coba dashboard langsung
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-            Server monitor real-time, finance tracker & AI hub — semua live dari apu.web.id.
+            Server monitor real-time, finance tracker & AI hub. Semua live dari apu.web.id.
           </p>
           <button
             onClick={() => enterDashboard('ai-hub')}
-            className="gradient-border px-6 py-3 rounded-none bg-slate-950/60 text-cyan-400 font-sans text-xs font-bold hover:brightness-125 transition-all focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-slate-950"
+            className="gradient-border px-6 py-3 rounded-none bg-slate-950/60 text-cyan-400 font-sans text-xs font-bold hover:brightness-125 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
           >
             Buka Dashboard
           </button>
@@ -488,7 +488,7 @@ export default function LandingPage() {
                 </span>
               </button>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Pusat berbagi knowledge & hub AI — model benchmarking, prompt engineering & 9Router
+                Pusat berbagi knowledge & hub AI: model benchmarking, prompt engineering & 9Router
                 AI Gateway. Powered by Arch Linux.
               </p>
             </div>
@@ -549,7 +549,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-white/10 text-center text-xs text-slate-500">
-            © 2026 apu.web.id — Powered by Arch Linux & 9Router
+            © 2026 apu.web.id. Powered by Arch Linux & 9Router
           </div>
         </div>
       </footer>
