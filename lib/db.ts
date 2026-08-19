@@ -61,10 +61,24 @@ function initDb(): DbLike {
       metode TEXT NOT NULL DEFAULT 'Transfer',
       source TEXT NOT NULL DEFAULT 'Manual Input'
     );
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      email TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'user',
+      status TEXT NOT NULL DEFAULT 'pending',
+      created_at TEXT NOT NULL
+    );
   `);
-  // migrasi: kolom ref_id (serial/invoice) untuk dedup struk — idempotent
+  // migrasi: kolom ref_id & status — idempotent
   try {
     db.exec(`ALTER TABLE transaksi ADD COLUMN ref_id TEXT DEFAULT ''`);
+  } catch {
+    /* kolom sudah ada — abaikan */
+  }
+  try {
+    db.exec(`ALTER TABLE users ADD COLUMN status TEXT DEFAULT 'pending'`);
   } catch {
     /* kolom sudah ada — abaikan */
   }
@@ -206,5 +220,84 @@ export function clearTransactions(): void {
     initDb().exec('DELETE FROM transaksi');
   } catch (e) {
     throw new Error(`Gagal mengosongkan transaksi: ${(e as Error).message}`);
+  }
+}
+
+export interface UserRow {
+  id: string;
+  username: string;
+  email: string;
+  password_hash: string;
+  role: string;
+  status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
+}
+
+export function findUserByUsernameOrEmail(identifier: string): UserRow | null {
+  try {
+    if (isJsonMode()) return null;
+    const row = initDb()
+      .prepare('SELECT * FROM users WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)')
+      .get(identifier, identifier);
+    if (!row) return null;
+    return {
+      id: String(row.id),
+      username: String(row.username),
+      email: String(row.email),
+      password_hash: String(row.password_hash),
+      role: String(row.role || 'user'),
+      status: (row.status as any) || 'pending',
+      created_at: String(row.created_at),
+    };
+  } catch {
+    return null;
+  }
+}
+
+export function createUser(username: string, email: string, passwordHash: string, role = 'user', status = 'pending'): UserRow {
+  try {
+    const createdAt = new Date().toISOString();
+    const res = initDb()
+      .prepare('INSERT INTO users (username, email, password_hash, role, status, created_at) VALUES (?, ?, ?, ?, ?, ?)')
+      .run(username.trim(), email.trim().toLowerCase(), passwordHash, role, status, createdAt);
+    return {
+      id: String(res.lastInsertRowid),
+      username: username.trim(),
+      email: email.trim().toLowerCase(),
+      password_hash: passwordHash,
+      role,
+      status: status as any,
+      created_at: createdAt,
+    };
+  } catch (e) {
+    throw new Error(`Gagal membuat akun: ${(e as Error).message}`);
+  }
+}
+
+export function listAllUsers(): UserRow[] {
+  try {
+    if (isJsonMode()) return [];
+    const rows = initDb().prepare('SELECT id, username, email, role, status, created_at FROM users ORDER BY id DESC').all();
+    return rows.map((r) => ({
+      id: String(r.id),
+      username: String(r.username),
+      email: String(r.email),
+      password_hash: '',
+      role: String(r.role || 'user'),
+      status: (r.status as any) || 'pending',
+      created_at: String(r.created_at),
+    }));
+  } catch {
+    return [];
+  }
+}
+
+export function updateUserStatus(id: string, status: 'approved' | 'rejected'): boolean {
+  try {
+    if (isJsonMode()) return false;
+    const res = initDb().prepare('UPDATE users SET status = ? WHERE id = ?').run(status, Number(id));
+    return Number(res.changes) > 0;
+  } catch {
+    return false;
   }
 }

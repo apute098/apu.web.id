@@ -14,8 +14,8 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-screen bg-[#05050d] flex flex-col items-center justify-center p-4 text-center">
-      <div className="max-w-md w-full rounded-2xl border border-[#22d3ee]/20 bg-[#111613] p-8 shadow-xl">
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4 text-center">
+      <div className="max-w-md w-full rounded-none border border-[#22d3ee]/20 bg-[#111613] p-8 shadow-xl">
         <div className="text-5xl mb-4" aria-hidden="true">⚠️</div>
         <h1 className="text-2xl font-bold font-mono text-rose-400 mb-2">
           Terjadi Kesalahan
@@ -30,7 +30,7 @@ export default function Error({
         </p>
         <button
           onClick={reset}
-          className="px-5 py-2.5 rounded-xl bg-[#22d3ee] text-white font-mono text-xs font-bold hover:bg-[#0ea5e9] transition-all cursor-pointer"
+          className="px-5 py-2.5 rounded-none bg-[#22d3ee] text-white font-mono text-xs font-bold hover:bg-[#0ea5e9] transition-all cursor-pointer"
         >
           Muat Ulang Halaman
         </button>

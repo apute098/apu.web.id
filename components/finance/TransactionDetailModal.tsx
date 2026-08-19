@@ -26,7 +26,7 @@ export const TransactionDetailModal: React.FC<Props> = ({ tx, onClose }) => (
         <button
           onClick={onClose}
           aria-label="Tutup detail transaksi"
-          className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
+          className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-none bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
         >
           <X className="w-4 h-4" />
         </button>
@@ -83,7 +83,7 @@ export const TransactionDetailModal: React.FC<Props> = ({ tx, onClose }) => (
 
       <button
         onClick={onClose}
-        className="w-full flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#06b6d4] transition-all"
+        className="w-full flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-none text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#06b6d4] transition-all"
       >
         Tutup
       </button>

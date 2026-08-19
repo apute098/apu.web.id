@@ -30,15 +30,20 @@ export const FinanceTab: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
+      const token = typeof window !== 'undefined' ? localStorage.getItem('apu_admin_token') || '' : '';
       const res = await fetch(
         `/api/v1/keuangan?tipe=${filterType === 'All' ? '' : filterType}&q=${encodeURIComponent(
           searchQuery
-        )}`
+        )}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       const json = await res.json();
+      if (!res.ok) throw new Error(json.message || `HTTP ${res.status}`);
       setData(json);
-    } catch (err) {
-      setError('Gagal memuat data keuangan. Periksa koneksi server lalu coba lagi.');
+    } catch (err: any) {
+      setError(err.message || 'Gagal memuat data keuangan. Periksa koneksi server lalu coba lagi.');
     } finally {
       setLoading(false);
     }
@@ -50,16 +55,20 @@ export const FinanceTab: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
+        const token = typeof window !== 'undefined' ? localStorage.getItem('apu_admin_token') || '' : '';
         const res = await fetch(
           `/api/v1/keuangan?tipe=${filterType === 'All' ? '' : filterType}&q=${encodeURIComponent(
             searchQuery
-          )}`
+          )}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
         const json = await res.json();
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) throw new Error(json.message || `HTTP ${res.status}`);
         if (isMounted) setData(json);
-      } catch (err) {
-        if (isMounted) setError('Gagal memuat data keuangan. Periksa koneksi server lalu coba lagi.');
+      } catch (err: any) {
+        if (isMounted) setError(err.message || 'Gagal memuat data keuangan. Periksa koneksi server lalu coba lagi.');
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -107,7 +116,7 @@ export const FinanceTab: React.FC = () => {
               </div>
               <button
                 onClick={fetchFinancialData}
-                className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#06b6d4] transition-all"
+                className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-none text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#06b6d4] transition-all"
               >
                 Coba lagi
               </button>

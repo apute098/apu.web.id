@@ -2,11 +2,27 @@ import { NextRequest, NextResponse } from 'next/server';
 import { isAuthorized, unauthorized } from '@/lib/auth';
 import { GoogleGenAI } from '@google/genai';
 
+import { listTransactions } from '@/lib/db';
+import { computeSummary } from '@/lib/keuangan';
+
 async function realServerContext() {
   try {
+    const token = process.env.WEBHOOK_TOKEN || process.env.MASTER_TOKEN;
     const [svc, fin] = await Promise.all([
-      fetch(`http://localhost:3100/api/v1/system-status`, { cache: 'no-store', signal: AbortSignal.timeout(15000) }).then((r) => r.json()).catch(() => null),
-      fetch(`http://localhost:3100/api/v1/keuangan`, { cache: 'no-store', signal: AbortSignal.timeout(15000) }).then((r) => r.json()).catch(() => null),
+      fetch(`http://localhost:3100/api/v1/system-status`, {
+        cache: 'no-store',
+        headers: { Authorization: `Bearer ${token}` },
+        signal: AbortSignal.timeout(15000),
+      }).then((r) => r.json()).catch(() => null),
+      (async () => {
+        try {
+          const all = listTransactions();
+          const summary = computeSummary(all);
+          return { summary, transactions: all };
+        } catch {
+          return null;
+        }
+      })(),
     ]);
     return { svc, fin };
   } catch {

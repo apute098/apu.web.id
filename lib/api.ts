@@ -30,7 +30,7 @@ export async function authedPost(url: string, body: unknown): Promise<Response> 
   if (!token) token = askToken();
   if (!token) return post(url, body, '');
   let res = await post(url, body, token);
-  if (res.status === 401) {
+  if (res.status === 401 || res.status === 403) {
     const again = askToken();
     if (again && again !== token) res = await post(url, body, again);
   }

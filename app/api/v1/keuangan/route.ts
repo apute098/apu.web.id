@@ -31,6 +31,7 @@ export interface Transaction {
 }
 
 export async function GET(req: NextRequest) {
+  if (!isAuthorized(req)) return unauthorized();
   try {
     const { searchParams } = new URL(req.url);
     const tipe = searchParams.get('tipe');

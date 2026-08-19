@@ -1,28 +1,83 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useEffect } from 'react';
 import { Navbar, SubdomainTab } from '@/components/Navbar';
-import { HardwareTab } from '@/components/HardwareTab';
-import { FinanceTab } from '@/components/finance/FinanceTab';
-import { Server, Wallet, Terminal } from 'lucide-react';
+import { AdminControlTab } from '@/components/AdminControlTab';
+import { AiHubTab } from '@/components/AiHubTab';
+import { Lock, LogIn, ShieldAlert, KeyRound } from 'lucide-react';
 
 export default function Home() {
-  const getInitialTab = (): SubdomainTab => {
-    if (typeof window !== 'undefined') {
-      if (
-        window.location.hostname === 'keuangan.apu.web.id' ||
-        window.location.hash === '#keuangan'
-      ) {
-        return 'keuangan';
-      }
-      if (window.location.hash === '#router') return 'router';
-    }
-    return 'hardware';
-  };
-  const [activeTab, setActiveTab] = useState<SubdomainTab>(getInitialTab);
+  const [activeTab, setActiveTab] = useState<SubdomainTab>('ai-hub');
   const [systemData, setSystemData] = useState<any>(null);
-  const [refreshing, setRefreshing] = useState(false);
   const [systemError, setSystemError] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [tokenInput, setTokenInput] = useState<string>('');
+
+  // Register form state
+  const [regUsername, setRegUsername] = useState('');
+  const [regEmail, setRegEmail] = useState('');
+  const [regPassword, setRegPassword] = useState('');
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [authSuccess, setAuthSuccess] = useState<string | null>(null);
+
+  // Admin session state
+  const [isAdminSession, setIsAdminSession] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedToken = localStorage.getItem('apu_admin_token');
+      if (storedToken) {
+        setIsAdminSession(true);
+      }
+      const hash = window.location.hash;
+      if (hash === '#admin') {
+        setActiveTab('admin');
+      } else {
+        setActiveTab('ai-hub');
+      }
+    }
+  }, []);
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError(null);
+    setAuthSuccess(null);
+    if (!tokenInput.trim()) {
+      setLoginError('Token atau kredensial tidak boleh kosong');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/v1/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'login', identifier: tokenInput, password: tokenInput }),
+      });
+
+      const json = await res.json();
+      if (res.ok && json.success) {
+        localStorage.setItem('apu_admin_token', json.token || tokenInput);
+        setIsAdminSession(true);
+        setAuthSuccess('Login berhasil! Selamat datang Kembali.');
+        setTimeout(() => {
+          setActiveTab('admin');
+          setAuthSuccess(null);
+        }, 1000);
+      } else {
+        setLoginError(json.message || 'Access denied. Fuck you!');
+      }
+    } catch (err: any) {
+      setLoginError(err.message || 'Access denied. Fuck you!');
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('apu_admin_token');
+    setIsAdminSession(false);
+    setActiveTab('ai-hub');
+  };
 
   const fetchSystemData = async () => {
     try {
@@ -33,8 +88,7 @@ export default function Home() {
       const json = await res.json();
       setSystemData(json);
     } catch (err) {
-      console.error('Failed to fetch system metrics', err);
-      setSystemError('Gagal memuat data sistem. Periksa koneksi server lalu coba lagi.');
+      setSystemError('Gagal memuat data sistem.');
     } finally {
       setRefreshing(false);
     }
@@ -45,14 +99,13 @@ export default function Home() {
     const loadInitialData = async () => {
       try {
         setRefreshing(true);
-        setSystemError(null);
         const res = await fetch('/api/v1/system-status');
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        if (isMounted) setSystemData(json);
-      } catch (err) {
-        console.error('Failed to fetch system metrics', err);
-        if (isMounted) setSystemError('Gagal memuat data sistem. Periksa koneksi server lalu coba lagi.');
+        if (res.ok) {
+          const json = await res.json();
+          if (isMounted) setSystemData(json);
+        }
+      } catch {
+        /* ignore */
       } finally {
         if (isMounted) setRefreshing(false);
       }
@@ -62,13 +115,12 @@ export default function Home() {
 
     const interval = setInterval(() => {
       loadInitialData();
-    }, 3000);
+    }, 4000);
 
     const onHashChange = () => {
       const h = window.location.hash;
-      if (h === '#keuangan') setActiveTab('keuangan');
-      else if (h === '#router') setActiveTab('router');
-      else if (h === '#home' || h === '') setActiveTab('hardware');
+      if (h === '#admin') setActiveTab('admin');
+      else setActiveTab('ai-hub');
     };
     window.addEventListener('hashchange', onHashChange);
 
@@ -79,184 +131,148 @@ export default function Home() {
     };
   }, []);
 
+  // IntersectionObserver for scroll reveals
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const elements = document.querySelectorAll('.reveal');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => {
+      elements.forEach((el) => observer.unobserve(el));
+      observer.disconnect();
+    };
+  }, []);
+
   const switchTab = (tab: SubdomainTab) => {
     setActiveTab(tab);
     if (typeof window !== 'undefined') {
-      const hash = tab === 'hardware' ? '#home' : tab === 'keuangan' ? '#keuangan' : '#router';
+      const hash = tab === 'admin' ? '#admin' : '';
       if (window.location.hash !== hash) window.location.hash = hash;
     }
   };
 
-  const isHome = activeTab === 'hardware';
-
   return (
-    <div className="min-h-screen text-slate-100 flex flex-col font-sans selection:bg-[#22d3ee] selection:text-[#030309]">
+    <div className="min-h-screen text-slate-100 flex flex-col font-sans selection:bg-[#22d3ee] selection:text-[#030309] bg-slate-950">
+      {/* Ambient Orbs */}
+      <div className="fixed top-1/4 -left-1/4 w-[600px] h-[600px] rounded-none bg-cyan-500/8  pointer-events-none z-0 animate-float-orb" />
+      <div 
+        className="fixed bottom-1/4 -right-1/4 w-[500px] h-[500px] rounded-none bg-purple-500/8  pointer-events-none z-0 animate-float-orb" 
+        style={{ animationDelay: '3s' }} 
+      />
+
       {/* Navigation Bar */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={switchTab}
         serverOnline={systemData?.status === 'online'}
+        onLogout={handleLogout}
+        isAdmin={isAdminSession}
       />
 
       {/* Main Content Area */}
-      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto p-3 sm:p-4 md:p-6 lg:p-8 pb-24 md:pb-8">
-        {isHome && (
-          <>
-            {/* ===== Minimal Hero Header ===== */}
-            <header className="mb-6 md:mb-8 px-1">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div>
-                  <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                    apu.web.id
-                  </h1>
-                  <p className="text-xs text-slate-400 mt-1 flex items-center gap-2">
-                    <span className="relative flex w-2 h-2">
-                      <span className={`absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping ${systemData?.status === 'online' ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-                      <span className={`relative inline-flex rounded-full w-2 h-2 ${systemData?.status === 'online' ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-                    </span>
-                    {systemData?.status === 'online' ? 'Server Online' : 'Menghubungkan...'}
-                    <span className="text-slate-600">·</span>
-                    Arch Linux x86_64
-                    <span className="text-slate-600">·</span>
-                    Cloudflare Tunnel
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => switchTab('hardware')}
-                    className="px-4 py-2 min-h-[44px] rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition-all"
-                  >
-                    <Server className="w-3.5 h-3.5 inline mr-1.5" />
-                    Telemetri
-                  </button>
-                  <button
-                    onClick={() => switchTab('keuangan')}
-                    className="px-4 py-2 min-h-[44px] rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition-all"
-                  >
-                    <Wallet className="w-3.5 h-3.5 inline mr-1.5" />
-                    Keuangan
-                  </button>
-                  <button
-                    onClick={() => switchTab('router')}
-                    className="px-4 py-2 min-h-[44px] rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition-all"
-                  >
-                    <Terminal className="w-3.5 h-3.5 inline mr-1.5" />
-                    Router
-                  </button>
-                </div>
-              </div>
-            </header>
-          </>
-        )}
+      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 pt-28 md:pt-32 pb-36 md:pb-12">
+        {activeTab === 'ai-hub' && <AiHubTab />}
 
-        {activeTab === 'hardware' && (
-          <HardwareTab
-            systemData={systemData}
-            refreshing={refreshing}
-            onManualRefresh={fetchSystemData}
-            error={systemError}
-            onRetry={fetchSystemData}
-          />
-        )}
-
-        {activeTab === 'keuangan' && <FinanceTab />}
-
-        {/* Router — embedded 9router gateway (iframe, bukan tab baru) */}
-        {activeTab === 'router' && (
-          <div className="rounded-2xl border border-white/10 bg-[#05050d] p-2 md:p-3">
-            <div className="flex items-center justify-between px-2 py-2.5 gap-2 flex-wrap mb-2">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300">
-                  <Terminal className="w-4 h-4" />
-                </div>
-                <div>
-                  <h2 className="text-sm font-bold text-white">9Router Gateway</h2>
-                  <p className="text-xs text-slate-400">router.apu.web.id — embedded</p>
-                </div>
-              </div>
-              <a
-                href="https://router.apu.web.id"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-4 py-2.5 min-h-[44px] rounded-lg text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition-all"
-              >
-                Buka di tab baru ↗
-              </a>
-            </div>
-            <iframe
-              src="https://router.apu.web.id"
-              title="9Router Gateway"
-              className="w-full h-[72vh] min-h-[480px] rounded-xl border border-white/5 bg-[#030309]"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+        {activeTab === 'admin' && (
+          isAdminSession ? (
+            <AdminControlTab
+              systemData={systemData}
+              systemError={systemError}
+              refreshing={refreshing}
+              onManualRefreshSystem={fetchSystemData}
             />
-          </div>
+          ) : (
+            <div className="p-1 rounded-none bg-slate-900 border border-slate-700 border border-white/10 shadow-2xl max-w-md mx-auto my-12 reveal opacity-0 translate-y-8 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] [&.visible]:opacity-100 [&.visible]:translate-y-0">
+              <div className="rounded-none bg-slate-950 p-6 sm:p-8">
+                <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
+                  <div className="w-10 h-10 rounded-none bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                    <Lock className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold text-white">Login Admin Master</h2>
+                    <p className="text-xs text-slate-400">Akses khusus Telemetri, Keuangan, & 9Router</p>
+                  </div>
+                </div>
+
+                {loginError && (
+                  <div className="mb-4 p-3.5 rounded-none bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2 font-sans">
+                    <ShieldAlert className="w-4 h-4 shrink-0" />
+                    <span>{loginError}</span>
+                  </div>
+                )}
+
+                {authSuccess && (
+                  <div className="mb-4 p-3.5 rounded-none bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2 font-sans">
+                    <div className="w-2 h-2 rounded-none bg-emerald-400 animate-ping" />
+                    <span>{authSuccess}</span>
+                  </div>
+                )}
+
+                <form onSubmit={handleLoginSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                      Username / Email / Admin Token
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={tokenInput}
+                        onChange={(e) => setTokenInput(e.target.value)}
+                        placeholder="Token Admin Master..."
+                        className="w-full px-4 py-3 bg-slate-950 border border-white/10 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-none text-xs text-white placeholder:text-slate-600 font-mono outline-none transition-all"
+                        autoFocus
+                      />
+                      <KeyRound className="w-4 h-4 text-slate-500 absolute right-4 top-3.5" />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-3 rounded-none bg-cyan-400 text-slate-950 font-sans text-xs font-bold hover:bg-cyan-300 transition-all flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 active:scale-[0.98]"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    <span>Masuk Admin Control</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          )
         )}
       </main>
 
-      {/* ===== Footer Sederhana ===== */}
-      <footer className="relative z-10 border-t border-white/10 bg-[#05050d]/80 mt-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {/* Brand */}
+      {/* Footer */}
+      <footer className="relative z-10 border-t border-white/10 bg-slate-950/80 mt-12 ">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 reveal opacity-0 translate-y-8 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] [&.visible]:opacity-100 [&.visible]:translate-y-0">
           <div>
             <div className="flex items-center gap-2.5 mb-3">
-              <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300">
-                <Server className="w-4 h-4" />
+              <div className="w-8 h-8 rounded-none bg-slate-900 border border-white/10 flex items-center justify-center text-cyan-400 font-bold text-xs">
+                AI
               </div>
               <h3 className="font-bold text-white text-sm">apu.web.id</h3>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Master Server Portal — telemetri hardware, keuangan AI, dan 9Router Gateway.
+              Pusat Berbagi Knowledge & Hub AI Indonesia — model benchmarking, prompt engineering & 9Router AI Gateway.
             </p>
-            <div className="mt-3 inline-flex flex-wrap items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/50 border border-slate-700/50">
-              <span className="relative flex w-2 h-2">
-                <span
-                  className={`absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping ${
-                    systemData?.status === 'online' ? 'bg-emerald-400' : 'bg-amber-400'
-                  }`}
-                />
-                <span
-                  className={`relative inline-flex rounded-full w-2 h-2 ${
-                    systemData?.status === 'online' ? 'bg-emerald-400' : 'bg-amber-400'
-                  }`}
-                />
-              </span>
-              <span className="text-[11px] font-mono text-slate-300">
-                {systemData?.status === 'online' ? 'Server Online' : 'Menghubungkan...'}
-              </span>
-              <span className="text-[10px] font-mono text-slate-500">
-                uptime {systemData?.uptime ?? '—'}
-              </span>
-            </div>
           </div>
-
-          {/* Media Sosial */}
           <div>
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Media Sosial</h4>
-            <ul className="space-y-2.5">
-              <li>
-                <a
-                  href="https://wa.me/62877511509544"
-                  className="inline-flex items-center gap-2.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
-                >
-                  WhatsApp
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/apute098"
-                  className="inline-flex items-center gap-2.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
-                >
-                  GitHub
-                </a>
-              </li>
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Navigasi Utama</h4>
+            <ul className="space-y-2 text-xs text-slate-400">
+              <li><button onClick={() => switchTab('ai-hub')} className="hover:text-cyan-400 transition-colors">AI Hub & Direktori Model</button></li>
+              <li><button onClick={() => switchTab('admin')} className="hover:text-cyan-400 transition-colors">Admin Control Panel</button></li>
             </ul>
           </div>
-
-          {/* Copyright */}
-          <div className="sm:col-span-2 lg:col-span-1 flex flex-col justify-end items-start lg:items-end">
-            <p className="text-[11px] text-slate-600 font-mono">
-              &copy; {new Date().getFullYear()} apu.web.id
-            </p>
+          <div className="flex flex-col justify-end items-start lg:items-end">
+            <p className="text-[11px] text-slate-500 font-mono">© 2026 apu.web.id — Powered by Arch Linux & 9Router</p>
           </div>
         </div>
       </footer>

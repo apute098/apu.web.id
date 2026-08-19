@@ -162,6 +162,10 @@ function getSystemServices(): ServiceItem[] {
 // Service user (systemctl --user) vs system (sudo -n systemctl).
 // caddy/cloudflared = system units → butuh sudo; apu-webid-next/apu-ecosystem = user units.
 const ALLOWED_SERVICE_NAMES = new Map<string, 'user' | 'system'>([
+  ['apu-webid', 'user'],
+  ['9router', 'user'],
+  ['mitm-router', 'user'],
+  ['apu-backend', 'user'],
   ['caddy', 'system'],
   ['cloudflared', 'system'],
   ['apu-webid-next', 'user'],
@@ -172,6 +176,7 @@ const ALLOWED_PROCESS_ACTIONS = new Set(['kill', 'terminate', 'pause', 'resume']
 const ALLOWED_SERVICE_ACTIONS = new Set(['restart_service', 'stop_service', 'start_service']);
 
 export async function GET(req: NextRequest) {
+  if (!isAuthorized(req)) return unauthorized();
   let psOutput: string;
   try {
     psOutput = execFileSync('ps', ['-eo', 'pid,user,%cpu,%mem,comm,args', '--sort=-%cpu'], { encoding: 'utf-8' });
@@ -217,7 +222,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, error: 'Body JSON tidak valid' }, { status: 400 });
   }
   try {
-    const { action, pid, serviceName } = body as { action?: string; pid?: number; serviceName?: string };
+    const rawAction = (body.action || body.command) as string | undefined;
+    const rawPid = body.pid as number | undefined;
+    const rawService = (body.serviceName || body.service) as string | undefined;
+
+    const actionMap: Record<string, string> = {
+      restart: 'restart_service',
+      restart_service: 'restart_service',
+      stop: 'stop_service',
+      stop_service: 'stop_service',
+      start: 'start_service',
+      start_service: 'start_service',
+      kill: 'kill',
+      terminate: 'terminate',
+      pause: 'pause',
+      resume: 'resume',
+    };
+
+    const action = rawAction ? (actionMap[rawAction] || rawAction) : undefined;
+    const pid = rawPid !== undefined ? Number(rawPid) : undefined;
+    const serviceName = rawService ? String(rawService).trim().replace(/\.service$/, '') : undefined;
 
     // Process Actions
     if (pid !== undefined && action) {
