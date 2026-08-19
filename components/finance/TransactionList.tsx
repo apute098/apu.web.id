@@ -38,17 +38,17 @@ export const TransactionList: React.FC<Props> = ({
             placeholder="Cari transaksi..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-8 pr-3 py-2.5 min-h-[44px] rounded-none bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full pl-8 pr-3 py-2.5 min-h-[44px] rounded-full bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
           />
         </div>
 
         {/* Type Filter Buttons */}
-        <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-none border border-slate-700">
+        <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-full border border-slate-700">
           {['All', 'Pemasukan', 'Pengeluaran'].map((type) => (
             <button
               key={type}
               onClick={() => onFilterChange(type)}
-              className={`px-2.5 py-1 rounded-none text-xs font-semibold transition-all ${
+              className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
                 filterType === type
                   ? 'bg-[#22d3ee] text-white'
                   : 'text-slate-400 hover:text-white'
@@ -81,7 +81,7 @@ export const TransactionList: React.FC<Props> = ({
             <tr>
               <td colSpan={8} className="py-14 text-center">
                 <div className="flex flex-col items-center gap-4">
-                  <div className="w-16 h-16 rounded-none bg-[#22d3ee]/10 border border-[#22d3ee]/20 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-[#22d3ee]/10 border border-[#22d3ee]/20 flex items-center justify-center">
                     <Wallet className="w-8 h-8 text-[#22d3ee]/60" />
                   </div>
                   <div>
@@ -94,7 +94,7 @@ export const TransactionList: React.FC<Props> = ({
                   <button
                     onClick={onAdd}
                     aria-label="Tambah transaksi manual"
-                    className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-none text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#06b6d4] transition-all"
+                    className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-full text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#06b6d4] transition-all"
                   >
                     + Tambah Transaksi
                   </button>
@@ -145,7 +145,7 @@ export const TransactionList: React.FC<Props> = ({
                       onDelete(tx.id);
                     }}
                     aria-label={`Hapus transaksi ${tx.keterangan}`}
-                    className="p-1.5 rounded-none bg-[#f43f5e]/10 text-[#f43f5e] hover:bg-rose-500/20 transition-all"
+                    className="p-1.5 rounded-full bg-[#f43f5e]/10 text-[#f43f5e] hover:bg-rose-500/20 transition-all"
                     title="Hapus Transaksi"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -162,7 +162,7 @@ export const TransactionList: React.FC<Props> = ({
     <div className="md:hidden space-y-3">
       {transactions.length === 0 ? (
         <div className="flex flex-col items-center gap-4 py-10 text-center">
-          <div className="w-16 h-16 rounded-none bg-[#22d3ee]/10 border border-[#22d3ee]/20 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full bg-[#22d3ee]/10 border border-[#22d3ee]/20 flex items-center justify-center">
             <Wallet className="w-8 h-8 text-[#22d3ee]/60" />
           </div>
           <div>
@@ -175,7 +175,7 @@ export const TransactionList: React.FC<Props> = ({
           <button
             onClick={onAdd}
             aria-label="Tambah transaksi manual dari kosong"
-            className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-none text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#06b6d4] transition-all"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-full text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#06b6d4] transition-all"
           >
             + Tambah Transaksi
           </button>
@@ -226,7 +226,7 @@ export const TransactionList: React.FC<Props> = ({
                     onDelete(tx.id);
                   }}
                   aria-label={`Hapus transaksi ${tx.keterangan}`}
-                  className="w-10 h-10 rounded-none bg-[#f43f5e]/10 text-[#f43f5e] hover:bg-rose-500/20 transition-all flex items-center justify-center flex-shrink-0"
+                  className="w-10 h-10 rounded-full bg-[#f43f5e]/10 text-[#f43f5e] hover:bg-rose-500/20 transition-all flex items-center justify-center flex-shrink-0"
                   title="Hapus Transaksi"
                 >
                   <Trash2 className="w-4 h-4" />

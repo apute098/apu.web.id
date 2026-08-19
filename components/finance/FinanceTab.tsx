@@ -116,7 +116,7 @@ export const FinanceTab: React.FC = () => {
               </div>
               <button
                 onClick={fetchFinancialData}
-                className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-none text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#06b6d4] transition-all"
+                className="flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-full text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#06b6d4] transition-all"
               >
                 Coba lagi
               </button>

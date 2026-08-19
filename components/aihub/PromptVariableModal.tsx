@@ -45,12 +45,12 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80  animate-in fade-in duration-300">
-      <div className="p-1 rounded-none bg-gradient-to-br from-white/10 via-white/5 to-white/0 border border-white/10 shadow-2xl  w-full max-w-3xl max-h-[90vh] flex flex-col">
-        <div className="rounded-none bg-slate-950 p-6 sm:p-8 flex flex-col overflow-hidden">
+      <div className="p-1 rounded-full bg-gradient-to-br from-white/10 via-white/5 to-white/0 border border-white/10 shadow-2xl  w-full max-w-3xl max-h-[90vh] flex flex-col">
+        <div className="rounded-full bg-slate-950 p-6 sm:p-8 flex flex-col overflow-hidden">
           {/* Modal Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-none bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+              <span className="p-2 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                 <Sliders className="w-5 h-5" />
               </span>
               <div>
@@ -64,7 +64,7 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-none text-slate-400 hover:text-white hover:bg-blue-600 text-white active:scale-95 transition-all"
+              className="p-2 rounded-full text-slate-400 hover:text-white hover:bg-blue-600 text-white active:scale-95 transition-all"
             >
               <X className="w-5 h-5" />
             </button>
@@ -95,7 +95,7 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
                           setValues((prev) => ({ ...prev, [v.key]: e.target.value }))
                         }
                         placeholder={v.placeholder}
-                        className="w-full rounded-none bg-slate-900/80 border border-white/10 px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50 font-mono"
+                        className="w-full rounded-full bg-slate-900/80 border border-white/10 px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50 font-mono"
                       />
                     ) : (
                       <input
@@ -105,7 +105,7 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
                           setValues((prev) => ({ ...prev, [v.key]: e.target.value }))
                         }
                         placeholder={v.placeholder}
-                        className="w-full rounded-none bg-slate-900/80 border border-white/10 px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
+                        className="w-full rounded-full bg-slate-900/80 border border-white/10 px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
                       />
                     )}
                   </div>
@@ -119,7 +119,7 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
                 <FileText className="w-3.5 h-3.5 text-slate-400" />
                 Live Hydrated Prompt Preview
               </h4>
-              <div className="rounded-none bg-slate-950 border border-white/10 p-4 text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-56 overflow-y-auto leading-relaxed shadow-inner">
+              <div className="rounded-full bg-slate-950 border border-white/10 p-4 text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-56 overflow-y-auto leading-relaxed shadow-inner">
                 {hydratedPrompt}
               </div>
             </div>
@@ -133,16 +133,16 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
             <div className="flex items-center gap-3">
               <button
                 onClick={onClose}
-                className="px-4 py-2 rounded-none text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-900 border border-slate-700 transition-all"
+                className="px-4 py-2 rounded-full text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-900 border border-slate-700 transition-all"
               >
                 Batal
               </button>
               <button
                 onClick={handleCopy}
-                className="inline-flex items-center gap-2 pl-5 pr-2 py-2 rounded-none bg-cyan-400 text-slate-950 font-bold text-xs hover:bg-cyan-300 transition-all duration-300 active:scale-[0.98] shadow-lg shadow-cyan-500/20 group"
+                className="inline-flex items-center gap-2 pl-5 pr-2 py-2 rounded-full bg-cyan-400 text-slate-950 font-bold text-xs hover:bg-cyan-300 transition-all duration-300 active:scale-[0.98] shadow-lg shadow-cyan-500/20 group"
               >
                 <span>{copied ? 'Tersalin!' : 'Salin Prompt Terkustomisasi'}</span>
-                <span className="w-6 h-6 rounded-none bg-slate-950/20 group-hover:bg-slate-950/30 flex items-center justify-center transition-colors">
+                <span className="w-6 h-6 rounded-full bg-slate-950/20 group-hover:bg-slate-950/30 flex items-center justify-center transition-colors">
                   {copied ? (
                     <Check className="w-3.5 h-3.5 text-slate-950" />
                   ) : (

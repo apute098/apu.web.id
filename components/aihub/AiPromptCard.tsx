@@ -27,7 +27,7 @@ export const AiPromptCard: React.FC<AiPromptCardProps> = ({ prompt, onCustomize 
       case 'system':
         return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
       case 'writing':
-        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+        return 'bg-green-500/10 text-green-400 border-green-500/20';
       case 'reasoning':
         return 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20';
       case 'security':
@@ -38,13 +38,13 @@ export const AiPromptCard: React.FC<AiPromptCardProps> = ({ prompt, onCustomize 
   };
 
   return (
-    <div className="p-1 rounded-none bg-gradient-to-br from-white/10 via-white/5 to-white/0 border-2 border-slate-800 shadow-[8px_8px_0_0_rgba(37,99,235,1)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-cyan-500/30 group flex flex-col justify-between">
-      <div className="rounded-none bg-slate-950 p-6 sm:p-7 flex flex-col justify-between h-full space-y-5">
+    <div className="p-1 rounded-full bg-gradient-to-br from-white/10 via-white/5 to-white/0 border-2 border-slate-800 shadow-[8px_8px_0_0_rgba(37,99,235,1)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-cyan-500/30 group flex flex-col justify-between">
+      <div className="rounded-full bg-slate-950 p-6 sm:p-7 flex flex-col justify-between h-full space-y-5">
         {/* Header Badges */}
         <div className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span
-              className={`text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-none border ${getCategoryColor(
+              className={`text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full border ${getCategoryColor(
                 prompt.category
               )}`}
             >
@@ -52,10 +52,10 @@ export const AiPromptCard: React.FC<AiPromptCardProps> = ({ prompt, onCustomize 
             </span>
 
             <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400">
-              <span className="bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-none border border-white/5">
+              <span className="bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-full border border-white/5">
                 {prompt.difficulty}
               </span>
-              <span className="bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-none border border-white/5">
+              <span className="bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-full border border-white/5">
                 ~{prompt.tokenEstimate} tok
               </span>
             </div>
@@ -77,7 +77,7 @@ export const AiPromptCard: React.FC<AiPromptCardProps> = ({ prompt, onCustomize 
               {prompt.variables.map((v) => (
                 <span
                   key={v.key}
-                  className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-none border border-cyan-500/20"
+                  className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20"
                 >
                   {`{{${v.key}}}`}
                 </span>
@@ -86,7 +86,7 @@ export const AiPromptCard: React.FC<AiPromptCardProps> = ({ prompt, onCustomize 
           )}
 
           {/* Prompt Preview Snippet */}
-          <div className="relative rounded-none bg-slate-950/80 border border-white/10 p-3.5 text-[11px] font-mono text-slate-400 line-clamp-3 leading-relaxed">
+          <div className="relative rounded-full bg-slate-950/80 border border-white/10 p-3.5 text-[11px] font-mono text-slate-400 line-clamp-3 leading-relaxed">
             {prompt.promptTemplate}
           </div>
         </div>
@@ -95,7 +95,7 @@ export const AiPromptCard: React.FC<AiPromptCardProps> = ({ prompt, onCustomize 
         <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/5">
           <button
             onClick={() => onCustomize(prompt)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-none text-xs font-semibold text-slate-300 hover:text-cyan-400 hover:bg-slate-900 border border-slate-700 transition-all active:scale-95"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-300 hover:text-cyan-400 hover:bg-slate-900 border border-slate-700 transition-all active:scale-95"
           >
             <Sliders className="w-3.5 h-3.5" />
             <span>Kustomisasi</span>
@@ -103,14 +103,14 @@ export const AiPromptCard: React.FC<AiPromptCardProps> = ({ prompt, onCustomize 
 
           <button
             onClick={handleCopy}
-            className={`inline-flex items-center gap-2 pl-4 pr-1.5 py-1.5 rounded-none font-bold text-xs transition-all duration-300 active:scale-[0.98] shadow-md group ${
+            className={`inline-flex items-center gap-2 pl-4 pr-1.5 py-1.5 rounded-full font-bold text-xs transition-all duration-300 active:scale-[0.98] shadow-md group ${
               copied
-                ? 'bg-emerald-400 text-slate-950 shadow-emerald-500/20'
+                ? 'bg-green-500 text-slate-950 shadow-green-500/20'
                 : 'bg-cyan-400 text-slate-950 hover:bg-cyan-300 shadow-cyan-500/20'
             }`}
           >
             <span>{copied ? 'Tersalin!' : 'Salin Prompt'}</span>
-            <span className="w-5 h-5 rounded-none bg-slate-950/20 group-hover:bg-slate-950/30 flex items-center justify-center transition-colors">
+            <span className="w-5 h-5 rounded-full bg-slate-950/20 group-hover:bg-slate-950/30 flex items-center justify-center transition-colors">
               {copied ? (
                 <Check className="w-3 h-3 text-slate-950" />
               ) : (

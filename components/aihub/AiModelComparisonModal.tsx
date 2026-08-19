@@ -23,18 +23,18 @@ export const AiModelComparisonModal: React.FC<AiModelComparisonModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80  animate-in fade-in duration-300">
-      <div className="p-1 rounded-none bg-gradient-to-br from-white/10 via-white/5 to-white/0 border border-white/10 shadow-2xl  w-full max-w-5xl max-h-[90vh] flex flex-col">
-        <div className="rounded-none bg-slate-950 p-6 sm:p-8 flex flex-col overflow-hidden">
+      <div className="p-1 rounded-full bg-gradient-to-br from-white/10 via-white/5 to-white/0 border border-white/10 shadow-2xl  w-full max-w-5xl max-h-[90vh] flex flex-col">
+        <div className="rounded-full bg-slate-950 p-6 sm:p-8 flex flex-col overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-none bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+              <span className="p-2 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                 <ArrowRightLeft className="w-5 h-5" />
               </span>
               <div>
                 <h3 className="text-xl font-bold text-white flex items-center gap-2">
                   Komparasi Model Flagship AI
-                  <span className="text-xs font-mono px-2 py-0.5 rounded-none bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                  <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                     {selectedModels.length} Model Terpilih
                   </span>
                 </h3>
@@ -47,14 +47,14 @@ export const AiModelComparisonModal: React.FC<AiModelComparisonModalProps> = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={onClearAll}
-                className="px-3 py-1.5 rounded-none text-xs font-semibold text-rose-400 hover:bg-rose-500/10 transition-all flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-full text-xs font-semibold text-rose-400 hover:bg-rose-500/10 transition-all flex items-center gap-1.5"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 Reset
               </button>
               <button
                 onClick={onClose}
-                className="p-2 rounded-none text-slate-400 hover:text-white hover:bg-blue-600 text-white active:scale-95 transition-all"
+                className="p-2 rounded-full text-slate-400 hover:text-white hover:bg-blue-600 text-white active:scale-95 transition-all"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -74,7 +74,7 @@ export const AiModelComparisonModal: React.FC<AiModelComparisonModalProps> = ({
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
                           <span
-                            className="w-2.5 h-2.5 rounded-none"
+                            className="w-2.5 h-2.5 rounded-full"
                             style={{ backgroundColor: m.accentColor }}
                           />
                           <span className="font-extrabold">{m.name}</span>
@@ -118,7 +118,7 @@ export const AiModelComparisonModal: React.FC<AiModelComparisonModalProps> = ({
                 <tr>
                   <td className="p-3 font-semibold text-slate-300">Input / 1M Tokens</td>
                   {selectedModels.map((m) => (
-                    <td key={m.id} className="p-3 font-mono text-emerald-400 font-bold">
+                    <td key={m.id} className="p-3 font-mono text-green-400 font-bold">
                       ${m.pricing.inputPer1M.toFixed(2)}
                     </td>
                   ))}
@@ -160,7 +160,7 @@ export const AiModelComparisonModal: React.FC<AiModelComparisonModalProps> = ({
                   {selectedModels.map((m) => (
                     <td key={m.id} className="p-3">
                       {m.capabilities.vision ? (
-                        <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
+                        <span className="flex items-center gap-1.5 text-green-400 font-semibold">
                           <CheckCircle2 className="w-4 h-4" /> Ya
                         </span>
                       ) : (
@@ -196,7 +196,7 @@ export const AiModelComparisonModal: React.FC<AiModelComparisonModalProps> = ({
                   {selectedModels.map((m) => (
                     <td key={m.id} className="p-3">
                       {m.capabilities.openWeights ? (
-                        <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
+                        <span className="flex items-center gap-1.5 text-green-400 font-semibold">
                           <CheckCircle2 className="w-4 h-4" /> Open-Weights
                         </span>
                       ) : (
@@ -215,7 +215,7 @@ export const AiModelComparisonModal: React.FC<AiModelComparisonModalProps> = ({
           <div className="flex items-center justify-end border-t border-white/10 pt-4 mt-2">
             <button
               onClick={onClose}
-              className="px-5 py-2 rounded-none bg-cyan-400 text-slate-950 font-bold text-xs hover:bg-cyan-300 transition-all active:scale-95"
+              className="px-5 py-2 rounded-full bg-cyan-400 text-slate-950 font-bold text-xs hover:bg-cyan-300 transition-all active:scale-95"
             >
               Selesai Membandingkan
             </button>

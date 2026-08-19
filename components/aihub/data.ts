@@ -103,7 +103,7 @@ export const AI_MODELS_DATA: AiModelSpec[] = [
     provider: 'OpenAI',
     providerSlug: 'openai',
     tag: 'Multimodal Standard',
-    badgeColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    badgeColor: 'bg-green-500/10 text-green-400 border-green-500/20',
     accentColor: '#10b981',
     description: 'Standar industri untuk tugas multimodal (teks, visi, audio) dan komputasi penalaran cepat o3-mini.',
     architecture: 'Omni-Native Multimodal MoE & High-Efficiency STEM Reasoner',

@@ -80,17 +80,17 @@ export const AiHubTab: React.FC = () => {
   return (
     <div className="space-y-16 py-6 max-w-7xl mx-auto">
       {/* 1. Hero Section & Architecture Highlights */}
-      <div className="relative p-1 rounded-none bg-gradient-to-br from-cyan-500/20 via-white/5 to-purple-500/10 border border-white/10 shadow-2xl  overflow-hidden">
-        <div className="rounded-none bg-slate-950 p-8 sm:p-12 relative z-10 space-y-8">
+      <div className="relative p-1 rounded-full bg-gradient-to-br from-cyan-500/20 via-white/5 to-purple-500/10 border border-white/10 shadow-2xl  overflow-hidden">
+        <div className="rounded-full bg-slate-950 p-8 sm:p-12 relative z-10 space-y-8">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
             <div className="space-y-4 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-none bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono font-semibold">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono font-semibold">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>AI Knowledge Hub & Local Relay Ecosystem</span>
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
                 Pusat Intelijen AI & <br />
-                <span className="bg-clip-text text-transparent bg-gradient-to-br from-cyan-400 via-emerald-400 to-purple-400">
+                <span className="bg-clip-text text-transparent bg-gradient-to-br from-cyan-400 via-green-400 to-cyan-600">
                   9Router Gateway Relay
                 </span>
               </h2>
@@ -101,19 +101,19 @@ export const AiHubTab: React.FC = () => {
 
             {/* Quick Metrics Cards */}
             <div className="grid grid-cols-2 gap-3 w-full lg:w-auto min-w-[280px]">
-              <div className="p-4 rounded-none bg-slate-900 border border-slate-700 border border-white/10 text-center">
+              <div className="p-4 rounded-full bg-slate-900 border border-slate-700 border border-white/10 text-center">
                 <span className="text-2xl font-black text-cyan-400 font-mono block">6</span>
                 <span className="text-xs text-slate-400 font-medium">Flagship Models</span>
               </div>
-              <div className="p-4 rounded-none bg-slate-900 border border-slate-700 border border-white/10 text-center">
-                <span className="text-2xl font-black text-emerald-400 font-mono block">7</span>
+              <div className="p-4 rounded-full bg-slate-900 border border-slate-700 border border-white/10 text-center">
+                <span className="text-2xl font-black text-green-400 font-mono block">7</span>
                 <span className="text-xs text-slate-400 font-medium">Prompt Disciplines</span>
               </div>
-              <div className="p-4 rounded-none bg-slate-900 border border-slate-700 border border-white/10 text-center">
+              <div className="p-4 rounded-full bg-slate-900 border border-slate-700 border border-white/10 text-center">
                 <span className="text-2xl font-black text-amber-400 font-mono block">2M</span>
                 <span className="text-xs text-slate-400 font-medium">Max Context Window</span>
               </div>
-              <div className="p-4 rounded-none bg-slate-900 border border-slate-700 border border-white/10 text-center">
+              <div className="p-4 rounded-full bg-slate-900 border border-slate-700 border border-white/10 text-center">
                 <span className="text-2xl font-black text-purple-400 font-mono block">:20128</span>
                 <span className="text-xs text-slate-400 font-medium">9Router Local Port</span>
               </div>
@@ -125,19 +125,19 @@ export const AiHubTab: React.FC = () => {
             <span className="text-slate-400 font-medium">Navigasi Cepat:</span>
             <a
               href="#models-showcase"
-              className="px-3 py-1.5 rounded-none bg-slate-900 border border-slate-700 hover:bg-blue-600 text-white text-slate-300 border border-white/10 transition-all"
+              className="px-3 py-1.5 rounded-full bg-slate-900 border border-slate-700 hover:bg-blue-600 text-white text-slate-300 border border-white/10 transition-all"
             >
               🚀 Model Directory
             </a>
             <a
               href="#ninerouter-guide"
-              className="px-3 py-1.5 rounded-none bg-slate-900 border border-slate-700 hover:bg-blue-600 text-white text-slate-300 border border-white/10 transition-all"
+              className="px-3 py-1.5 rounded-full bg-slate-900 border border-slate-700 hover:bg-blue-600 text-white text-slate-300 border border-white/10 transition-all"
             >
               ⚡ 9Router Gateway Guide
             </a>
             <a
               href="#prompt-library"
-              className="px-3 py-1.5 rounded-none bg-slate-900 border border-slate-700 hover:bg-blue-600 text-white text-slate-300 border border-white/10 transition-all"
+              className="px-3 py-1.5 rounded-full bg-slate-900 border border-slate-700 hover:bg-blue-600 text-white text-slate-300 border border-white/10 transition-all"
             >
               📚 Prompt Vault
             </a>
@@ -170,11 +170,11 @@ export const AiHubTab: React.FC = () => {
                 value={modelSearch}
                 onChange={(e) => setModelSearch(e.target.value)}
                 placeholder="Cari model AI..."
-                className="w-full pl-8 pr-3 py-2 rounded-none bg-slate-900/80 border border-white/10 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
+                className="w-full pl-8 pr-3 py-2 rounded-full bg-slate-900/80 border border-white/10 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
               />
             </div>
 
-            <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-none border border-white/10 text-xs overflow-x-auto max-w-full no-scrollbar whitespace-nowrap shrink-0">
+            <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-full border border-white/10 text-xs overflow-x-auto max-w-full no-scrollbar whitespace-nowrap shrink-0">
               {[
                 { id: 'all', label: 'Semua' },
                 { id: 'deepseek', label: 'DeepSeek' },
@@ -187,7 +187,7 @@ export const AiHubTab: React.FC = () => {
                 <button
                   key={prov.id}
                   onClick={() => setSelectedProvider(prov.id)}
-                  className={`px-3 py-1.5 rounded-none font-semibold transition-all shrink-0 ${
+                  className={`px-3 py-1.5 rounded-full font-semibold transition-all shrink-0 ${
                     selectedProvider === prov.id
                       ? 'bg-cyan-500 text-slate-950 shadow-sm'
                       : 'text-slate-400 hover:text-slate-200'
@@ -223,7 +223,7 @@ export const AiHubTab: React.FC = () => {
       <section id="prompt-library" className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 uppercase tracking-wider font-bold">
+            <div className="flex items-center gap-2 text-xs font-mono text-green-400 uppercase tracking-wider font-bold">
               <BookOpen className="w-4 h-4" />
               <span>Prompt Library & Vault</span>
             </div>
@@ -244,11 +244,11 @@ export const AiHubTab: React.FC = () => {
                 value={promptSearch}
                 onChange={(e) => setPromptSearch(e.target.value)}
                 placeholder="Cari prompt..."
-                className="w-full pl-8 pr-3 py-2 rounded-none bg-slate-900/80 border border-white/10 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
+                className="w-full pl-8 pr-3 py-2 rounded-full bg-slate-900/80 border border-white/10 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
               />
             </div>
 
-            <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-none border border-white/10 text-xs overflow-x-auto max-w-full no-scrollbar whitespace-nowrap shrink-0">
+            <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-full border border-white/10 text-xs overflow-x-auto max-w-full no-scrollbar whitespace-nowrap shrink-0">
               {[
                 { id: 'all', label: 'Semua' },
                 { id: 'coding', label: 'coding' },
@@ -262,9 +262,9 @@ export const AiHubTab: React.FC = () => {
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-none font-semibold transition-all shrink-0 ${
+                  className={`px-3 py-1.5 rounded-full font-semibold transition-all shrink-0 ${
                     selectedCategory === cat.id
-                      ? 'bg-emerald-400 text-slate-950 shadow-sm'
+                      ? 'bg-green-500 text-slate-950 shadow-sm'
                       : 'text-slate-400 hover:text-slate-200'
                   }`}
                 >
@@ -290,8 +290,8 @@ export const AiHubTab: React.FC = () => {
       {/* Floating Comparison Action Bar */}
       {compareModels.length > 0 && (
         <div className="fixed bottom-24 md:bottom-6 left-1/2 -translate-x-1/2 z-[45] animate-in slide-in-from-bottom-5 duration-300 w-max max-w-[90vw]">
-          <div className="p-1 rounded-none bg-gradient-to-br from-cyan-500 via-emerald-500 to-purple-500 shadow-2xl">
-            <div className="flex items-center gap-4 bg-slate-950 px-5 py-2.5 rounded-none border border-white/10">
+          <div className="p-1 rounded-full bg-gradient-to-br from-cyan-500 via-green-500 to-cyan-700 shadow-2xl">
+            <div className="flex items-center gap-4 bg-slate-950 px-5 py-2.5 rounded-full border border-white/10">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-white">Komparasi:</span>
                 <div className="flex -space-x-2">
@@ -299,7 +299,7 @@ export const AiHubTab: React.FC = () => {
                     <span
                       key={m.id}
                       title={m.name}
-                      className="w-6 h-6 rounded-none border-2 border-[#05050d] flex items-center justify-center text-[10px] font-bold text-white"
+                      className="w-6 h-6 rounded-full border-2 border-[#05050d] flex items-center justify-center text-[10px] font-bold text-white"
                       style={{ backgroundColor: m.accentColor }}
                     >
                       {m.name.charAt(0)}
@@ -310,7 +310,7 @@ export const AiHubTab: React.FC = () => {
 
               <button
                 onClick={() => setIsCompareModalOpen(true)}
-                className="px-4 py-1.5 rounded-none bg-cyan-400 text-slate-950 font-bold text-xs hover:bg-cyan-300 transition-all active:scale-95 shadow-md shadow-cyan-500/20"
+                className="px-4 py-1.5 rounded-full bg-cyan-400 text-slate-950 font-bold text-xs hover:bg-cyan-300 transition-all active:scale-95 shadow-md shadow-cyan-500/20"
               >
                 Bandingkan ({compareModels.length})
               </button>
