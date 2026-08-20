@@ -251,6 +251,16 @@ export async function GET() {
     const uptimeSec = getUptimeSeconds();
     const uptime = `${Math.floor(uptimeSec / 86400)}d ${Math.floor((uptimeSec % 86400) / 3600)}h ${Math.floor((uptimeSec % 3600) / 60)}m`;
 
+    // load average 1/5/15 menit + jumlah proses (real dari /proc)
+    let loadAverage: number[] = [0, 0, 0];
+    let processCount = 0;
+    const loadavg = readProc('/proc/loadavg');
+    if (loadavg) {
+      const parts = loadavg.split(/\s+/);
+      loadAverage = parts.slice(0, 3).map((n) => Math.round(Number(n) * 100) / 100);
+      processCount = Number(parts[3]?.split('/')[1] || 0);
+    }
+
     const cpuinfo = readProc('/proc/cpuinfo');
     let model = 'unknown';
     let cores = 0;
@@ -262,22 +272,29 @@ export async function GET() {
     const hostname = readProc('/proc/sys/kernel/hostname')?.trim() || 'unknown';
     const osrelease = readProc('/proc/sys/kernel/osrelease')?.trim() || 'unknown';
 
-    return NextResponse.json({
-      success: true,
-      status: 'online',
-      serverName: hostname,
-      os: `Arch Linux x86_64 (Linux ${osrelease})`,
-      uptime,
-      cpu: { usagePercent: cpu, cores, model },
-      ram,
-      hdd: { ...hdd, walMode },
-      temperature,
-      network,
-      diskIO,
-      services: getServices(),
-      stressMode: false, // stress test dihapus — data selalu real
-      timestamp: new Date().toISOString(),
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        status: 'online',
+        serverName: hostname,
+        os: `Arch Linux x86_64 (Linux ${osrelease})`,
+        uptime,
+        cpu: { usagePercent: cpu, cores, model },
+        loadAverage,
+        processCount,
+        ram,
+        hdd: { ...hdd, walMode },
+        temperature,
+        network,
+        diskIO,
+        services: getServices(),
+        stressMode: false, // stress test dihapus — data selalu real
+        timestamp: new Date().toISOString(),
+      },
+      {
+        headers: { 'Cache-Control': 'no-store, max-age=0' },
+      }
+    );
   } catch (err: unknown) {
     console.error('GET /api/v1/system-status gagal:', err instanceof Error ? err.message : err);
     return NextResponse.json(
