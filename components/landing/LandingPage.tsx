@@ -59,22 +59,19 @@ const EXPERIENCE = [
     role: 'Store Ops & Service Crew',
     company: 'Seblak Dower, Purwokerto',
     period: '2022 - sekarang',
-    description:
-      'Operasional store, service & tim. // ISI KONTEN DI SINI: deskripsi singkat pekerjaan.',
+    description: 'Operasional harian store, pelayanan pelanggan, dan koordinasi tim service.',
   },
   {
     role: 'Service Crew',
     company: 'RM Pempek Ny Kamto, Yogyakarta',
     period: '2019 - 2022',
-    description:
-      'Service crew restoran. // ISI KONTEN DI SINI: deskripsi singkat pekerjaan.',
+    description: 'Pelayanan pelanggan dan operasional restoran.',
   },
   {
     role: 'Staf Operasional',
     company: 'PT Propack Kreasi Mandiri',
     period: '2018 - 2019',
-    description:
-      'Staf operasional produksi. // ISI KONTEN DI SINI: deskripsi singkat pekerjaan.',
+    description: 'Mendukung operasional produksi dan logistik.',
   },
   {
     role: 'Homelab Engineer',
@@ -86,7 +83,7 @@ const EXPERIENCE = [
 ];
 
 export default function LandingPage() {
-  const [systemStatus, setSystemStatus] = useState<'online' | 'offline'>('offline');
+  const [systemStatus, setSystemStatus] = useState<'checking' | 'online' | 'offline'>('checking');
 
   // Fetch status server asli untuk badge LIVE di hero (data real, bukan mock)
   useEffect(() => {
@@ -96,6 +93,8 @@ export default function LandingPage() {
         if (res.ok) {
           const json = await res.json();
           setSystemStatus(json?.status === 'online' || json?.status === true ? 'online' : 'offline');
+        } else {
+          setSystemStatus('offline');
         }
       } catch {
         setSystemStatus('offline');
@@ -181,10 +180,18 @@ export default function LandingPage() {
 
         <div className="relative max-w-7xl mx-auto px-6 py-24 md:py-28 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full liquid-glass border border-white/10 text-xs font-medium text-slate-400 mb-6">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            <span
+              className={`w-2 h-2 rounded-full ${
+                systemStatus === 'online' ? 'bg-green-500 animate-pulse' : systemStatus === 'offline' ? 'bg-red-400' : 'bg-slate-500'
+              }`}
+            />
             Server:{' '}
-            <span className="font-medium text-cyan-400">
-              {systemStatus === 'online' ? 'LIVE' : 'OFFLINE'}
+            <span
+              className={`font-medium ${
+                systemStatus === 'online' ? 'text-green-400' : systemStatus === 'offline' ? 'text-red-400' : 'text-slate-400'
+              }`}
+            >
+              {systemStatus === 'online' ? 'LIVE' : systemStatus === 'offline' ? 'OFFLINE' : '···'}
             </span>
             <span className="text-slate-600">· Arch Linux x86_64</span>
           </div>
@@ -225,8 +232,8 @@ export default function LandingPage() {
               Tentang Saya
             </h2>
             <p className="text-slate-300 text-lg max-w-2xl mx-auto leading-relaxed">
-              Homelab enthusiast. Self-hosted infrastructure & AI tooling. {/* ISI KONTEN DI SINI */}
-            </p>
+                        Homelab enthusiast. Bangun, monitor, dan otomasi infrastruktur self-hosted.
+                      </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -305,8 +312,8 @@ export default function LandingPage() {
               Projects
             </h2>
             <p className="text-slate-300 text-lg max-w-2xl mx-auto leading-relaxed">
-              Selected self-hosted projects. {/* ISI KONTEN DI SINI */}
-            </p>
+                        Selected self-hosted projects: portal web, AI agent, dan AI gateway.
+                      </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -366,8 +373,8 @@ export default function LandingPage() {
               Pengalaman
             </h2>
             <p className="text-slate-300 text-lg max-w-2xl mx-auto leading-relaxed">
-              Riwayat kerja & proyek pribadi. {/* ISI KONTEN DI SINI */}
-            </p>
+                        Riwayat kerja, pendidikan, dan proyek pribadi.
+                      </p>
           </div>
 
           {/* Timeline */}
