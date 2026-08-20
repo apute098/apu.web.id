@@ -6,6 +6,8 @@ out/
 # secrets & data
 .env*
 !.env.example
+database.sqlite
+*.sqlite*
 data/*.db
 data/*.db-wal
 data/*.db-shm
