@@ -68,7 +68,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="flex flex-col justify-center">
                 <div className="flex items-center gap-2">
                   <h1 className="font-sans font-medium text-sm text-white/90 tracking-wide">apu.web.id</h1>
-                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-900 border border-slate-700 border border-white/10">
+                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full liquid-glass border border-slate-700 border border-white/10">
                     <span className="relative flex h-1.5 w-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
@@ -144,7 +144,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setIsMobileMenuOpen(false);
               }}
             >
-              <div className="w-8 h-8 rounded-full bg-slate-900 border border-slate-700 border border-white/10 flex items-center justify-center overflow-hidden">
+              <div className="w-8 h-8 rounded-full liquid-glass border border-slate-700 border border-white/10 flex items-center justify-center overflow-hidden">
                 <Logo3D size={32} />
               </div>
               <div className="flex flex-col">
@@ -218,7 +218,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setActiveTab('admin');
                 setIsMobileMenuOpen(false);
               }}
-              className={`group flex items-center gap-4 pl-6 pr-2 py-2 rounded-full bg-slate-900 border border-slate-700 border border-white/10 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+              className={`group flex items-center gap-4 pl-6 pr-2 py-2 rounded-full liquid-glass border border-slate-700 border border-white/10 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                 isMobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
               }`}
               style={{ transitionDelay: isMobileMenuOpen ? `${200 + tabs.length * 100}ms` : '0ms' }}

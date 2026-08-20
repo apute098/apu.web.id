@@ -33,7 +33,7 @@ export const AiModelCard: React.FC<AiModelCardProps> = ({
           {/* Header */}
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-2">
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full border border-white/10 bg-slate-900 border border-slate-700 text-[10px] uppercase tracking-[0.15em] font-medium text-slate-300 font-mono ">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full border border-white/10 liquid-glass border border-slate-700 text-[10px] uppercase tracking-[0.15em] font-medium text-slate-300 font-mono ">
                 {model.provider}
               </span>
               <h4 className="text-xl font-medium text-white tracking-tight flex items-center gap-2 font-sans">
@@ -76,7 +76,7 @@ export const AiModelCard: React.FC<AiModelCardProps> = ({
                 <span>Reasoning</span>
                 <span className="text-white font-medium">{model.benchmarks.reasoningScore}/100</span>
               </div>
-              <div className="w-full h-1.5 rounded-full bg-slate-900 border border-slate-700 overflow-hidden">
+              <div className="w-full h-1.5 rounded-full liquid-glass border border-slate-700 overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
                   style={{ width: `${model.benchmarks.reasoningScore}%`, backgroundColor: accent }}
@@ -89,7 +89,7 @@ export const AiModelCard: React.FC<AiModelCardProps> = ({
                 <span>Coding</span>
                 <span className="text-white font-medium">{model.benchmarks.codingScore}/100</span>
               </div>
-              <div className="w-full h-1.5 rounded-full bg-slate-900 border border-slate-700 overflow-hidden">
+              <div className="w-full h-1.5 rounded-full liquid-glass border border-slate-700 overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
                   style={{ width: `${model.benchmarks.codingScore}%`, backgroundColor: accent }}

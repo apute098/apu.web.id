@@ -126,7 +126,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
       {/* Top Action & Server Banner — animated conic gradient border */}
       <div className="border-glow flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-4 rounded-full">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[#22d3ee]">
+          <div className="w-12 h-12 rounded-full liquid-glass border border-slate-700 flex items-center justify-center text-[#22d3ee]">
             <Server className="w-6 h-6" />
           </div>
           <div>
@@ -134,7 +134,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
               <h2 className="text-lg font-bold text-white tracking-tight">
                 apu-arch-server
               </h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono bg-slate-800 text-slate-300 border border-slate-700">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono liquid-glass text-slate-300 border border-slate-700">
                 {systemData.os}
               </span>
             </div>
@@ -227,7 +227,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
             <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
               <HardDrive className="w-4 h-4 text-sky-400" /> HDD Storage
             </span>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-sky-400 border border-slate-700">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono liquid-glass text-sky-400 border border-slate-700">
               WAL MODE
             </span>
           </div>
@@ -276,7 +276,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
               {temperature?.currentC > 70 ? 'High Load' : 'Optimal Thermal'}
             </span>
           </div>
-          <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+          <div className="w-full liquid-glass h-2 rounded-full overflow-hidden">
             <div
               className={`h-full transition-all duration-500 ${
                 temperature?.currentC > 70
@@ -294,7 +294,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
       {/* Network & Disk I/O Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Network Traffic */}
-        <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-full">
+        <div className="border border-slate-700/50 liquid-glass p-4 rounded-full">
           <div className="flex items-start flex-wrap gap-x-2 gap-y-1 justify-between mb-4">
             <div className="flex items-center gap-2">
               <Wifi className="w-5 h-5 text-[#22d3ee] shrink-0" />
@@ -303,7 +303,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
             <span className="text-xs font-mono text-slate-400">{network?.interface}</span>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-3 rounded-full bg-slate-800/50 border border-slate-700/60">
+            <div className="p-3 rounded-full liquid-glass border border-slate-700/60">
               <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
                 <ArrowDownRight className="w-4 h-4 text-green-400" /> Download
               </div>
@@ -312,7 +312,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
                 <span className="text-xs font-normal text-slate-400">MB/s</span>
               </div>
             </div>
-            <div className="p-3 rounded-full bg-slate-800/50 border border-slate-700/60">
+            <div className="p-3 rounded-full liquid-glass border border-slate-700/60">
               <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
                 <ArrowUpRight className="w-4 h-4 text-[#22d3ee]" /> Upload
               </div>
@@ -325,25 +325,25 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
         </div>
 
         {/* Disk I/O WAL Mode Status */}
-        <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-full">
+        <div className="border border-slate-700/50 liquid-glass p-4 rounded-full">
           <div className="flex items-start flex-wrap gap-x-2 gap-y-1 justify-between mb-4">
             <div className="flex items-center gap-2">
               <HardDrive className="w-5 h-5 text-sky-400 shrink-0" />
               <h3 className="font-bold text-white text-sm">HDD Disk I/O & WAL Mode</h3>
             </div>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-green-400 border border-slate-700">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono liquid-glass text-green-400 border border-slate-700">
               WAL ACTIVE
             </span>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-3 rounded-full bg-slate-800/50 border border-slate-700/60">
+            <div className="p-3 rounded-full liquid-glass border border-slate-700/60">
               <div className="text-xs text-slate-400 mb-1">Disk Read Rate</div>
               <div className="text-2xl font-mono font-bold text-sky-400">
                 {diskIO?.readMBps}{' '}
                 <span className="text-xs font-normal text-slate-400">MB/s</span>
               </div>
             </div>
-            <div className="p-3 rounded-full bg-slate-800/50 border border-slate-700/60">
+            <div className="p-3 rounded-full liquid-glass border border-slate-700/60">
               <div className="text-xs text-slate-400 mb-1">Disk Write Rate</div>
               <div className="text-2xl font-mono font-bold text-[#22d3ee]">
                 {diskIO?.writeMBps}{' '}
@@ -355,7 +355,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
       </div>
 
       {/* Real-time Time Series Chart */}
-      <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-full">
+      <div className="border border-slate-700/50 liquid-glass p-4 rounded-full">
         <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
           <div className="min-w-0">
             <h3 className="font-bold text-white text-sm flex items-center gap-2 flex-wrap">
@@ -456,7 +456,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
       </div>
 
       {/* Services Status Grid */}
-      <div className="border border-slate-700/50 bg-slate-900/50 p-4 rounded-full">
+      <div className="border border-slate-700/50 liquid-glass p-4 rounded-full">
         <h3 className="font-bold text-white text-sm mb-4 flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-green-400" />
           Arch Systemd Services Status
@@ -466,7 +466,7 @@ export const HardwareTab: React.FC<HardwareTabProps> = ({
           {Object.entries(services || {}).map(([serviceName, statusText]: [string, any]) => (
             <div
               key={serviceName}
-              className="p-3 rounded-full bg-slate-800/40 border border-slate-700/50 flex flex-col justify-between"
+              className="p-3 rounded-full liquid-glass border border-slate-700/50 flex flex-col justify-between"
             >
               <span className="text-xs font-mono font-semibold text-slate-200 capitalize truncate">
                 {serviceName}

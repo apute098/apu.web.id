@@ -101,19 +101,19 @@ export const AiHubTab: React.FC = () => {
 
             {/* Quick Metrics Cards */}
             <div className="grid grid-cols-2 gap-3 w-full lg:w-auto min-w-[280px]">
-              <div className="p-4 rounded-full bg-slate-900 border border-slate-700 border border-white/10 text-center">
+              <div className="p-4 rounded-full liquid-glass border border-slate-700 border border-white/10 text-center">
                 <span className="text-2xl font-black text-cyan-400 font-mono block">6</span>
                 <span className="text-xs text-slate-400 font-medium">Flagship Models</span>
               </div>
-              <div className="p-4 rounded-full bg-slate-900 border border-slate-700 border border-white/10 text-center">
+              <div className="p-4 rounded-full liquid-glass border border-slate-700 border border-white/10 text-center">
                 <span className="text-2xl font-black text-green-400 font-mono block">7</span>
                 <span className="text-xs text-slate-400 font-medium">Prompt Disciplines</span>
               </div>
-              <div className="p-4 rounded-full bg-slate-900 border border-slate-700 border border-white/10 text-center">
+              <div className="p-4 rounded-full liquid-glass border border-slate-700 border border-white/10 text-center">
                 <span className="text-2xl font-black text-amber-400 font-mono block">2M</span>
                 <span className="text-xs text-slate-400 font-medium">Max Context Window</span>
               </div>
-              <div className="p-4 rounded-full bg-slate-900 border border-slate-700 border border-white/10 text-center">
+              <div className="p-4 rounded-full liquid-glass border border-slate-700 border border-white/10 text-center">
                 <span className="text-2xl font-black text-purple-400 font-mono block">:20128</span>
                 <span className="text-xs text-slate-400 font-medium">9Router Local Port</span>
               </div>
@@ -170,11 +170,11 @@ export const AiHubTab: React.FC = () => {
                 value={modelSearch}
                 onChange={(e) => setModelSearch(e.target.value)}
                 placeholder="Cari model AI..."
-                className="w-full pl-8 pr-3 py-2 rounded-full bg-slate-900/80 border border-white/10 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
+                className="w-full pl-8 pr-3 py-2 rounded-full liquid-glass border border-white/10 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
               />
             </div>
 
-            <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-full border border-white/10 text-xs overflow-x-auto max-w-full no-scrollbar whitespace-nowrap shrink-0">
+            <div className="flex items-center gap-1 liquid-glass p-1 rounded-full border border-white/10 text-xs overflow-x-auto max-w-full no-scrollbar whitespace-nowrap shrink-0">
               {[
                 { id: 'all', label: 'Semua' },
                 { id: 'deepseek', label: 'DeepSeek' },
@@ -244,11 +244,11 @@ export const AiHubTab: React.FC = () => {
                 value={promptSearch}
                 onChange={(e) => setPromptSearch(e.target.value)}
                 placeholder="Cari prompt..."
-                className="w-full pl-8 pr-3 py-2 rounded-full bg-slate-900/80 border border-white/10 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
+                className="w-full pl-8 pr-3 py-2 rounded-full liquid-glass border border-white/10 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
               />
             </div>
 
-            <div className="flex items-center gap-1 bg-slate-900/80 p-1 rounded-full border border-white/10 text-xs overflow-x-auto max-w-full no-scrollbar whitespace-nowrap shrink-0">
+            <div className="flex items-center gap-1 liquid-glass p-1 rounded-full border border-white/10 text-xs overflow-x-auto max-w-full no-scrollbar whitespace-nowrap shrink-0">
               {[
                 { id: 'all', label: 'Semua' },
                 { id: 'coding', label: 'coding' },

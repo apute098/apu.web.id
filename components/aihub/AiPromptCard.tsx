@@ -52,10 +52,10 @@ export const AiPromptCard: React.FC<AiPromptCardProps> = ({ prompt, onCustomize 
             </span>
 
             <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400">
-              <span className="bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-full border border-white/5">
+              <span className="liquid-glass border border-slate-700 px-2 py-0.5 rounded-full border border-white/5">
                 {prompt.difficulty}
               </span>
-              <span className="bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-full border border-white/5">
+              <span className="liquid-glass border border-slate-700 px-2 py-0.5 rounded-full border border-white/5">
                 ~{prompt.tokenEstimate} tok
               </span>
             </div>

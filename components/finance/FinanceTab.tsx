@@ -97,9 +97,9 @@ export const FinanceTab: React.FC = () => {
       {/* Data area: skeleton while first load */}
       {loading && !data ? (
         <div className="space-y-4">
-          <div className="floating-card h-24 animate-pulse bg-slate-800/50" />
-          <div className="floating-card h-64 animate-pulse bg-slate-800/50" />
-          <div className="floating-card h-48 animate-pulse bg-slate-800/50" />
+          <div className="floating-card h-24 animate-pulse liquid-glass" />
+          <div className="floating-card h-64 animate-pulse liquid-glass" />
+          <div className="floating-card h-48 animate-pulse liquid-glass" />
         </div>
       ) : (
         <>

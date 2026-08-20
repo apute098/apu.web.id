@@ -51,7 +51,7 @@ export const NineRouterStatusBadge: React.FC<NineRouterStatusBadgeProps> = ({
   }, [checkHealth]);
 
   return (
-    <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-slate-900 border border-slate-700 border border-white/10  shadow-lg">
+    <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full liquid-glass border border-slate-700 border border-white/10  shadow-lg">
       <div className="flex items-center gap-2">
         {status === 'online' ? (
           <span className="relative flex h-2.5 w-2.5">

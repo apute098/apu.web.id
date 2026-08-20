@@ -215,7 +215,7 @@ export default function Home() {
               onManualRefreshSystem={fetchSystemData}
             />
           ) : (
-            <div className="p-1 rounded-none bg-slate-900 border border-slate-700 border border-white/10 shadow-2xl max-w-md mx-auto my-12 reveal opacity-0 translate-y-8 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] [&.visible]:opacity-100 [&.visible]:translate-y-0">
+            <div className="p-1 rounded-none liquid-glass border border-slate-700 border border-white/10 shadow-2xl max-w-md mx-auto my-12 reveal opacity-0 translate-y-8 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] [&.visible]:opacity-100 [&.visible]:translate-y-0">
               <div className="rounded-none bg-slate-950 p-6 sm:p-8">
                 <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
                   <div className="w-10 h-10 rounded-none bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
@@ -278,7 +278,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 reveal opacity-0 translate-y-8 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] [&.visible]:opacity-100 [&.visible]:translate-y-0">
           <div>
             <div className="flex items-center gap-2.5 mb-3">
-              <div className="w-8 h-8 rounded-none bg-slate-900 border border-white/10 flex items-center justify-center text-cyan-400 font-bold text-xs">
+              <div className="w-8 h-8 rounded-none liquid-glass border border-white/10 flex items-center justify-center text-cyan-400 font-bold text-xs">
                 AI
               </div>
               <h3 className="font-bold text-white text-sm">apu.web.id</h3>

@@ -38,12 +38,12 @@ export const TransactionList: React.FC<Props> = ({
             placeholder="Cari transaksi..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-8 pr-3 py-2.5 min-h-[44px] rounded-full bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full pl-8 pr-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
           />
         </div>
 
         {/* Type Filter Buttons */}
-        <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-full border border-slate-700">
+        <div className="flex items-center gap-1 liquid-glass p-1 rounded-full border border-slate-700">
           {['All', 'Pemasukan', 'Pengeluaran'].map((type) => (
             <button
               key={type}
@@ -64,7 +64,7 @@ export const TransactionList: React.FC<Props> = ({
     {/* Table — desktop only */}
     <div className="hidden md:block overflow-x-auto">
       <table className="w-full text-left text-xs">
-        <thead className="bg-slate-800/80 text-slate-400 uppercase font-mono text-[10px] border-b border-slate-700">
+        <thead className="liquid-glass text-slate-400 uppercase font-mono text-[10px] border-b border-slate-700">
           <tr>
             <th className="py-3 px-4">Tanggal</th>
             <th className="py-3 px-4">Sumber</th>
@@ -110,7 +110,7 @@ export const TransactionList: React.FC<Props> = ({
               >
                 <td className="py-3 px-4 font-mono text-slate-400">{tx.tanggal}</td>
                 <td className="py-3 px-4">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[10px] bg-slate-800 text-[#06b6d4] border border-slate-700">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[10px] liquid-glass text-[#06b6d4] border border-slate-700">
                     <Bot className="w-3 h-3 text-[#22C55E]" />
                     {tx.source || 'Manual'}
                   </span>
@@ -203,7 +203,7 @@ export const TransactionList: React.FC<Props> = ({
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-white truncate">{tx.keterangan}</p>
                 <p className="text-[10px] text-slate-400 mt-0.5 flex items-center gap-1.5">
-                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded font-mono bg-slate-800 text-[#06b6d4] border border-slate-700">
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded font-mono liquid-glass text-[#06b6d4] border border-slate-700">
                     <Bot className="w-2.5 h-2.5 text-[#22C55E]" />
                     {tx.source || 'Manual'}
                   </span>

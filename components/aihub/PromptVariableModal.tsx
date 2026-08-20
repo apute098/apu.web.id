@@ -95,7 +95,7 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
                           setValues((prev) => ({ ...prev, [v.key]: e.target.value }))
                         }
                         placeholder={v.placeholder}
-                        className="w-full rounded-full bg-slate-900/80 border border-white/10 px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50 font-mono"
+                        className="w-full rounded-full liquid-glass border border-white/10 px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50 font-mono"
                       />
                     ) : (
                       <input
@@ -105,7 +105,7 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
                           setValues((prev) => ({ ...prev, [v.key]: e.target.value }))
                         }
                         placeholder={v.placeholder}
-                        className="w-full rounded-full bg-slate-900/80 border border-white/10 px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
+                        className="w-full rounded-full liquid-glass border border-white/10 px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
                       />
                     )}
                   </div>

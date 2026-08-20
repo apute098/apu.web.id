@@ -48,7 +48,7 @@ export const NineRouterGuide: React.FC = () => {
 
         {/* Core Specs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 rounded-full bg-slate-900 border border-slate-700 border border-white/10 space-y-2">
+          <div className="p-4 rounded-full liquid-glass border border-slate-700 border border-white/10 space-y-2">
             <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold">
               <Zap className="w-4 h-4" />
               Base URL Standard
@@ -61,7 +61,7 @@ export const NineRouterGuide: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-4 rounded-full bg-slate-900 border border-slate-700 border border-white/10 space-y-2">
+          <div className="p-4 rounded-full liquid-glass border border-slate-700 border border-white/10 space-y-2">
             <div className="flex items-center gap-2 text-green-400 text-xs font-bold">
               <ShieldCheck className="w-4 h-4" />
               Auth & Zero Rate-Limits
@@ -74,7 +74,7 @@ export const NineRouterGuide: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-4 rounded-full bg-slate-900 border border-slate-700 border border-white/10 space-y-2">
+          <div className="p-4 rounded-full liquid-glass border border-slate-700 border border-white/10 space-y-2">
             <div className="flex items-center gap-2 text-purple-400 text-xs font-bold">
               <Layers className="w-4 h-4" />
               Stream Acceleration
@@ -91,7 +91,7 @@ export const NineRouterGuide: React.FC = () => {
         {/* Multi-Language Code Snippets */}
         <div className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-1.5 bg-slate-900/80 p-1 rounded-full border border-white/10">
+            <div className="flex items-center gap-1.5 liquid-glass p-1 rounded-full border border-white/10">
               {NINEROUTER_SNIPPETS.map((snippet) => (
                 <button
                   key={snippet.lang}

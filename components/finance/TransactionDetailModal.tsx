@@ -13,7 +13,7 @@ export const TransactionDetailModal: React.FC<Props> = ({ tx, onClose }) => (
     onClick={onClose}
   >
     <div
-      className="floating-card w-full max-w-md mx-auto bg-slate-900/95 border-[#22d3ee]/40 p-6 space-y-5"
+      className="floating-card w-full max-w-md mx-auto liquid-glass border-[#22d3ee]/40 p-6 space-y-5"
       onClick={(e) => e.stopPropagation()}
       role="dialog"
       aria-modal="true"

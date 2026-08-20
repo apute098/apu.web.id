@@ -38,14 +38,14 @@ export const NineRouterCurlBuilder: React.FC = () => {
   };
 
   return (
-    <div className="p-1 rounded-full bg-slate-900 border border-slate-700 border border-white/10 shadow-xl ">
+    <div className="p-1 rounded-full liquid-glass border border-slate-700 border border-white/10 shadow-xl ">
       <div className="rounded-full bg-slate-950 p-5 space-y-4">
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <div className="flex items-center gap-2">
             <Sliders className="w-4 h-4 text-cyan-400" />
             <h4 className="text-sm font-bold text-slate-200">Interactive cURL Generator</h4>
           </div>
-          <span className="text-[11px] font-mono text-slate-400 bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-full border border-white/10">
+          <span className="text-[11px] font-mono text-slate-400 liquid-glass border border-slate-700 px-2 py-0.5 rounded-full border border-white/10">
             Endpoint: /v1/chat/completions
           </span>
         </div>
@@ -57,7 +57,7 @@ export const NineRouterCurlBuilder: React.FC = () => {
               value={model}
               onChange={(e) => setModel(e.target.value)}
               aria-label="Model Target"
-              className="w-full rounded-full bg-slate-900/80 border border-white/10 px-3 py-2 text-slate-200 focus:outline-none focus:border-cyan-500/50"
+              className="w-full rounded-full liquid-glass border border-white/10 px-3 py-2 text-slate-200 focus:outline-none focus:border-cyan-500/50"
             >
               {AVAILABLE_MODELS.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -109,7 +109,7 @@ export const NineRouterCurlBuilder: React.FC = () => {
             onChange={(e) => setPrompt(e.target.value)}
             aria-label="User Prompt Content"
             placeholder="Masukkan prompt..."
-            className="w-full rounded-full bg-slate-900/80 border border-white/10 px-3 py-2 text-slate-200 focus:outline-none focus:border-cyan-500/50"
+            className="w-full rounded-full liquid-glass border border-white/10 px-3 py-2 text-slate-200 focus:outline-none focus:border-cyan-500/50"
           />
         </div>
 

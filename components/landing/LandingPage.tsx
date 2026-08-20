@@ -180,7 +180,7 @@ export default function LandingPage() {
         </div>
 
         <div className="relative max-w-7xl mx-auto px-6 py-24 md:py-28 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-white/10 text-xs font-medium text-slate-400 mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full liquid-glass border border-white/10 text-xs font-medium text-slate-400 mb-6">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
             Server:{' '}
             <span className="font-medium text-cyan-400">
@@ -375,7 +375,7 @@ export default function LandingPage() {
 
           {/* Timeline */}
           <div className="relative">
-            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-slate-800 md:-translate-x-px" />
+            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px liquid-glass md:-translate-x-px" />
             <div className="space-y-8">
               {EXPERIENCE.map((entry, i) => (
                 <div
