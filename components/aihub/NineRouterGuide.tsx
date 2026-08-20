@@ -20,7 +20,7 @@ export const NineRouterGuide: React.FC = () => {
   };
 
   return (
-    <div className="p-1 rounded-full bg-gradient-to-br from-white/10 via-white/5 to-white/0 border-2 border-slate-800 shadow-[8px_8px_0_0_rgba(37,99,235,1)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-cyan-500/30 group">
+    <div className="p-1 rounded-full bg-gradient-to-br from-white/10 via-white/5 to-white/0 border border-white/10 shadow-lg shadow-black/20 transition-all duration-500 group hover:border-cyan-500/30">
       <div className="rounded-full bg-slate-950 p-6 sm:p-8 space-y-8">
         {/* Header & Status */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-6">
@@ -48,12 +48,12 @@ export const NineRouterGuide: React.FC = () => {
 
         {/* Core Specs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 rounded-full liquid-glass border border-slate-700 border border-white/10 space-y-2">
+          <div className="p-4 rounded-full liquid-glass border border-white/10 border border-white/10 space-y-2">
             <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold">
               <Zap className="w-4 h-4" />
               Base URL Standard
             </div>
-            <div className="font-mono text-xs text-slate-200 bg-black/40 px-3 py-1.5 rounded-full border border-white/5">
+            <div className="font-mono text-xs text-slate-200 bg-black/40 px-3 py-1.5 rounded-full border border-white/10">
               http://localhost:20128/v1
             </div>
             <p className="text-[11px] text-slate-400">
@@ -61,12 +61,12 @@ export const NineRouterGuide: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-4 rounded-full liquid-glass border border-slate-700 border border-white/10 space-y-2">
+          <div className="p-4 rounded-full liquid-glass border border-white/10 border border-white/10 space-y-2">
             <div className="flex items-center gap-2 text-green-400 text-xs font-bold">
               <ShieldCheck className="w-4 h-4" />
               Auth & Zero Rate-Limits
             </div>
-            <div className="font-mono text-xs text-slate-200 bg-black/40 px-3 py-1.5 rounded-full border border-white/5">
+            <div className="font-mono text-xs text-slate-200 bg-black/40 px-3 py-1.5 rounded-full border border-white/10">
               Bearer $NINEROUTER_API_KEY
             </div>
             <p className="text-[11px] text-slate-400">
@@ -74,12 +74,12 @@ export const NineRouterGuide: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-4 rounded-full liquid-glass border border-slate-700 border border-white/10 space-y-2">
+          <div className="p-4 rounded-full liquid-glass border border-white/10 border border-white/10 space-y-2">
             <div className="flex items-center gap-2 text-purple-400 text-xs font-bold">
               <Layers className="w-4 h-4" />
               Stream Acceleration
             </div>
-            <div className="font-mono text-xs text-slate-200 bg-black/40 px-3 py-1.5 rounded-full border border-white/5">
+            <div className="font-mono text-xs text-slate-200 bg-black/40 px-3 py-1.5 rounded-full border border-white/10">
               text/event-stream (SSE)
             </div>
             <p className="text-[11px] text-slate-400">
@@ -99,7 +99,7 @@ export const NineRouterGuide: React.FC = () => {
                   className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
                     activeLang === snippet.lang
                       ? 'bg-cyan-500 text-slate-950 shadow-md'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-slate-700'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-white/10'
                   }`}
                 >
                   {snippet.label}

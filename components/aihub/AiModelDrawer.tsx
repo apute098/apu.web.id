@@ -55,7 +55,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
           <div className="flex-1 overflow-y-auto py-5 space-y-6 pr-1 custom-scrollbar">
             {/* Quick Metrics Bar */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="p-3 rounded-full liquid-glass border border-slate-700 border border-white/10 text-center">
+              <div className="p-3 rounded-full liquid-glass border border-white/10 border border-white/10 text-center">
                 <span className="text-[10px] uppercase font-bold text-slate-400 block">
                   Context Window
                 </span>
@@ -63,7 +63,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                   {model.contextWindowLabel}
                 </span>
               </div>
-              <div className="p-3 rounded-full liquid-glass border border-slate-700 border border-white/10 text-center">
+              <div className="p-3 rounded-full liquid-glass border border-white/10 border border-white/10 text-center">
                 <span className="text-[10px] uppercase font-bold text-slate-400 block">
                   Generation Speed
                 </span>
@@ -71,7 +71,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                   {model.speedLabel}
                 </span>
               </div>
-              <div className="p-3 rounded-full liquid-glass border border-slate-700 border border-white/10 text-center">
+              <div className="p-3 rounded-full liquid-glass border border-white/10 border border-white/10 text-center">
                 <span className="text-[10px] uppercase font-bold text-slate-400 block">
                   Input / 1M Tokens
                 </span>
@@ -79,7 +79,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                   ${model.pricing.inputPer1M.toFixed(2)}
                 </span>
               </div>
-              <div className="p-3 rounded-full liquid-glass border border-slate-700 border border-white/10 text-center">
+              <div className="p-3 rounded-full liquid-glass border border-white/10 border border-white/10 text-center">
                 <span className="text-[10px] uppercase font-bold text-slate-400 block">
                   Output / 1M Tokens
                 </span>
@@ -90,7 +90,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
             </div>
 
             {/* Description */}
-            <div className="p-4 rounded-full liquid-glass border border-slate-700 border border-white/10">
+            <div className="p-4 rounded-full liquid-glass border border-white/10 border border-white/10">
               <p className="text-xs text-slate-300 leading-relaxed">{model.description}</p>
             </div>
 
@@ -155,7 +155,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                     className={`flex items-center gap-1.5 p-2 rounded-full border ${
                       enabled
                         ? 'bg-green-500/10 text-green-300 border-green-500/20'
-                        : 'liquid-glass border border-slate-700 text-slate-500 border-white/5'
+                        : 'liquid-glass border border-white/10 text-slate-500 border-white/10'
                     }`}
                   >
                     {enabled ? (
@@ -178,7 +178,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                 {model.bestFor.map((item, idx) => (
                   <li
                     key={idx}
-                    className="flex items-center gap-2 p-2.5 rounded-full liquid-glass border border-slate-700 border border-white/5"
+                    className="flex items-center gap-2 p-2.5 rounded-full liquid-glass border border-white/10 border border-white/10"
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
                     <span>{item}</span>

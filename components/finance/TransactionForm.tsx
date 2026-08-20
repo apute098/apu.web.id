@@ -62,7 +62,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
             type="date"
             value={tanggal}
             onChange={(e) => setTanggal(e.target.value)}
-            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
             required
           />
         </div>
@@ -74,7 +74,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
           <select
             value={tipe}
             onChange={(e) => setTipe(e.target.value as any)}
-            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-white/10 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
           >
             <option value="Pemasukan">Pemasukan (Income)</option>
             <option value="Pengeluaran">Pengeluaran (Expense)</option>
@@ -90,7 +90,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
             value={kategori}
             onChange={(e) => setKategori(e.target.value)}
             placeholder="Misal: Hosting, Client Payment, Listrik"
-            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-white/10 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
             required
           />
         </div>
@@ -104,7 +104,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
             value={jumlah}
             onChange={(e) => setJumlah(e.target.value)}
             placeholder="Contoh: 1500000"
-            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
             required
           />
         </div>
@@ -118,7 +118,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
             value={metode}
             onChange={(e) => setMetode(e.target.value)}
             placeholder="Bank Transfer, Midtrans, Cash"
-            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-white/10 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
           />
         </div>
 
@@ -131,7 +131,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
             value={keterangan}
             onChange={(e) => setKeterangan(e.target.value)}
             placeholder="Deskripsi transaksi..."
-            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-slate-700 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-white/10 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
             required
           />
         </div>

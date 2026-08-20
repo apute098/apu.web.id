@@ -62,13 +62,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-3 cursor-pointer group" 
               onClick={() => setActiveTab('ai-hub')}
             >
-              <div className="w-9 h-9 rounded-full bg-slate-900 border border-slate-700 border border-white/10 flex items-center justify-center overflow-hidden transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-110">
+              <div className="w-9 h-9 rounded-full bg-slate-900 border border-white/10 border border-white/10 flex items-center justify-center overflow-hidden transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-110">
                 <Logo3D size={40} />
               </div>
               <div className="flex flex-col justify-center">
                 <div className="flex items-center gap-2">
                   <h1 className="font-sans font-medium text-sm text-white/90 tracking-wide">apu.web.id</h1>
-                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full liquid-glass border border-slate-700 border border-white/10">
+                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full liquid-glass border border-white/10 border border-white/10">
                     <span className="relative flex h-1.5 w-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
@@ -92,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className={`flex items-center gap-2 px-5 py-2 rounded-full font-sans text-sm tracking-wide transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                       isActive
                         ? 'bg-blue-600 text-white text-white'
-                        : 'text-white/50 hover:text-white/90 hover:bg-slate-900 border border-slate-700'
+                        : 'text-white/50 hover:text-white/90 hover:bg-slate-900 border border-white/10'
                     }`}
                   >
                     <span className={`${isActive ? 'text-white' : 'text-white/50'}`}>
@@ -108,7 +108,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {!isAdmin && (
                 <button
                   onClick={() => setActiveTab('admin')}
-                  className="group flex items-center gap-3 pl-5 pr-1 py-1 rounded-full bg-slate-900 border border-slate-700 border border-white/10 hover:bg-blue-600 text-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                  className="group flex items-center gap-3 pl-5 pr-1 py-1 rounded-full bg-slate-900 border border-white/10 border border-white/10 hover:bg-blue-600 text-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
                 >
                   <span className="font-sans text-sm text-white/90">Admin Login</span>
                   <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-95 group-hover:bg-white/20">
@@ -144,7 +144,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setIsMobileMenuOpen(false);
               }}
             >
-              <div className="w-8 h-8 rounded-full liquid-glass border border-slate-700 border border-white/10 flex items-center justify-center overflow-hidden">
+              <div className="w-8 h-8 rounded-full liquid-glass border border-white/10 border border-white/10 flex items-center justify-center overflow-hidden">
                 <Logo3D size={32} />
               </div>
               <div className="flex flex-col">
@@ -163,7 +163,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-10 h-10 rounded-full bg-slate-900 border border-slate-700 border border-white/10 flex items-center justify-center min-h-[44px] min-w-[44px] transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-blue-600 text-white"
+              className="w-10 h-10 rounded-full bg-slate-900 border border-white/10 border border-white/10 flex items-center justify-center min-h-[44px] min-w-[44px] transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-blue-600 text-white"
               aria-label="Toggle menu"
             >
               <div className="relative w-5 h-5">
@@ -197,7 +197,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 } ${isActive ? 'text-white' : 'text-white/50'}`}
                 style={{ transitionDelay: isMobileMenuOpen ? `${100 + idx * 100}ms` : '0ms' }}
               >
-                <span className={`p-3 rounded-full border ${isActive ? 'bg-blue-600 text-white border-white/20 text-white' : 'bg-transparent border-white/10 text-white/50'}`}>
+                <span className={`p-3 rounded-full border ${isActive ? 'bg-blue-600 text-white border-white/10 text-white' : 'bg-transparent border-white/10 text-white/50'}`}>
                   {tab.icon}
                 </span>
                 <span>{tab.label}</span>
@@ -218,7 +218,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setActiveTab('admin');
                 setIsMobileMenuOpen(false);
               }}
-              className={`group flex items-center gap-4 pl-6 pr-2 py-2 rounded-full liquid-glass border border-slate-700 border border-white/10 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+              className={`group flex items-center gap-4 pl-6 pr-2 py-2 rounded-full liquid-glass border border-white/10 border border-white/10 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                 isMobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
               }`}
               style={{ transitionDelay: isMobileMenuOpen ? `${200 + tabs.length * 100}ms` : '0ms' }}

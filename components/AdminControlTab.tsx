@@ -325,7 +325,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
               { label: 'User Disetujui', value: `${approvedCount} User`, icon: <CheckCircle2 className="w-5 h-5" />, color: 'emerald' },
               { label: 'User Ditolak', value: `${rejectedCount} User`, icon: <XCircle className="w-5 h-5" />, color: 'rose' },
             ].map((m) => (
-              <div key={m.label} className="p-1 rounded-full liquid-glass border border-slate-700 border border-white/10 shadow-lg">
+              <div key={m.label} className="p-1 rounded-full liquid-glass border border-white/10 border border-white/10 shadow-lg">
                 <div className="rounded-full bg-slate-950 p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${
@@ -346,7 +346,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
           </div>
 
           {/* User Table Card */}
-          <div className="p-1 rounded-full liquid-glass border border-slate-700 border border-white/10 shadow-2xl">
+          <div className="p-1 rounded-full liquid-glass border border-white/10 border border-white/10 shadow-2xl">
             <div className="rounded-full bg-slate-950 p-6 space-y-4">
               <div className="flex items-center justify-between gap-4 flex-wrap">
                 <div className="flex items-center gap-3">
@@ -372,7 +372,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                   <button
                     onClick={fetchUsers}
                     disabled={loadingUsers}
-                    className="px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold flex items-center gap-2 transition-all active:scale-[0.98]"
+                    className="px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-slate-300 border border-white/10 text-xs font-semibold flex items-center gap-2 transition-all active:scale-[0.98]"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${loadingUsers ? 'animate-spin' : ''}`} />
                     Refresh
@@ -402,12 +402,12 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                       </tr>
                     ) : (
                       filteredUsers.map((u) => (
-                        <tr key={u.id} className="hover:bg-slate-900 border border-slate-700 transition-colors">
+                        <tr key={u.id} className="hover:bg-slate-900 border border-white/10 transition-colors">
                           <td className="py-3.5 px-4 font-mono text-slate-500">#{u.id}</td>
                           <td className="py-3.5 px-4 font-bold text-white font-mono">@{u.username}</td>
                           <td className="py-3.5 px-4 text-slate-300">{u.email}</td>
                           <td className="py-3.5 px-4">
-                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold liquid-glass text-slate-300 border border-slate-700">
+                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold liquid-glass text-slate-300 border border-white/10">
                               {u.role}
                             </span>
                           </td>
@@ -466,7 +466,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
 
       {/* ===== Admin Sub-Tab 2: Keuangan Dashboard ===== */}
       {activeAdminSubTab === 'keuangan' && (
-        <div className="p-1 rounded-full liquid-glass border border-slate-700 border border-white/10 shadow-2xl">
+        <div className="p-1 rounded-full liquid-glass border border-white/10 border border-white/10 shadow-2xl">
           <div className="rounded-full bg-slate-950 p-6">
             <FinanceTab />
           </div>
@@ -475,7 +475,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
 
       {/* ===== Admin Sub-Tab 3: Telemetri Server Arch ===== */}
       {activeAdminSubTab === 'telemetri' && (
-        <div className="p-1 rounded-full liquid-glass border border-slate-700 border border-white/10 shadow-2xl">
+        <div className="p-1 rounded-full liquid-glass border border-white/10 border border-white/10 shadow-2xl">
           <div className="rounded-full bg-slate-950 p-6">
             <HardwareTab
               systemData={systemData}
@@ -491,7 +491,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
       {activeAdminSubTab === 'services' && (
         <div className="space-y-6">
           {/* Services Grid */}
-          <div className="p-1 rounded-full liquid-glass border border-slate-700 border border-white/10 shadow-2xl">
+          <div className="p-1 rounded-full liquid-glass border border-white/10 border border-white/10 shadow-2xl">
             <div className="rounded-full bg-slate-950 p-6 space-y-6">
               <div className="flex items-center justify-between gap-4 flex-wrap">
                 <div className="flex items-center gap-3">
@@ -505,7 +505,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                 <button
                   onClick={fetchProcessesAndServices}
                   disabled={loadingProcesses}
-                  className="px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold flex items-center gap-2 transition-all active:scale-[0.98]"
+                  className="px-3.5 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-slate-300 border border-white/10 text-xs font-semibold flex items-center gap-2 transition-all active:scale-[0.98]"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${loadingProcesses ? 'animate-spin' : ''}`} />
                   Refresh Daemon Status
@@ -523,7 +523,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                   return (
                     <div
                       key={svc.name}
-                      className="p-4 rounded-full bg-slate-900 border border-slate-700 border border-white/10 flex flex-col justify-between space-y-4 hover:border-cyan-500/30 transition-all"
+                      className="p-4 rounded-full bg-slate-900 border border-white/10 border border-white/10 flex flex-col justify-between space-y-4 hover:border-cyan-500/30 transition-all"
                     >
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
@@ -554,7 +554,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                         )}
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                      <div className="flex items-center justify-between pt-2 border-t border-white/10">
                         <span className="text-[10px] text-slate-500 uppercase tracking-wider font-mono">
                           {svc.type === 'system' ? 'systemctl' : 'systemctl --user'}
                         </span>
@@ -582,7 +582,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
           </div>
 
           {/* Top 20 System Processes Inspector */}
-          <div className="p-1 rounded-full liquid-glass border border-slate-700 border border-white/10 shadow-2xl">
+          <div className="p-1 rounded-full liquid-glass border border-white/10 border border-white/10 shadow-2xl">
             <div className="rounded-full bg-slate-950 p-6 space-y-4">
               <div className="flex items-center justify-between gap-4 flex-wrap">
                 <div className="flex items-center gap-3">
@@ -627,14 +627,14 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                       </tr>
                     ) : (
                       filteredProcesses.map((p) => (
-                        <tr key={p.pid} className="hover:bg-slate-900 border border-slate-700 transition-colors">
+                        <tr key={p.pid} className="hover:bg-slate-900 border border-white/10 transition-colors">
                           <td className="py-2.5 px-3 text-cyan-400 font-bold">#{p.pid}</td>
                           <td className="py-2.5 px-3 text-slate-400">{p.user}</td>
                           <td className="py-2.5 px-3 text-white font-bold">{p.name}</td>
                           <td className="py-2.5 px-3 text-amber-400 font-semibold">{p.cpu}%</td>
                           <td className="py-2.5 px-3 text-purple-400 font-semibold">{p.ramMB} MB</td>
                           <td className="py-2.5 px-3">
-                            <span className="px-2 py-0.5 rounded-full liquid-glass border border-slate-700 border border-white/10 text-slate-300 text-[10px]">
+                            <span className="px-2 py-0.5 rounded-full liquid-glass border border-white/10 border border-white/10 text-slate-300 text-[10px]">
                               {p.status}
                             </span>
                           </td>

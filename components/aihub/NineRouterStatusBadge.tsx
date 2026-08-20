@@ -51,7 +51,7 @@ export const NineRouterStatusBadge: React.FC<NineRouterStatusBadgeProps> = ({
   }, [checkHealth]);
 
   return (
-    <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full liquid-glass border border-slate-700 border border-white/10  shadow-lg">
+    <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full liquid-glass border border-white/10 border border-white/10  shadow-lg">
       <div className="flex items-center gap-2">
         {status === 'online' ? (
           <span className="relative flex h-2.5 w-2.5">
@@ -97,7 +97,7 @@ export const NineRouterStatusBadge: React.FC<NineRouterStatusBadgeProps> = ({
         onClick={checkHealth}
         disabled={status === 'checking'}
         title="Refresh Status"
-        className="p-1 rounded-full text-slate-400 hover:text-cyan-400 hover:bg-slate-900 border border-slate-700 active:scale-95 transition-all"
+        className="p-1 rounded-full text-slate-400 hover:text-cyan-400 hover:bg-slate-900 border border-white/10 active:scale-95 transition-all"
       >
         <RefreshCw className={`w-3.5 h-3.5 ${status === 'checking' ? 'animate-spin' : ''}`} />
       </button>

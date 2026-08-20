@@ -218,13 +218,13 @@ export default function LandingPage() {
       </section>
 
       {/* ===== ABOUT (apu-about) ===== */}
-      <section id="about" className="apu-about py-24 md:py-32 px-6 md:px-8 reveal">
+      <section id="about" className="apu-about py-16 md:py-24 px-6 md:px-8 reveal">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
               Tentang Saya
             </h2>
-            <p className="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
+            <p className="text-slate-300 text-lg max-w-2xl mx-auto leading-relaxed">
               Homelab enthusiast. Self-hosted infrastructure & AI tooling. {/* ISI KONTEN DI SINI */}
             </p>
           </div>
@@ -239,7 +239,7 @@ export default function LandingPage() {
               <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
                 Arch Linux Homelab
               </h3>
-              <p className="text-slate-400 text-sm mt-1">
+              <p className="text-slate-300 text-sm mt-1">
                 Server Arch Linux x86_64 di apu.web.id: server monitor, finance tracker, AI hub & bot.
               </p>
             </article>
@@ -253,7 +253,7 @@ export default function LandingPage() {
               <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
                 9Router AI Gateway
               </h3>
-              <p className="text-slate-400 text-sm mt-1">
+              <p className="text-slate-300 text-sm mt-1">
                 AI request routing & provider failover di lapisan gateway (localhost:20128).
               </p>
             </article>
@@ -267,25 +267,21 @@ export default function LandingPage() {
               <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
                 Hermes AI Agent
               </h3>
-              <p className="text-slate-400 text-sm mt-1">
+              <p className="text-slate-300 text-sm mt-1">
                 AI assistant agent (Nous Research) dengan durable session, memory & tool-use.
               </p>
             </article>
           </div>
-        </div>
-      </section>
 
-      {/* ===== SKILLS (apu-skills) ===== */}
-      <section id="skills" className="apu-skills py-24 md:py-32 px-6 md:px-8 bg-slate-950/50 reveal">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">Skills</h2>
-            <p className="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
-              Core competencies: Linux, AI, Web & otomasi. {/* ISI KONTEN DI SINI */}
-            </p>
-          </div>
-
-          {/* ISI KONTEN DI SINI: sesuaikan daftar skill di konstanta SKILLS atas file */}
+          {/* SKILLS — digabung ke bagian tentang biar halaman pendek */}
+          <div id="skills" className="apu-skills mt-12">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2">Skills</h2>
+              <p className="text-slate-300 text-sm max-w-2xl mx-auto leading-relaxed">
+                Core competencies: Linux, AI, Web & otomasi. {/* ISI KONTEN DI SINI */}
+              </p>
+            </div>
+            {/* ISI KONTEN DI SINI: sesuaikan daftar skill di konstanta SKILLS atas file */}
           <div className="flex flex-wrap justify-center gap-4">
             {SKILLS.map((label, i) => (
               <div
@@ -297,17 +293,18 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+          </div>
         </div>
       </section>
 
       {/* ===== PROJECTS (apu-projects) ===== */}
-      <section id="projects" className="apu-projects py-24 md:py-32 px-6 md:px-8 reveal">
+      <section id="projects" className="apu-projects py-16 md:py-24 px-6 md:px-8 reveal">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
               Projects
             </h2>
-            <p className="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
+            <p className="text-slate-300 text-lg max-w-2xl mx-auto leading-relaxed">
               Selected self-hosted projects. {/* ISI KONTEN DI SINI */}
             </p>
           </div>
@@ -324,7 +321,7 @@ export default function LandingPage() {
                                 <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
                   {project.title}
                 </h3>
-                <p className="text-slate-400 text-sm mt-2 flex-1">{project.description}</p>
+                <p className="text-slate-300 text-sm mt-2 flex-1">{project.description}</p>
                 <div className="mt-4 flex gap-2 items-center">
                   <a
                     href={project.githubLink}
@@ -348,7 +345,7 @@ export default function LandingPage() {
               href="https://github.com/apute098"
               target="_blank"
               rel="noopener noreferrer"
-              className="group liquid-glass border border-dashed border-white/15 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/40 transition-all flex flex-col items-center justify-center text-center min-h-[180px] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
+              className="group liquid-glass border border-dashed border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/40 transition-all flex flex-col items-center justify-center text-center min-h-[180px] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
             >
               <svg className="w-8 h-8 text-slate-500 group-hover:text-cyan-400 transition-colors mb-3" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z" />
@@ -362,13 +359,13 @@ export default function LandingPage() {
       </section>
 
       {/* ===== EXPERIENCE (apu-experience) ===== */}
-      <section id="experience" className="apu-experience py-24 md:py-32 px-6 md:px-8 bg-slate-950/50 reveal">
+      <section id="experience" className="apu-experience py-16 md:py-24 px-6 md:px-8 bg-slate-950/50 reveal">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
               Pengalaman
             </h2>
-            <p className="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
+            <p className="text-slate-300 text-lg max-w-2xl mx-auto leading-relaxed">
               Riwayat kerja & proyek pribadi. {/* ISI KONTEN DI SINI */}
             </p>
           </div>
@@ -384,14 +381,14 @@ export default function LandingPage() {
                     i % 2 === 0 ? 'md:pr-[calc(50%+2rem)]' : 'md:pl-[calc(50%+2rem)]'
                   }`}
                 >
-                  <span className="absolute left-2 md:left-1/2 top-1.5 w-4 h-4 rounded-full bg-cyan-400 border-4 border-slate-950 md:-translate-x-1/2" />
+                  <span className="absolute left-2 md:left-1/2 top-1.5 w-4 h-4 rounded-full bg-cyan-400 border-2 border-[#05050d] md:-translate-x-1/2" />
                   <div className="group liquid-glass border border-white/10 rounded-2xl p-6 hover:border-cyan-500/30 transition-all">
                     <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
                       {entry.role}
                     </h3>
                     <p className="text-slate-500 text-sm mb-1">{entry.company}</p>
                     <p className="text-slate-400 text-xs mb-3">{entry.period}</p>
-                    <p className="text-slate-400 text-sm">{entry.description}</p>
+                    <p className="text-slate-300 text-sm">{entry.description}</p>
                   </div>
                 </div>
               ))}
@@ -401,10 +398,10 @@ export default function LandingPage() {
       </section>
 
       {/* ===== CONTACT (apu-contact) ===== */}
-      <section id="contact" className="apu-contact py-24 md:py-32 px-6 md:px-8 reveal">
+      <section id="contact" className="apu-contact py-16 md:py-24 px-6 md:px-8 reveal">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">Kontak</h2>
-          <p className="text-slate-400 text-lg max-w-xl mx-auto leading-relaxed">
+          <p className="text-slate-300 text-lg max-w-xl mx-auto leading-relaxed">
             Bot aktif 24/7. Konsultasi, kolaborasi, atau sekadar ngobrol.
           </p>
 
@@ -469,24 +466,6 @@ export default function LandingPage() {
               <div className="text-xs text-slate-500 mt-2">Source code & projects</div>
             </a>
           </div>
-        </div>
-      </section>
-
-      {/* ===== CTA BANNER ===== */}
-      <section className="apu-cta py-16 bg-slate-950/80 backdrop-blur-xl border-t border-white/10 reveal">
-        <div className="max-w-7xl mx-auto px-6 md:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
-            Coba dashboard langsung
-          </h2>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-            Server monitor real-time, finance tracker & AI hub. Semua live dari apu.web.id.
-          </p>
-          <button
-            onClick={() => enterDashboard('ai-hub')}
-            className="gradient-border px-6 py-3 rounded-full bg-slate-950/60 text-cyan-400 font-sans text-xs font-bold hover:brightness-125 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
-          >
-            Buka Dashboard
-          </button>
         </div>
       </section>
 

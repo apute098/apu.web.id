@@ -38,7 +38,7 @@ export const AiPromptCard: React.FC<AiPromptCardProps> = ({ prompt, onCustomize 
   };
 
   return (
-    <div className="p-1 rounded-full bg-gradient-to-br from-white/10 via-white/5 to-white/0 border-2 border-slate-800 shadow-[8px_8px_0_0_rgba(37,99,235,1)] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-cyan-500/30 group flex flex-col justify-between">
+    <div className="p-1 rounded-full bg-gradient-to-br from-white/10 via-white/5 to-white/0 border border-white/10 shadow-lg shadow-black/20 transition-all duration-500 group hover:border-cyan-500/30 flex flex-col justify-between">
       <div className="rounded-full bg-slate-950 p-6 sm:p-7 flex flex-col justify-between h-full space-y-5">
         {/* Header Badges */}
         <div className="space-y-3">
@@ -52,10 +52,10 @@ export const AiPromptCard: React.FC<AiPromptCardProps> = ({ prompt, onCustomize 
             </span>
 
             <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400">
-              <span className="liquid-glass border border-slate-700 px-2 py-0.5 rounded-full border border-white/5">
+              <span className="liquid-glass border border-white/10 px-2 py-0.5 rounded-full border border-white/10">
                 {prompt.difficulty}
               </span>
-              <span className="liquid-glass border border-slate-700 px-2 py-0.5 rounded-full border border-white/5">
+              <span className="liquid-glass border border-white/10 px-2 py-0.5 rounded-full border border-white/10">
                 ~{prompt.tokenEstimate} tok
               </span>
             </div>
@@ -92,10 +92,10 @@ export const AiPromptCard: React.FC<AiPromptCardProps> = ({ prompt, onCustomize 
         </div>
 
         {/* Action Row */}
-        <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/5">
+        <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/10">
           <button
             onClick={() => onCustomize(prompt)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-300 hover:text-cyan-400 hover:bg-slate-900 border border-slate-700 transition-all active:scale-95"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-300 hover:text-cyan-400 hover:bg-slate-900 border border-white/10 transition-all active:scale-95"
           >
             <Sliders className="w-3.5 h-3.5" />
             <span>Kustomisasi</span>

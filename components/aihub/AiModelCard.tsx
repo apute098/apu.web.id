@@ -33,7 +33,7 @@ export const AiModelCard: React.FC<AiModelCardProps> = ({
           {/* Header */}
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-2">
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full border border-white/10 liquid-glass border border-slate-700 text-[10px] uppercase tracking-[0.15em] font-medium text-slate-300 font-mono ">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full border border-white/10 liquid-glass border border-white/10 text-[10px] uppercase tracking-[0.15em] font-medium text-slate-300 font-mono ">
                 {model.provider}
               </span>
               <h4 className="text-xl font-medium text-white tracking-tight flex items-center gap-2 font-sans">
@@ -55,13 +55,13 @@ export const AiModelCard: React.FC<AiModelCardProps> = ({
 
           {/* Metrics */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="p-3 rounded-full bg-white/[0.02] border border-white/5 ">
+            <div className="p-3 rounded-full bg-white/[0.02] border border-white/10 ">
               <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono block mb-1">Context Window</span>
               <span className="text-sm font-medium text-white font-sans block">
                 {model.contextWindowLabel}
               </span>
             </div>
-            <div className="p-3 rounded-full bg-white/[0.02] border border-white/5 ">
+            <div className="p-3 rounded-full bg-white/[0.02] border border-white/10 ">
               <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono block mb-1">Speed</span>
               <span className="text-sm font-medium text-white font-sans block">
                 {model.speedLabel}
@@ -76,7 +76,7 @@ export const AiModelCard: React.FC<AiModelCardProps> = ({
                 <span>Reasoning</span>
                 <span className="text-white font-medium">{model.benchmarks.reasoningScore}/100</span>
               </div>
-              <div className="w-full h-1.5 rounded-full liquid-glass border border-slate-700 overflow-hidden">
+              <div className="w-full h-1.5 rounded-full liquid-glass border border-white/10 overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
                   style={{ width: `${model.benchmarks.reasoningScore}%`, backgroundColor: accent }}
@@ -89,7 +89,7 @@ export const AiModelCard: React.FC<AiModelCardProps> = ({
                 <span>Coding</span>
                 <span className="text-white font-medium">{model.benchmarks.codingScore}/100</span>
               </div>
-              <div className="w-full h-1.5 rounded-full liquid-glass border border-slate-700 overflow-hidden">
+              <div className="w-full h-1.5 rounded-full liquid-glass border border-white/10 overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
                   style={{ width: `${model.benchmarks.codingScore}%`, backgroundColor: accent }}
@@ -106,7 +106,7 @@ export const AiModelCard: React.FC<AiModelCardProps> = ({
             className={`min-h-[44px] min-w-[44px] w-11 h-11 flex items-center justify-center rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] border ${
               isSelectedForCompare
                 ? 'bg-white text-[#05050d] border-white'
-                : 'bg-slate-900 border border-slate-700 text-slate-300 border-white/10 hover:bg-blue-600 text-white hover:text-white'
+                : 'bg-slate-900 border border-white/10 text-slate-300 border-white/10 hover:bg-blue-600 text-white hover:text-white'
             }`}
             aria-label={isSelectedForCompare ? "Remove from compare" : "Add to compare"}
           >
