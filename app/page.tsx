@@ -15,17 +15,35 @@ import { AiWatchdogTab } from '@/components/AiWatchdogTab';
 import { AuthModal } from '@/components/AuthModal';
 import { CommandPalette } from '@/components/CommandPalette';
 import { MASTER_PIN } from '@/lib/auth';
+import { triggerHaptic } from '@/lib/haptics';
+import { RefreshCw } from 'lucide-react';
+
+const ORDERED_TABS: ActiveTab[] = [
+  'overview',
+  'services',
+  'processes',
+  'docker',
+  'network',
+  'logs',
+  'terminal',
+  'watchdog',
+];
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
   const [systemData, setSystemData] = useState<any>(null);
   const [historyData, setHistoryData] = useState<any[]>([]);
-  const [refreshInterval, setRefreshInterval] = useState<number>(-1); // Default to SSE Stream (-1)
+  const [refreshInterval, setRefreshInterval] = useState<number>(-1);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isCmdPaletteOpen, setIsCmdPaletteOpen] = useState<boolean>(false);
   const [logModalUnit, setLogModalUnit] = useState<string | null>(null);
 
+  // Pull-to-refresh state
+  const [pullDistance, setPullDistance] = useState<number>(0);
+  const [isPulling, setIsPulling] = useState<boolean>(false);
+  const touchStartY = useRef<number>(0);
+  const touchStartX = useRef<number>(0);
   const eventSourceRef = useRef<EventSource | null>(null);
 
   // Auth / Lock state
@@ -107,8 +125,7 @@ export default function Home() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
-      const validTabs: ActiveTab[] = ['overview', 'services', 'processes', 'docker', 'network', 'logs', 'terminal', 'watchdog'];
-      if (validTabs.includes(hash as ActiveTab)) {
+      if (ORDERED_TABS.includes(hash as ActiveTab)) {
         setActiveTab(hash as ActiveTab);
       }
     };
@@ -119,15 +136,80 @@ export default function Home() {
   }, []);
 
   const switchTab = (tab: ActiveTab) => {
+    triggerHaptic('light');
     setActiveTab(tab);
     if (typeof window !== 'undefined') {
       window.location.hash = tab === 'overview' ? '' : tab;
     }
   };
 
+  // Mobile Touch Gestures: Pull-to-Refresh & Horizontal Swipe
+  useEffect(() => {
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY.current = e.touches[0].clientY;
+      touchStartX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const currentY = e.touches[0].clientY;
+      const dy = currentY - touchStartY.current;
+
+      // Only allow pull-to-refresh at the top of the page
+      if (window.scrollY === 0 && dy > 0) {
+        setIsPulling(true);
+        setPullDistance(Math.min(dy * 0.45, 100)); // Elastic resistance
+      }
+    };
+
+    const handleTouchEnd = async (e: TouchEvent) => {
+      const touchEndY = e.changedTouches[0].clientY;
+      const touchEndX = e.changedTouches[0].clientX;
+      const dy = touchEndY - touchStartY.current;
+      const dx = touchEndX - touchStartX.current;
+
+      // 1. Pull to refresh trigger
+      if (isPulling) {
+        if (pullDistance > 65) {
+          triggerHaptic('success');
+          await fetchSystemData();
+        }
+        setIsPulling(false);
+        setPullDistance(0);
+      }
+
+      // 2. Horizontal Swipe between tabs (ignore if target is inside an input or scrollable element)
+      if (Math.abs(dx) > 90 && Math.abs(dy) < 45 && !isPulling) {
+        const target = e.target as HTMLElement;
+        if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.closest('.overflow-x-auto'))) {
+          return;
+        }
+
+        const currentIndex = ORDERED_TABS.indexOf(activeTab);
+        if (dx < 0 && currentIndex < ORDERED_TABS.length - 1) {
+          // Swipe Left -> Next Tab
+          switchTab(ORDERED_TABS[currentIndex + 1]);
+        } else if (dx > 0 && currentIndex > 0) {
+          // Swipe Right -> Previous Tab
+          switchTab(ORDERED_TABS[currentIndex - 1]);
+        }
+      }
+    };
+
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [activeTab, isPulling, pullDistance, fetchSystemData]);
+
   // Quick Action execution handler
   const handleTriggerAction = async (action: string) => {
     const token = localStorage.getItem('apu_admin_token') || MASTER_PIN;
+    triggerHaptic('medium');
     try {
       const res = await fetch('/api/v1/terminal', {
         method: 'POST',
@@ -140,18 +222,39 @@ export default function Home() {
 
       const data = await res.json();
       if (res.ok && data.success) {
+        triggerHaptic('success');
         alert(`Sukses: ${data.stdout || 'Perintah berhasil dieksekusi.'}`);
         fetchSystemData();
       } else {
+        triggerHaptic('error');
         alert(`Gagal: ${data.error || data.stderr || 'Terjadi kesalahan eksekusi'}`);
       }
     } catch (err: any) {
+      triggerHaptic('error');
       alert(`Error: ${err.message}`);
     }
   };
 
   return (
     <div className="min-h-[100dvh] text-slate-100 flex flex-col font-sans selection:bg-cyan-400 selection:text-slate-950 bg-[#030308]">
+      {/* Pull-To-Refresh Indicator for Mobile */}
+      {pullDistance > 0 && (
+        <div
+          className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center pointer-events-none transition-all duration-150"
+          style={{ transform: `translateY(${Math.min(pullDistance, 80)}px)` }}
+        >
+          <div className="bg-[#080914]/90 border border-[#00f2fe]/40 rounded-full px-4 py-2 flex items-center gap-2 shadow-2xl backdrop-blur-xl">
+            <RefreshCw
+              className={`w-4 h-4 text-[#00f2fe] ${pullDistance > 65 ? 'animate-spin' : ''}`}
+              style={{ transform: `rotate(${pullDistance * 4}deg)` }}
+            />
+            <span className="text-xs font-mono font-bold text-slate-200">
+              {pullDistance > 65 ? 'Lepaskan untuk Refresh' : 'Tarik untuk Refresh'}
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Ambient Cyberpunk Lighting */}
       <div className="ambient-glow-cyan top-1/4 -left-1/4" />
       <div className="ambient-glow-violet bottom-1/4 -right-1/4" />
@@ -168,8 +271,10 @@ export default function Home() {
           if (locked) {
             localStorage.removeItem('apu_admin_token');
             setIsLocked(true);
+            triggerHaptic('medium');
           } else {
             setIsAuthModalOpen(true);
+            triggerHaptic('light');
           }
         }}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
@@ -179,7 +284,7 @@ export default function Home() {
       />
 
       {/* Main Content Area: Responsive Mobile Spacing */}
-      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 pt-20 sm:pt-28 pb-28 sm:pb-16">
+      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 pt-20 sm:pt-28 pb-28 sm:pb-16 transition-opacity duration-300">
         {activeTab === 'overview' && (
           <OverviewTab
             systemData={systemData}
@@ -249,7 +354,7 @@ export default function Home() {
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
       />
 
-      {/* Footer System Status Bar (Hidden on small mobile to give room for bottom dock) */}
+      {/* Footer System Status Bar */}
       <footer className="hidden sm:flex relative z-10 border-t border-white/[0.08] bg-[#05060f]/80 px-4 sm:px-8 py-4 text-[11px] font-mono text-slate-500 flex-col sm:flex-row items-center justify-between gap-2">
         <div className="flex items-center gap-3">
           <span className="text-slate-400 font-bold">apu.web.id Server Control Station</span>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Activity,
   Cpu,
@@ -16,6 +16,7 @@ import {
   Radio,
   Command,
 } from 'lucide-react';
+import { triggerHaptic } from '@/lib/haptics';
 
 export type ActiveTab =
   | 'overview'
@@ -69,6 +70,11 @@ export function Navbar({
   const cpuPercent = systemData?.cpu?.totalUsage ?? 0;
   const ramPercent = systemData?.ram?.usagePercent ?? 0;
 
+  const handleTabClick = (tabId: ActiveTab) => {
+    triggerHaptic('light');
+    setActiveTab(tabId);
+  };
+
   return (
     <>
       {/* 1. TOP FLOATING ISLAND (Desktop & Mobile Header) */}
@@ -118,7 +124,7 @@ export function Navbar({
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id as ActiveTab)}
+                    onClick={() => handleTabClick(tab.id as ActiveTab)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all duration-300 active:scale-95 ${
                       isActive
                         ? 'bg-[#00f2fe]/20 text-[#00f2fe] border border-[#00f2fe]/40 shadow-sm shadow-[#00f2fe]/20'
@@ -139,7 +145,10 @@ export function Navbar({
                 {refreshInterval === -1 && <Radio className="w-3 h-3 text-[#10b981] animate-pulse" />}
                 <select
                   value={refreshInterval}
-                  onChange={(e) => setRefreshInterval(Number(e.target.value))}
+                  onChange={(e) => {
+                    triggerHaptic('light');
+                    setRefreshInterval(Number(e.target.value));
+                  }}
                   className="bg-transparent text-[#00f2fe] text-[11px] font-mono outline-none cursor-pointer"
                 >
                   <option value={-1} className="bg-[#080914] text-[#10b981]">SSE</option>
@@ -151,7 +160,10 @@ export function Navbar({
 
               {/* Refresh Button */}
               <button
-                onClick={onManualRefresh}
+                onClick={() => {
+                  triggerHaptic('medium');
+                  onManualRefresh();
+                }}
                 title="Manual Refresh"
                 className="p-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-400 hover:text-[#00f2fe] transition-colors active:scale-95"
               >
@@ -160,7 +172,10 @@ export function Navbar({
 
               {/* Command Palette (Desktop) */}
               <button
-                onClick={onOpenCmdPalette}
+                onClick={() => {
+                  triggerHaptic('light');
+                  onOpenCmdPalette();
+                }}
                 className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-slate-300 hover:text-white text-[11px] font-mono transition-all"
               >
                 <Command className="w-3 h-3 text-[#00f2fe]" />
@@ -170,7 +185,10 @@ export function Navbar({
               {/* Lock Button */}
               {isLocked ? (
                 <button
-                  onClick={onOpenAuthModal}
+                  onClick={() => {
+                    triggerHaptic('light');
+                    onOpenAuthModal();
+                  }}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#f43f5e]/15 hover:bg-[#f43f5e]/25 border border-[#f43f5e]/30 text-[#f43f5e] text-xs font-semibold transition-all active:scale-95"
                 >
                   <Lock className="w-3.5 h-3.5" />
@@ -178,7 +196,10 @@ export function Navbar({
                 </button>
               ) : (
                 <button
-                  onClick={() => setIsLocked(true)}
+                  onClick={() => {
+                    triggerHaptic('medium');
+                    setIsLocked(true);
+                  }}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#10b981]/15 hover:bg-[#10b981]/25 border border-[#10b981]/30 text-[#10b981] text-xs font-semibold transition-all active:scale-95"
                 >
                   <Unlock className="w-3.5 h-3.5" />
@@ -199,7 +220,7 @@ export function Navbar({
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as ActiveTab)}
+                onClick={() => handleTabClick(tab.id as ActiveTab)}
                 className={`flex flex-col items-center justify-center p-2 rounded-full min-w-[44px] min-h-[44px] transition-all duration-300 active:scale-90 ${
                   isActive
                     ? 'bg-[#00f2fe]/20 text-[#00f2fe] border border-[#00f2fe]/40 shadow-sm shadow-[#00f2fe]/25 scale-105'

@@ -26,6 +26,7 @@ import {
   AreaChart,
   Area,
 } from 'recharts';
+import { triggerHaptic } from '@/lib/haptics';
 
 interface OverviewTabProps {
   systemData: any;
@@ -48,9 +49,11 @@ export function OverviewTab({
 
   const handleAction = async (action: string) => {
     if (isLocked) {
+      triggerHaptic('light');
       onOpenAuthModal();
       return;
     }
+    triggerHaptic('medium');
     setRunningAction(action);
     try {
       await onTriggerAction(action);

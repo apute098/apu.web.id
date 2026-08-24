@@ -1,0 +1,18 @@
+{
+  "name": "apu.web.id Server Control",
+  "short_name": "APU Control",
+  "description": "Server Control & Real-Time Monitoring Hub",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030308",
+  "theme_color": "#030308",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

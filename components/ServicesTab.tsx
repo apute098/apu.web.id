@@ -15,6 +15,7 @@ import {
   RefreshCw,
   Zap,
 } from 'lucide-react';
+import { triggerHaptic } from '@/lib/haptics';
 
 interface ServicesTabProps {
   isLocked: boolean;
@@ -58,10 +59,12 @@ export function ServicesTab({
 
   const handleServiceAction = async (unit: string, action: 'start' | 'stop' | 'restart', scope: 'system' | 'user') => {
     if (isLocked) {
+      triggerHaptic('light');
       onOpenAuthModal();
       return;
     }
 
+    triggerHaptic('medium');
     const token = localStorage.getItem('apu_admin_token') || '574409';
     setActionInProgress(`${unit}-${action}`);
 
@@ -76,12 +79,15 @@ export function ServicesTab({
       });
 
       if (res.ok) {
+        triggerHaptic('success');
         await fetchServices();
       } else {
+        triggerHaptic('error');
         const json = await res.json();
         alert(`Gagal: ${json.error || 'Terjadi kesalahan'}`);
       }
     } catch (err: any) {
+      triggerHaptic('error');
       alert(`Error: ${err.message}`);
     } finally {
       setActionInProgress(null);
