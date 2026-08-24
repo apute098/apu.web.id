@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px; height: 630px;
+    background: #05050d;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px;
+    color: #e8eaf2;
+    position: relative;
+    overflow: hidden;
+  }
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(180deg, #00f5ff, #f97316);
+  }
+  .name {
+    font-size: 72px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    line-height: 0.95;
+    color: #fff;
+  }
+  .name .accent { color: #00f5ff; }
+  .tagline {
+    font-size: 24px;
+    color: #00f5ff;
+    margin-top: 24px;
+    font-weight: 600;
+  }
+  .desc {
+    font-size: 18px;
+    color: #8a90a5;
+    margin-top: 16px;
+    line-height: 1.5;
+    max-width: 700px;
+  }
+  .specs {
+    position: absolute;
+    bottom: 60px;
+    right: 80px;
+    font-size: 14px;
+    color: #585f75;
+    text-align: right;
+    line-height: 1.8;
+  }
+  .specs .val { color: #c6cbdd; }
+  .url {
+    position: absolute;
+    bottom: 60px;
+    left: 80px;
+    font-size: 16px;
+    color: #f97316;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+  <div class="name">APU<span class="accent"> LINUX</span></div>
+  <div class="tagline">Homelab Engineer & AI Tinkerer</div>
+  <div class="desc">Arch Linux homelab · AI gateway (9Router) · Hermes agent · Self-hosted infrastructure</div>
+  <div class="specs">
+    os: <span class="val">Arch Linux x86_64</span><br>
+    cpu: <span class="val">Intel i3-7100 (4c)</span><br>
+    uptime: <span class="val">live</span><br>
+    stack: <span class="val">Next.js · Cloudflare · 9Router</span>
+  </div>
+  <div class="url">apu.web.id</div>
+</body>
+</html>

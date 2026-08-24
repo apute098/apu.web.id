@@ -1,0 +1,34 @@
+# apu.web.id
+
+> Homelab Engineer & AI Tinkerer — Arch Linux self-hosted infrastructure, AI gateway, and developer portfolio.
+
+## About
+
+Personal website and dashboard for Regsi Wahyu Saputra. Built with Next.js 16, deployed on a self-hosted Arch Linux server behind Cloudflare.
+
+## What This Site Contains
+
+- **Landing page**: Hero with live system stats (uptime, CPU, RAM, disk, temperature), about section, projects, work experience, and contact
+- **Dashboard** (requires auth): Server monitoring, finance tracker, AI gateway management
+- **Blog** (planned): Technical articles about homelab, AI, and self-hosted infrastructure
+
+## Tech Stack
+
+- **Server**: Arch Linux x86_64, Intel i3-7100, 8GB RAM
+- **Frontend**: Next.js 16, React 19, Tailwind v4, GSAP
+- **AI Gateway**: 9Router (localhost:20128) — multi-provider LLM proxy
+- **Agent**: Hermes — personal AI agent via Telegram/WhatsApp
+- **Proxy**: Caddy → Cloudflare DNS/CDN
+- **Monitoring**: Systemd services, custom health endpoints
+
+## Key URLs
+
+- Homepage: https://apu.web.id
+- Dashboard: https://apu.web.id/dashboard (auth required)
+- API Health: https://apu.web.id/api/v1/health
+- System Status: https://apu.web.id/api/v1/system-status
+
+## Contact
+
+- GitHub: https://github.com/apute098
+- Domain: apu.web.id

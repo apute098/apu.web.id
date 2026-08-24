@@ -12,6 +12,11 @@ export const metadata: Metadata = {
     'apu.web.id: Arch Linux homelab, AI gateway (9Router), Hermes agent, server monitor & finance tracker. Portfolio + dashboard live.',
   keywords: ['apu.web.id', 'homelab', 'arch linux', '9router', 'hermes', 'ai gateway', 'self-hosted'],
   alternates: { canonical: '/' },
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
   openGraph: {
     type: 'website',
     url: siteUrl,
@@ -19,13 +24,15 @@ export const metadata: Metadata = {
     title: 'apu.web.id | Homelab Engineer & AI Tinkerer',
     description:
       'Arch Linux homelab, AI gateway (9Router), Hermes agent, server monitor & finance tracker.',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'apu.web.id — Homelab Engineer & AI Tinkerer' }],
     locale: 'id_ID',
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'apu.web.id | Homelab Engineer & AI Tinkerer',
     description:
       'Arch Linux homelab, AI gateway (9Router), Hermes agent, server monitor & finance tracker.',
+    images: ['/og-image.png'],
   },
 };
 
