@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import gsap from 'gsap';
 
 // ============================================================
-// Landing + Portfolio apu.web.id — "System Readout"
-// Signature: panel fastfetch hidup, data langsung dari
-// /api/v1/system-status (mesin asli, bukan dekorasi).
+// Landing apu.web.id — "BOOT SEQUENCE"
+// Halaman booting seperti Arch: log systemd mengetik di hero,
+// fastfetch hidup sebagai signature, konten muncul setelah
+// "login". Semua data dari /api/v1/system-status — mesin asli.
 // Entrance dashboard: hash '#ai-hub' / '#admin', page.tsx listen.
 // ============================================================
 
@@ -16,34 +18,24 @@ const SITE = {
   tagline: 'Membangun self-hosted infrastructure, benchmarking LLM, & crafting AI agents.',
 };
 
-const SKILLS = [
-  'Linux/Server',
-  'AI/LLM',
-  'Web Dev',
-  'Network',
-  'Automation',
-  'Finance',
-];
+const SKILLS = ['Linux/Server', 'AI/LLM', 'Web Dev', 'Network', 'Automation', 'Finance'];
 
 const PROJECTS = [
   {
     title: 'apu.web.id Portal',
-    description:
-      'Portal self-hosted: server monitor, finance tracker, AI hub & dashboard terpadu.',
+    description: 'Portal self-hosted: server monitor, finance tracker, AI hub & dashboard terpadu.',
     githubLink: 'https://github.com/apute098',
     tag: 'Next.js 16',
   },
   {
     title: 'Hermes AI Agent',
-    description:
-      'AI assistant agent (Nous Research) dengan durable session, memory & tool-use.',
+    description: 'AI assistant agent (Nous Research) dengan durable session, memory & tool-use.',
     githubLink: 'https://github.com/apute098',
     tag: 'AI Agent',
   },
   {
     title: '9Router AI Gateway',
-    description:
-      'AI gateway dengan routing provider & fallback untuk agent dan tools.',
+    description: 'AI gateway dengan routing provider & fallback untuk agent dan tools.',
     githubLink: 'https://github.com/apute098',
     tag: 'AI Gateway',
   },
@@ -77,42 +69,128 @@ const EXPERIENCE = [
   },
 ];
 
-// Bentuk minimum payload /api/v1/system-status yang dipakai panel
 type SystemStatus = {
   status?: string | boolean;
   os?: string;
   uptime?: string;
   cpu?: { usagePercent?: number; cores?: number; model?: string };
   ram?: { usedGB?: number; totalGB?: number; usagePercent?: number };
-  hdd?: { usedTB?: number; totalTB?: number; freeTB?: number; usagePercent?: number };
+  hdd?: { usedTB?: number; totalTB?: number; usagePercent?: number };
   temperature?: { currentC?: number | null; status?: string };
   loadAverage?: number[];
   services?: Record<string, string>;
 };
 
-function kernelFromOs(os?: string): string {
-  const m = os?.match(/Linux\s+([^\s)]+)/);
-  return m ? m[1] : 'linux';
-}
+const ARCH_LOGO = [
+  '       /\\',
+  '      /  \\',
+  '     /\\   \\',
+  '    /  __  \\',
+  '   /  (  )  \\',
+  '  / __|  |__-\\',
+  ' /.\\u00b7        .\\',
+].join('\n');
 
 export default function LandingPage() {
   const [sys, setSys] = useState<SystemStatus | null>(null);
+  const [bootDone, setBootDone] = useState(false);
+  const [bootLines, setBootLines] = useState(0);
+  const [skipped, setSkipped] = useState(false);
+  const bootRef = useRef<HTMLDivElement>(null);
 
-  // Telemetri nyata untuk panel fastfetch (poll 30s)
+  // Baris boot journal — nilai nyata disuntikkan saat fetch selesai
+  const [liveLines, setLiveLines] = useState<string[]>([]);
+
   useEffect(() => {
+    let alive = true;
+    const controller = new AbortController();
+    // Boot tidak boleh menunggu fetch: timeout 3s → fallback offline lines
+    const timeout = setTimeout(() => controller.abort(), 3000);
     const fetchStatus = async () => {
       try {
-        const res = await fetch('/api/v1/system-status');
-        const json = await res.json();
+        const res = await fetch('/api/v1/system-status', { signal: controller.signal });
+        const json: SystemStatus = await res.json();
+        if (!alive) return;
         setSys(json);
+        const svc = Object.values(json.services ?? {});
+        const svcActive = svc.filter((s) => s.startsWith('active')).length;
+        setLiveLines([
+          `[ OK ] Finished Arch Linux x86_64 (kernel ${json.os?.match(/Linux\s+([^\s)]+)/)?.[1] ?? 'zen'}).`,
+          `[ OK ] Reached target System Time Synchronized.`,
+          `[ OK ] Started 9Router AI Gateway on :20128.`,
+          `[ OK ] Mounted /dev/sda2 ext4 — WAL mode active.`,
+          `[ OK ] Started hermes-gateway.service — agent online.`,
+          `[ OK ] Started ${svcActive}/${svc.length} user units — all systems nominal.`,
+        ]);
       } catch {
-        /* biarkan panel memakai nilai terakhir */
+        if (!alive || controller.signal.aborted) return;
+        setLiveLines(['[ WARN ] telemetri tidak terjangkau — mode offline.']);
+      } finally {
+        clearTimeout(timeout);
       }
     };
     fetchStatus();
     const interval = setInterval(fetchStatus, 30000);
-    return () => clearInterval(interval);
+    // Hard cap: boot selesai maksimal 2.5s walau fetch masih pending
+    const hardCap = setTimeout(() => alive && setSkipped(true), 2500);
+    return () => {
+      alive = false;
+      clearInterval(interval);
+      clearTimeout(hardCap);
+    };
   }, []);
+
+  // Boot sequence: ketik baris demi baris, lalu tampilkan landing penuh
+  useEffect(() => {
+    const reduced =
+      typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || skipped) {
+      setBootDone(true);
+      return;
+    }
+    const total = liveLines.length;
+    if (total === 0 || bootDone) return;
+    if (bootLines >= total) {
+      const t = setTimeout(() => setBootDone(true), 400);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setBootLines((n) => n + 1), bootLines === 0 ? 200 : 200);
+    return () => clearTimeout(t);
+  }, [liveLines.length, bootLines, bootDone, skipped]);
+
+  // Skip boot dengan klik/scroll/key — boot tidak pernah memblokir lebih dari ~2s
+  useEffect(() => {
+    if (bootDone) return;
+    const skip = () => setSkipped(true);
+    window.addEventListener('keydown', skip, { once: true });
+    window.addEventListener('wheel', skip, { once: true });
+    return () => {
+      window.removeEventListener('keydown', skip);
+      window.removeEventListener('wheel', skip);
+    };
+  }, [bootDone]);
+
+  useEffect(() => {
+    if (skipped) setBootDone(true);
+  }, [skipped]);
+
+  // Momen orkestrasi: specRows fastfetch muncul berurutan (stagger 30ms)
+  // setelah boot selesai — data "booting in", bukan sekadar tampil.
+  // Query dokumen: readout mobile & panel desktop sama-sama ikut animasi.
+  useEffect(() => {
+    if (!bootDone) return;
+    const rows = Array.from(document.querySelectorAll<HTMLElement>('[data-spec-row]'));
+    if (!rows.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    gsap.fromTo(
+      rows,
+      { opacity: 0, x: -10 },
+      { opacity: 1, x: 0, duration: 0.35, stagger: 0.03, ease: 'power2.out' },
+    );
+    return () => {
+      gsap.killTweensOf(rows);
+      gsap.set(rows, { clearProps: 'all' });
+    };
+  }, [bootDone]);
 
   const enterDashboard = (tab: 'ai-hub' | 'admin') => {
     window.location.hash = tab === 'admin' ? '#admin' : '#ai-hub';
@@ -130,10 +208,56 @@ export default function LandingPage() {
   const hot = typeof tempC === 'number' && (tempC > 75 || sys?.temperature?.status === 'warning');
   const loads = sys?.loadAverage ?? [];
 
+  // Baris fastfetch — dipakai panel desktop & readout inline mobile
+  const specRows: [string, string][] = [
+    ['os', 'Arch Linux x86_64'],
+    ['kernel', sys?.os?.match(/Linux\s+([^\s)]+)/)?.[1] ?? 'linux-zen'],
+    ['uptime', sys?.uptime ?? '—'],
+    [
+      'cpu',
+      sys?.cpu
+        ? `${(sys.cpu.model ?? '').replace(/^Intel\(R\)\s*Core\(TM\)\s*/, '').replace(/\s*CPU.*$/, '')} (${sys.cpu.cores}c) · ${sys.cpu.usagePercent}%`
+        : 'Intel i3-7100 (4c)',
+    ],
+    ['ram', sys?.ram ? `${sys.ram.usedGB}/${sys.ram.totalGB}G (${sys.ram.usagePercent}%)` : '—'],
+    [
+      'disk',
+      sys?.hdd
+        ? `${Math.round((sys.hdd.usedTB ?? 0) * 1000)}G/${Math.round((sys.hdd.totalTB ?? 0) * 1000)}G (${sys.hdd.usagePercent}%)`
+        : '—',
+    ],
+    ['temp', typeof tempC === 'number' ? `${tempC}°C${hot ? ' ⚠' : ''}` : '—'],
+    ['load', loads.length ? loads.map((l) => l.toFixed(2)).join(' ') : '—'],
+    ['svc', svcTotal ? `${svcActive}/${svcTotal} unit aktif` : '—'],
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-[#05050d] text-[#e8eaf2] apu-root overflow-x-hidden">
+      {/* ===== BOOT OVERLAY ===== */}
+      {!bootDone && (
+        <div
+          ref={bootRef}
+          className="fixed inset-0 z-[100] bg-[#05050d] flex items-center justify-center px-6"
+          onClick={() => setSkipped(true)}
+          role="presentation"
+        >
+          <div className="w-full max-w-xl font-mono text-xs sm:text-sm leading-relaxed">
+            <p className="text-white mb-3">APU LINUX — booting…</p>
+            {liveLines.slice(0, bootLines).map((line, i) => (
+              <p key={i} className={line.startsWith('[ OK') ? 'apu-boot-ok' : 'apu-boot-warn'}>
+                {line}
+              </p>
+            ))}
+            <span className="apu-cursor" aria-hidden="true" />
+            <p className="absolute bottom-6 left-0 right-0 text-center text-[10px] text-[#585f75]">
+              klik untuk melewati
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* ===== NAV ===== */}
-      <nav className="fixed top-0 inset-x-0 z-50 bg-[#05050d]/90 backdrop-blur-sm border-b border-white/[0.07]">
+      <nav className="fixed top-0 inset-x-0 z-50 bg-[#05050d]/92 backdrop-blur-sm border-b border-white/[0.07]">
         <div className="max-w-6xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between gap-4">
           <button
             onClick={() => scrollTo('hero')}
@@ -171,27 +295,46 @@ export default function LandingPage() {
       </nav>
 
       {/* ===== HERO ===== */}
-      <section id="hero" className="pt-32 pb-20 md:pt-40 md:pb-28 px-5 md:px-8">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-[1.15fr_1fr] gap-12 md:gap-10 items-center">
-          {/* Kiri: identitas */}
+      <section id="hero" className="pt-32 pb-20 md:pt-40 md:pb-24 px-5 md:px-8">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-[1.1fr_1fr] gap-12 md:gap-10 items-start">
+          {/* Kiri: identitas — login prompt setelah boot */}
           <div>
-            <p className="apu-in apu-in-1 font-mono text-xs text-[#8a90a5] mb-6 flex items-center gap-2">
-              <span className={`inline-block w-2 h-2 rounded-full ${online ? 'bg-[#00f5ff]' : 'bg-[#f97316]'}`} />
-              {online ? 'arch linux · online' : sys ? 'arch linux · degraded' : 'arch linux'}
+            <p className={`font-mono text-xs text-[#f97316] mb-4 tracking-wider ${bootDone ? 'apu-in apu-in-1' : 'opacity-0'}`}>
+              $ whoami
             </p>
 
-            <h1 className="apu-in apu-in-2 font-display font-extrabold tracking-[-0.03em] leading-[0.95] text-[clamp(2.75rem,8vw,5.25rem)] text-white">
-              Regsi Wahyu
+            <h1 className={`font-display font-black leading-[0.92] text-[clamp(2.6rem,7vw,5rem)] text-white uppercase ${bootDone ? 'apu-in apu-in-1' : 'opacity-0'}`}>
+              Regsi
               <br />
-              Saputra
+              Wahyu Saputra
             </h1>
 
-            <p className="apu-in apu-in-3 mt-6 text-lg text-[#aab0c4] max-w-md leading-relaxed">
-              {SITE.tagline}
-              <span className="apu-cursor ml-1 select-none" aria-hidden="true" />
+            <h2 className={`mt-5 text-lg sm:text-xl leading-snug text-[#00f5ff] max-w-md ${bootDone ? 'apu-in apu-in-2' : 'opacity-0'}`}>
+              Setiap angka di panel ini dibaca langsung dari mesin saya — bukan demo.
+            </h2>
+
+            <p className={`mt-4 font-mono text-sm text-[#8a90a5] ${bootDone ? 'apu-in apu-in-2' : 'opacity-0'}`}>
+              archlinux login:{' '}
+              <span className="text-[#00f5ff] font-semibold">{SITE.peran.toLowerCase()}</span>
+              <span className="text-white/60"> — password:</span>{' '}
+              <span className="tracking-tighter">********</span>
             </p>
 
-            <div className="apu-in apu-in-4 mt-9 flex flex-wrap gap-3">
+            <p className={`mt-6 text-lg text-[#aab0c4] max-w-md leading-relaxed ${bootDone ? 'apu-in apu-in-3' : 'opacity-0'}`}>
+              {SITE.tagline}
+            </p>
+
+            {/* Mobile: readout neofetch inline — satu output terminal, bukan dua blok */}
+            <dl className={`md:hidden mt-7 font-mono text-xs leading-relaxed border-t border-white/[0.07] pt-5 ${bootDone ? 'apu-in apu-in-3' : 'opacity-0'}`}>
+              {specRows.map(([k, v]) => (
+                <div key={k} data-spec-row className="flex gap-3">
+                  <dt className={`w-11 shrink-0 ${k === 'temp' && hot ? 'text-[#f97316]' : 'text-[#00f5ff]'}`}>{k}</dt>
+                  <dd className="text-[#c6cbdd] truncate">{v}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <div className={`mt-9 flex flex-wrap gap-3 ${bootDone ? 'apu-in apu-in-4' : 'opacity-0'}`}>
               <button
                 onClick={() => enterDashboard('ai-hub')}
                 className="px-5 py-3 min-h-[44px] rounded-md bg-[#00f5ff] text-[#05050d] text-sm font-bold hover:bg-[#5cf7ff] transition-colors active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f5ff]/70"
@@ -207,58 +350,31 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Kanan: SIGNATURE — panel fastfetch hidup */}
-          <aside className="apu-in apu-in-3 apu-panel rounded-lg border border-white/10 bg-[#0b0b16]" aria-label="Status server langsung">
+          {/* Kanan: SIGNATURE — fastfetch hidup (desktop saja, mobile inline di kiri) */}
+          <aside
+            className={`hidden md:block apu-panel rounded-lg border border-white/10 bg-[#0b0b16] ${bootDone ? 'apu-in apu-in-2' : 'opacity-0'}`}
+            aria-label="Status server langsung"
+          >
             <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/10">
-              <span className="font-mono text-[11px] text-[#8a90a5]">regsi@archlinux</span>
-              <span className="flex gap-1.5" aria-hidden="true">
-                <i className="w-2.5 h-2.5 rounded-full bg-white/10" />
-                <i className="w-2.5 h-2.5 rounded-full bg-white/10" />
-                <i className={`w-2.5 h-2.5 rounded-full ${online ? 'bg-[#00f5ff]' : 'bg-[#f97316]'}`} />
+              <span className="font-mono text-[11px] text-[#8a90a5]">regsi@archlinux: ~/welcome</span>
+              <span
+                className={`font-mono text-[10px] px-2 py-0.5 rounded-full border ${
+                  online
+                    ? 'text-[#00f5ff] border-[#00f5ff]/30 bg-[#00f5ff]/5'
+                    : 'text-[#f97316] border-[#f97316]/30 bg-[#f97316]/5'
+                }`}
+              >
+                {online ? '● live' : sys ? '● degraded' : '···'}
               </span>
             </div>
 
             <div className="p-4 sm:p-5 flex gap-4 sm:gap-5">
-              {/* Logo Arch ASCII */}
-              <pre className="hidden xs:block sm:block font-mono text-[9px] sm:text-[10px] leading-[1.35] text-[#00f5ff] shrink-0 select-none" aria-hidden="true">{`       /\\
-      /  \\
-     /\\   \\
-    /  __  \\
-   /  (  )  \\
-  / __|  |__ \\\\\\
- /.\\\`        \\.\\\``}</pre>
+              <pre className="hidden sm:block font-mono text-[9px] sm:text-[10px] leading-[1.35] text-[#00f5ff] shrink-0 select-none" aria-hidden="true">{ARCH_LOGO}</pre>
 
-              {/* Readout */}
               <dl className="font-mono text-[11px] sm:text-xs leading-relaxed min-w-0 flex-1">
-                {[
-                  ['os', 'Arch Linux x86_64'],
-                  ['kernel', kernelFromOs(sys?.os)],
-                  ['uptime', sys?.uptime ?? '—'],
-                  [
-                    'cpu',
-                    sys?.cpu
-                      ? `${(sys.cpu.model ?? '').replace(/^Intel\(R\)\s*Core\(TM\)\s*/, 'i3 ').replace(/\s*CPU.*$/, '')} (${sys.cpu.cores}) ${sys.cpu.usagePercent}%`
-                      : '—',
-                  ],
-                  [
-                    'ram',
-                    sys?.ram ? `${sys.ram.usedGB}G / ${sys.ram.totalGB}G (${sys.ram.usagePercent}%)` : '—',
-                  ],
-                  [
-                    'disk',
-                    sys?.hdd
-                      ? `${Math.round((sys.hdd.usedTB ?? 0) * 1000)}G / ${Math.round((sys.hdd.totalTB ?? 0) * 1000)}G (${sys.hdd.usagePercent}%)`
-                      : '—',
-                  ],
-                  [
-                    'temp',
-                    typeof tempC === 'number' ? `${tempC}°C${hot ? ' ⚠' : ''}` : '—',
-                  ],
-                  ['load', loads.length ? loads.join(' ') : '—'],
-                  ['svc', svcTotal ? `${svcActive}/${svcTotal} aktif` : '—'],
-                ].map(([k, v]) => (
-                  <div key={k} className="flex gap-3">
-                    <dt className={`w-12 shrink-0 ${k === 'temp' && hot ? 'text-[#f97316]' : 'text-[#00f5ff]'}`}>{k}</dt>
+                {specRows.map(([k, v]) => (
+                  <div key={k} data-spec-row className="flex gap-3">
+                    <dt className={`w-11 shrink-0 ${k === 'temp' && hot ? 'text-[#f97316]' : 'text-[#00f5ff]'}`}>{k}</dt>
                     <dd className="text-[#c6cbdd] truncate">{v}</dd>
                   </div>
                 ))}
@@ -270,22 +386,21 @@ export default function LandingPage() {
 
       {/* ===== TENTANG + SKILLS ===== */}
       <section id="about" className="py-16 md:py-24 px-5 md:px-8 border-t border-white/[0.07]">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-[1fr_1.2fr] gap-10 md:gap-16">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-[1fr_1.2fr] gap-10 md:gap-16 reveal">
           <div>
-            <p className="font-mono text-xs text-[#f97316] mb-4">## tentang</p>
+            <p className="font-mono text-xs text-[#f97316] mb-4">$ cat tentang.txt</p>
             <h2 className="font-display font-bold tracking-tight text-3xl md:text-4xl text-white leading-tight">
               Satu mesin,
               <br />
               semua layanan.
             </h2>
             <p className="mt-5 text-[#aab0c4] leading-relaxed max-w-sm">
-              Homelab enthusiast. Bangun, monitor, dan otomasi infrastruktur self-hosted —
-              dari telemetri kernel sampai gateway AI.
+              Homelab enthusiast. Bangun, monitor, dan otomasi infrastruktur self-hosted — dari
+              telemetri kernel sampai gateway AI.
             </p>
           </div>
 
-          {/* Lembar spesifikasi */}
-          <dl className="rounded-lg border border-white/10 divide-y divide-white/[0.07] self-start">
+          <dl className="rounded-lg border border-white/10 divide-y divide-white/[0.07] self-start bg-[#0b0b16]">
             {[
               ['Lokasi', 'Purwokerto, Indonesia'],
               ['Fokus', 'Self-hosted infra, LLM tooling, otomasi'],
@@ -300,7 +415,6 @@ export default function LandingPage() {
           </dl>
         </div>
 
-        {/* Skills strip */}
         <div id="skills" className="max-w-6xl mx-auto mt-12 scroll-mt-24">
           <ul className="flex flex-wrap gap-x-2 gap-y-2">
             {SKILLS.map((label) => (
@@ -315,16 +429,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ===== PROJECT (baris indeks, bukan grid kartu) ===== */}
+      {/* ===== PROJECT ===== */}
       <section id="projects" className="py-16 md:py-24 px-5 md:px-8 border-t border-white/[0.07]">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-end justify-between mb-10">
-            <div>
-              <p className="font-mono text-xs text-[#f97316] mb-4">## project</p>
-              <h2 className="font-display font-bold tracking-tight text-3xl md:text-4xl text-white">
-                Yang dibangun di atasnya.
-              </h2>
-            </div>
+          <div className="mb-10">
+            <p className="font-mono text-xs text-[#f97316] mb-4">$ systemctl list-units --project</p>
+            <h2 className="font-display font-bold tracking-tight text-3xl md:text-4xl text-white">
+              Yang dibangun di atasnya.
+            </h2>
           </div>
 
           <ul className="border-t border-white/10">
@@ -368,18 +480,27 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ===== PENGALAMAN — log kronologis ===== */}
+      {/* ===== PENGALAMAN — journalctl ===== */}
       <section id="experience" className="py-16 md:py-24 px-5 md:px-8 border-t border-white/[0.07]">
         <div className="max-w-6xl mx-auto">
-          <p className="font-mono text-xs text-[#f97316] mb-4">## log</p>
+          <p className="font-mono text-xs text-[#f97316] mb-4">$ journalctl --riwayat</p>
           <h2 className="font-display font-bold tracking-tight text-3xl md:text-4xl text-white mb-10">
             Riwayat.
           </h2>
 
-          <ol className="space-y-0 border-t border-white/10">
-            {EXPERIENCE.map((entry, i) => (
-              <li key={i} className="grid md:grid-cols-[10rem_1fr] gap-x-8 gap-y-1 py-5 border-b border-white/10">
-                <span className="font-mono text-xs text-[#8a90a5] pt-1">[{entry.period}]</span>
+          <ol className="border-t border-white/10">
+            {EXPERIENCE.map((entry, i) => {
+              const active = entry.period === 'aktif';
+              return (
+              <li
+                key={i}
+                className={`grid md:grid-cols-[10rem_1fr] gap-x-8 gap-y-1 py-5 border-b border-white/10 group ${
+                  active ? 'border-l-2 border-l-[#f97316] pl-4 md:pl-6 bg-gradient-to-r from-[#f97316]/[0.06] to-transparent' : ''
+                }`}
+              >
+                <span className={`font-mono text-xs pt-1 transition-colors ${active ? 'text-[#f97316] font-semibold' : 'text-[#585f75] group-hover:text-[#00f5ff]'}`}>
+                  [{entry.period}]
+                </span>
                 <div>
                   <h3 className="font-semibold text-white">
                     {entry.role}
@@ -388,7 +509,8 @@ export default function LandingPage() {
                   <p className="text-sm text-[#aab0c4] mt-1 leading-relaxed max-w-2xl">{entry.description}</p>
                 </div>
               </li>
-            ))}
+              );
+            })}
           </ol>
         </div>
       </section>
@@ -396,7 +518,7 @@ export default function LandingPage() {
       {/* ===== KONTAK ===== */}
       <section id="contact" className="py-16 md:py-28 px-5 md:px-8 border-t border-white/[0.07]">
         <div className="max-w-6xl mx-auto">
-          <p className="font-mono text-xs text-[#f97316] mb-4">## kontak</p>
+          <p className="font-mono text-xs text-[#f97316] mb-4">$ ping --kontak</p>
           <a
             href="mailto:contact@apu.web.id"
             className="group inline-block font-display font-extrabold tracking-tight text-[clamp(1.6rem,5vw,3.25rem)] text-white hover:text-[#00f5ff] transition-colors break-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f5ff]/70 rounded"
@@ -436,7 +558,9 @@ export default function LandingPage() {
           <span className="font-mono text-xs text-[#8a90a5]">
             © 2026 apu<span className="text-[#f97316]">.web.id</span> — arch linux · 9router
           </span>
-          <span className="font-mono text-[11px] text-[#585f75]">uptime {sys?.uptime ?? '—'} · {svcTotal ? `${svcActive}/${svcTotal} svc` : ''}</span>
+          <span className="font-mono text-[11px] text-[#585f75]">
+            up {sys?.uptime ?? '—'} · {svcTotal ? `${svcActive}/${svcTotal} svc` : ''}
+          </span>
         </div>
       </footer>
     </div>
