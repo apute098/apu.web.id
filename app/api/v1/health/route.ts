@@ -1,10 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { readFileSync } from 'fs';
 
 export const dynamic = 'force-dynamic';
 
-/** Healthcheck ringan untuk uptime monitoring (CF/Telegram watchdog). */
-export async function GET(req: NextRequest) {
+export async function GET() {
   const uptimeSec = (() => {
     try {
       return Number(readFileSync('/proc/uptime', 'utf8').split(' ')[0]) || 0;
@@ -17,9 +16,8 @@ export async function GET(req: NextRequest) {
     {
       success: true,
       status: 'ok',
-      service: 'apu-webid',
+      service: 'apu.web.id Server Control Hub',
       uptimeSec: Math.round(uptimeSec),
-      db: 'keuangan.db (ditulis via webhook, dicek runtime)',
       timestamp: new Date().toISOString(),
     },
     {
