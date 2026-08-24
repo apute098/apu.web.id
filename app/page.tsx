@@ -69,7 +69,6 @@ export default function Home() {
 
   // Telemetry stream / polling effect
   useEffect(() => {
-    // Mode SSE Stream (-1)
     if (refreshInterval === -1) {
       fetchSystemData();
       try {
@@ -152,12 +151,12 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen text-slate-100 flex flex-col font-sans selection:bg-cyan-400 selection:text-slate-950 bg-[#05050d]">
-      {/* Ambient Cyberpunk Glows */}
-      <div className="fixed top-1/4 -left-1/4 w-[700px] h-[700px] rounded-full bg-cyan-500/5 blur-3xl pointer-events-none z-0" />
-      <div className="fixed bottom-1/4 -right-1/4 w-[600px] h-[600px] rounded-full bg-purple-500/5 blur-3xl pointer-events-none z-0" />
+    <div className="min-h-[100dvh] text-slate-100 flex flex-col font-sans selection:bg-cyan-400 selection:text-slate-950 bg-[#030308]">
+      {/* Ambient Cyberpunk Lighting */}
+      <div className="ambient-glow-cyan top-1/4 -left-1/4" />
+      <div className="ambient-glow-violet bottom-1/4 -right-1/4" />
 
-      {/* Global Navbar */}
+      {/* Global Navbar with Mobile Bottom Thumb Dock */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={switchTab}
@@ -179,8 +178,8 @@ export default function Home() {
         isRefreshing={isRefreshing}
       />
 
-      {/* Main Content Area */}
-      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 pt-28 md:pt-32 pb-16">
+      {/* Main Content Area: Responsive Mobile Spacing */}
+      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 pt-20 sm:pt-28 pb-28 sm:pb-16">
         {activeTab === 'overview' && (
           <OverviewTab
             systemData={systemData}
@@ -250,14 +249,14 @@ export default function Home() {
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
       />
 
-      {/* Footer System Status Bar */}
-      <footer className="relative z-10 border-t border-white/10 bg-slate-950/80 px-4 sm:px-8 py-4 text-[11px] font-mono text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+      {/* Footer System Status Bar (Hidden on small mobile to give room for bottom dock) */}
+      <footer className="hidden sm:flex relative z-10 border-t border-white/[0.08] bg-[#05060f]/80 px-4 sm:px-8 py-4 text-[11px] font-mono text-slate-500 flex-col sm:flex-row items-center justify-between gap-2">
         <div className="flex items-center gap-3">
           <span className="text-slate-400 font-bold">apu.web.id Server Control Station</span>
           <span>•</span>
           <span>Node: archlinux</span>
           <span>•</span>
-          <span className="text-emerald-400">SSE Telemetry Active</span>
+          <span className="text-[#10b981]">SSE Telemetry Active</span>
         </div>
         <div>
           <span>Arch Linux x86_64 • 9Router Gateway • Next.js 16</span>

@@ -61,8 +61,8 @@ export function NetworkTab() {
       {/* Header Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
-            <Network className="w-6 h-6 text-[#00f2fe]" />
+          <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
+            <Network className="w-5 h-5 sm:w-6 sm:h-6 text-[#00f2fe]" />
             Network & Ingress Controller
           </h2>
           <p className="text-xs text-slate-400 font-mono">
@@ -71,10 +71,10 @@ export function NetworkTab() {
         </div>
 
         <div className="flex items-center gap-2 font-mono text-xs">
-          <span className="px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300">
-            Open Ports: <strong className="text-white">{listeningPorts.length}</strong>
+          <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300">
+            Ports: <strong className="text-white">{listeningPorts.length}</strong>
           </span>
-          <span className="px-3.5 py-1 rounded-full bg-[#00f2fe]/15 border border-[#00f2fe]/30 text-[#00f2fe]">
+          <span className="px-3 py-1 rounded-full bg-[#00f2fe]/15 border border-[#00f2fe]/30 text-[#00f2fe]">
             Tailscale: <strong>{tailscale.isOnline ? 'ONLINE' : 'STANDBY'}</strong>
           </span>
           <button
@@ -107,21 +107,21 @@ export function NetworkTab() {
                   key={idx}
                   className="flex items-center justify-between p-3 rounded-xl bg-black/50 border border-white/[0.06] hover:border-[#00f2fe]/30 transition-colors"
                 >
-                  <div>
+                  <div className="truncate max-w-[200px] xs:max-w-xs sm:max-w-sm">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-white">{route.domain}</span>
-                      <span className="text-[10px] text-slate-500 uppercase px-2 py-0.5 rounded-full bg-white/[0.04]">
+                      <span className="font-bold text-white truncate">{route.domain}</span>
+                      <span className="text-[10px] text-slate-500 uppercase px-2 py-0.5 rounded-full bg-white/[0.04] shrink-0">
                         {route.type}
                       </span>
                     </div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">Target: {route.target}</div>
+                    <div className="text-[11px] text-slate-400 mt-0.5 truncate">Target: {route.target}</div>
                   </div>
 
                   <a
                     href={`https://${route.domain}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-2 rounded-full bg-white/[0.04] hover:bg-[#00f2fe]/20 text-slate-400 hover:text-[#00f2fe] transition-colors"
+                    className="p-2 rounded-full bg-white/[0.04] hover:bg-[#00f2fe]/20 text-slate-400 hover:text-[#00f2fe] transition-colors shrink-0"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
@@ -140,7 +140,7 @@ export function NetworkTab() {
                 Tailscale Mesh VPN Topology
               </h3>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-[#10b981]/15 text-[#10b981] border border-[#10b981]/30">
-                IP: {tailscale.selfIp || '100.122.52.32'}
+                {tailscale.selfIp || '100.122.52.32'}
               </span>
             </div>
 
@@ -164,7 +164,7 @@ export function NetworkTab() {
                         <span className="font-bold text-white">{peer.name}</span>
                         {peer.isSelf && (
                           <span className="px-2 py-0.2 rounded-full text-[9px] bg-[#00f2fe]/20 text-[#00f2fe] font-bold">
-                            THIS HOST
+                            ME
                           </span>
                         )}
                         <span className="text-[10px] text-slate-400 capitalize">({peer.os})</span>
@@ -179,7 +179,7 @@ export function NetworkTab() {
                         }`}
                       />
                       <span className={`text-[10px] font-bold ${peer.online || peer.isSelf ? 'text-[#10b981]' : 'text-slate-500'}`}>
-                        {peer.online || peer.isSelf ? 'ONLINE' : 'OFFLINE'}
+                        {peer.online || peer.isSelf ? 'ON' : 'OFF'}
                       </span>
                     </div>
                   </div>
@@ -190,7 +190,7 @@ export function NetworkTab() {
         </div>
       </div>
 
-      {/* Listening Ports Table */}
+      {/* Listening Ports Section */}
       <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <h3 className="font-extrabold text-white text-base flex items-center gap-2">
@@ -215,7 +215,7 @@ export function NetworkTab() {
               ))}
             </div>
 
-            <div className="relative w-48 sm:w-64">
+            <div className="relative w-full sm:w-64">
               <input
                 type="text"
                 value={search}
@@ -228,7 +228,35 @@ export function NetworkTab() {
           </div>
         </div>
 
-        <div className="doppelrand-shell">
+        {/* Mobile Ports Card Grid (< sm screens) */}
+        <div className="block sm:hidden space-y-2">
+          {filteredPorts.map((p: any, idx: number) => (
+            <div key={idx} className="doppelrand-shell">
+              <div className="doppelrand-core p-3 flex items-center justify-between font-mono text-xs">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-[#00f2fe] text-sm">:{p.port}</span>
+                    <span className={`px-2 py-0.2 rounded-full text-[9px] font-bold uppercase ${
+                      p.protocol === 'tcp' ? 'bg-[#00f2fe]/15 text-[#00f2fe]' : 'bg-[#8b5cf6]/15 text-[#8b5cf6]'
+                    }`}>
+                      {p.protocol}
+                    </span>
+                  </div>
+                  <div className="text-white font-bold mt-1">{p.process}</div>
+                  <div className="text-[10px] text-slate-500 mt-0.5">{p.localAddress}</div>
+                </div>
+
+                <div className="text-right">
+                  <span className="text-[10px] text-slate-400 block">{p.pid ? `#${p.pid}` : '-'}</span>
+                  <span className="text-[#10b981] font-bold text-[11px]">{p.state || 'LISTEN'}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Ports Table (>= sm screens) */}
+        <div className="hidden sm:block doppelrand-shell">
           <div className="doppelrand-core p-0 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left font-mono text-xs">
