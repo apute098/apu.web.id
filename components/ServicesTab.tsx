@@ -8,16 +8,12 @@ import {
   Square,
   Play,
   FileText,
-  CheckCircle2,
-  AlertCircle,
-  Clock,
-  Zap,
   Bot,
   Globe,
   HardDrive,
   Cpu,
   RefreshCw,
-  Plus,
+  Zap,
 } from 'lucide-react';
 
 interface ServicesTabProps {
@@ -37,9 +33,6 @@ export function ServicesTab({
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
-  const [customUnit, setCustomUnit] = useState('');
-  const [customScope, setCustomScope] = useState<'system' | 'user'>('system');
-  const [showAddModal, setShowAddModal] = useState(false);
 
   const fetchServices = async () => {
     try {
@@ -108,53 +101,53 @@ export function ServicesTab({
 
   const categories = [
     { id: 'all', label: 'All Services', icon: Layers },
-    { id: 'ai', label: 'AI Hub & Models', icon: Bot },
-    { id: 'web', label: 'Web & Ingress', icon: Globe },
-    { id: 'bot', label: 'Bots & Messaging', icon: Zap },
+    { id: 'ai', label: 'AI Hub', icon: Bot },
+    { id: 'web', label: 'Ingress & Web', icon: Globe },
+    { id: 'bot', label: 'Bots & Agents', icon: Zap },
     { id: 'core', label: 'Core Daemons', icon: Cpu },
-    { id: 'network', label: 'Network & Mesh', icon: HardDrive },
+    { id: 'network', label: 'Mesh & Proxy', icon: HardDrive },
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Header & Category Filter */}
+    <div className="space-y-6 sm:space-y-8">
+      {/* Header Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <Layers className="w-5 h-5 text-cyan-400" />
+          <h2 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
+            <Layers className="w-6 h-6 text-[#00f2fe]" />
             Systemd Services Controller
           </h2>
-          <p className="text-xs text-slate-400">
-            Kendali penuh unit systemd (System & User Scope) untuk 9Router, Caddy, Cloudflare, AI Engines & Bots
+          <p className="text-xs text-slate-400 font-mono">
+            Direct controller for System & User systemd daemons (9Router, Caddy, Cloudflare, Hermes, MiMo)
           </p>
         </div>
 
-        {/* Stats Summary Pills */}
+        {/* Stats Summary Badges */}
         <div className="flex items-center gap-2 font-mono text-xs">
-          <span className="px-3 py-1 rounded-lg bg-slate-900 border border-white/10 text-slate-300">
-            Total: <strong>{summary.total}</strong>
+          <span className="px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300">
+            Total: <strong className="text-white">{summary.total}</strong>
           </span>
-          <span className="px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+          <span className="px-3.5 py-1 rounded-full bg-[#10b981]/15 border border-[#10b981]/30 text-[#10b981]">
             Active: <strong>{summary.active}</strong>
           </span>
           {summary.failed > 0 && (
-            <span className="px-3 py-1 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 animate-pulse">
+            <span className="px-3.5 py-1 rounded-full bg-[#f43f5e]/15 border border-[#f43f5e]/30 text-[#f43f5e] animate-pulse">
               Failed: <strong>{summary.failed}</strong>
             </span>
           )}
           <button
             onClick={fetchServices}
-            className="p-1.5 rounded-lg bg-slate-900 border border-white/10 hover:bg-white/10 text-slate-300 hover:text-cyan-400"
+            className="p-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] text-slate-300 hover:text-[#00f2fe] transition-colors"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-[#00f2fe]' : ''}`} />
           </button>
         </div>
       </div>
 
-      {/* Controls Bar: Search & Category Tabs */}
+      {/* Filter and Search Bar */}
       <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
         {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
           {categories.map((cat) => {
             const Icon = cat.icon;
             const isActive = activeCategory === cat.id;
@@ -162,10 +155,10 @@ export function ServicesTab({
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all ${
+                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] ${
                   isActive
-                    ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 shadow-sm'
-                    : 'bg-slate-900/60 text-slate-400 hover:text-slate-200 border border-white/5'
+                    ? 'bg-[#00f2fe]/15 text-[#00f2fe] border border-[#00f2fe]/40 shadow-sm shadow-[#00f2fe]/20'
+                    : 'bg-white/[0.03] text-slate-400 hover:text-slate-200 border border-white/[0.06]'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -176,20 +169,20 @@ export function ServicesTab({
         </div>
 
         {/* Search Input */}
-        <div className="relative w-full lg:w-72">
+        <div className="relative w-full lg:w-80">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari service (nama, unit, deskripsi)..."
-            className="w-full pl-9 pr-4 py-2 bg-slate-900/80 border border-white/10 focus:border-cyan-400 rounded-xl text-xs text-white placeholder:text-slate-500 outline-none font-mono transition-all"
+            placeholder="Filter unit (name, desc)..."
+            className="w-full pl-9 pr-4 py-2 bg-black/50 border border-white/[0.08] focus:border-[#00f2fe] rounded-full text-xs text-white placeholder:text-slate-500 outline-none font-mono transition-all"
           />
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
+          <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-2.5" />
         </div>
       </div>
 
-      {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Services Grid with Doppelrand Architecture */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {filteredServices.map((svc) => {
           const isActive = svc.status === 'active';
           const isFailed = svc.status === 'failed';
@@ -199,105 +192,95 @@ export function ServicesTab({
           const isStarting = actionInProgress === `${svc.unit}-start`;
 
           return (
-            <div
-              key={svc.unit}
-              className={`rounded-2xl border p-5 backdrop-blur-md transition-all flex flex-col justify-between ${
-                isFailed
-                  ? 'bg-rose-950/20 border-rose-500/40 shadow-lg shadow-rose-950/30'
-                  : isActive
-                  ? 'bg-slate-900/70 border-white/10 hover:border-cyan-500/30'
-                  : 'bg-slate-950/60 border-white/5 opacity-75'
-              }`}
-            >
-              {/* Card Top */}
-              <div>
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <div>
-                    <h3 className="font-bold text-white text-sm tracking-tight flex items-center gap-1.5">
-                      {svc.name}
-                    </h3>
-                    <div className="text-[11px] font-mono text-cyan-400/80">{svc.unit}</div>
-                  </div>
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1 ${
-                      isActive
-                        ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-400'
-                        : isFailed
-                        ? 'bg-rose-500/15 border border-rose-500/30 text-rose-400 animate-pulse'
-                        : isActivating
-                        ? 'bg-amber-500/15 border border-amber-500/30 text-amber-400'
-                        : 'bg-slate-800 border border-slate-700 text-slate-400'
-                    }`}
-                  >
+            <div key={svc.unit} className="doppelrand-shell flex flex-col justify-between">
+              <div className="doppelrand-core h-full flex flex-col justify-between space-y-4">
+                <div>
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div>
+                      <h3 className="font-extrabold text-white text-sm tracking-tight">{svc.name}</h3>
+                      <div className="text-[11px] font-mono text-[#00f2fe]/90">{svc.unit}</div>
+                    </div>
                     <span
-                      className={`w-1.5 h-1.5 rounded-full ${
-                        isActive ? 'bg-emerald-400' : isFailed ? 'bg-rose-400' : 'bg-slate-400'
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 ${
+                        isActive
+                          ? 'bg-[#10b981]/15 border border-[#10b981]/30 text-[#10b981]'
+                          : isFailed
+                          ? 'bg-[#f43f5e]/15 border border-[#f43f5e]/30 text-[#f43f5e] animate-pulse'
+                          : isActivating
+                          ? 'bg-amber-500/15 border border-amber-500/30 text-amber-400'
+                          : 'bg-slate-800 border border-slate-700 text-slate-400'
                       }`}
-                    />
-                    {svc.status}
-                  </span>
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          isActive ? 'bg-[#10b981]' : isFailed ? 'bg-[#f43f5e]' : 'bg-slate-400'
+                        }`}
+                      />
+                      {svc.status}
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-slate-400 line-clamp-2 my-2 leading-relaxed">
+                    {svc.description}
+                  </p>
+
+                  <div className="grid grid-cols-3 gap-2 my-3 py-2 border-y border-white/[0.06] font-mono text-[11px]">
+                    <div>
+                      <span className="text-slate-500 block text-[9px]">SCOPE</span>
+                      <span className="text-slate-300 font-bold uppercase">{svc.scope}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500 block text-[9px]">MEMORY</span>
+                      <span className="text-slate-300 font-bold">{svc.memoryMB ? `${svc.memoryMB} MB` : '-'}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500 block text-[9px]">PID / UP</span>
+                      <span className="text-slate-300 font-bold">{svc.pid ? `#${svc.pid}` : svc.uptime || '-'}</span>
+                    </div>
+                  </div>
                 </div>
 
-                <p className="text-xs text-slate-400 line-clamp-2 my-2 leading-relaxed">
-                  {svc.description}
-                </p>
+                {/* Control Actions */}
+                <div className="flex items-center gap-2 pt-2">
+                  <button
+                    onClick={() => handleServiceAction(svc.unit, 'restart', svc.scope)}
+                    disabled={isRestarting || isStopping || isStarting}
+                    className="flex-1 btn-nested group"
+                  >
+                    <span>Restart</span>
+                    <div className="btn-nested-icon">
+                      <RotateCcw className={`w-3.5 h-3.5 ${isRestarting ? 'animate-spin' : 'text-[#00f2fe]'}`} />
+                    </div>
+                  </button>
 
-                {/* Metadata Row */}
-                <div className="grid grid-cols-3 gap-2 my-3 py-2 border-y border-white/5 font-mono text-[11px]">
-                  <div>
-                    <span className="text-slate-500 block text-[9px]">SCOPE</span>
-                    <span className="text-slate-300 font-bold uppercase">{svc.scope}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block text-[9px]">MEMORY</span>
-                    <span className="text-slate-300 font-bold">{svc.memoryMB ? `${svc.memoryMB} MB` : '-'}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500 block text-[9px]">PID / UP</span>
-                    <span className="text-slate-300 font-bold">{svc.pid ? `#${svc.pid}` : svc.uptime || '-'}</span>
-                  </div>
+                  {isActive ? (
+                    <button
+                      onClick={() => handleServiceAction(svc.unit, 'stop', svc.scope)}
+                      disabled={isStopping || isRestarting}
+                      className="p-2.5 rounded-full bg-white/[0.04] hover:bg-[#f43f5e]/20 border border-white/[0.08] text-slate-400 hover:text-[#f43f5e] transition-colors"
+                      title="Stop Unit"
+                    >
+                      <Square className="w-3.5 h-3.5" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleServiceAction(svc.unit, 'start', svc.scope)}
+                      disabled={isStarting || isRestarting}
+                      className="p-2.5 rounded-full bg-white/[0.04] hover:bg-[#10b981]/20 border border-white/[0.08] text-slate-400 hover:text-[#10b981] transition-colors"
+                      title="Start Unit"
+                    >
+                      <Play className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() => onOpenLogModal(svc.unit)}
+                    className="p-2.5 rounded-full bg-white/[0.04] hover:bg-[#8b5cf6]/20 border border-white/[0.08] text-slate-400 hover:text-[#8b5cf6] transition-colors"
+                    title="Inspect Journal Logs"
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center gap-2 pt-2">
-                <button
-                  onClick={() => handleServiceAction(svc.unit, 'restart', svc.scope)}
-                  disabled={isRestarting || isStopping || isStarting}
-                  title="Restart Service"
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-800 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-500/30 text-xs font-semibold text-slate-200 hover:text-cyan-300 transition-all active:scale-95 disabled:opacity-50"
-                >
-                  <RotateCcw className={`w-3.5 h-3.5 ${isRestarting ? 'animate-spin text-cyan-400' : 'text-cyan-400'}`} />
-                  <span>Restart</span>
-                </button>
-
-                {isActive ? (
-                  <button
-                    onClick={() => handleServiceAction(svc.unit, 'stop', svc.scope)}
-                    disabled={isStopping || isRestarting}
-                    title="Stop Service"
-                    className="p-2 rounded-xl bg-slate-800 hover:bg-rose-500/20 border border-white/10 hover:border-rose-500/30 text-slate-300 hover:text-rose-400 transition-all active:scale-95 disabled:opacity-50"
-                  >
-                    <Square className={`w-3.5 h-3.5 ${isStopping ? 'animate-pulse text-rose-400' : 'text-rose-400'}`} />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => handleServiceAction(svc.unit, 'start', svc.scope)}
-                    disabled={isStarting || isRestarting}
-                    title="Start Service"
-                    className="p-2 rounded-xl bg-slate-800 hover:bg-emerald-500/20 border border-white/10 hover:border-emerald-500/30 text-slate-300 hover:text-emerald-400 transition-all active:scale-95 disabled:opacity-50"
-                  >
-                    <Play className={`w-3.5 h-3.5 ${isStarting ? 'animate-pulse text-emerald-400' : 'text-emerald-400'}`} />
-                  </button>
-                )}
-
-                <button
-                  onClick={() => onOpenLogModal(svc.unit)}
-                  title="View Service Journal Logs"
-                  className="p-2 rounded-xl bg-slate-800 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/30 text-slate-300 hover:text-purple-400 transition-all active:scale-95"
-                >
-                  <FileText className="w-3.5 h-3.5 text-purple-400" />
-                </button>
               </div>
             </div>
           );

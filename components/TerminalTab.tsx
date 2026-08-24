@@ -4,15 +4,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Terminal as TerminalIcon,
   Play,
-  RotateCcw,
   Trash2,
-  HardDrive,
-  Activity,
-  CheckCircle2,
-  AlertTriangle,
-  Clock,
   Sparkles,
-  Layers,
 } from 'lucide-react';
 
 interface TerminalTabProps {
@@ -25,7 +18,7 @@ export function TerminalTab({ isLocked, onOpenAuthModal }: TerminalTabProps) {
   const [history, setHistory] = useState<Array<{ cmd: string; stdout: string; stderr: string; exitCode: number; durationMs: number; time: string }>>([
     {
       cmd: 'uname -a && uptime',
-      stdout: 'Linux archlinux 6.18.9-arch1-1 #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux\n2d 14h 22m, load average: 0.12, 0.24, 0.18',
+      stdout: 'Linux archlinux 7.1.8-zen1-3-zen #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux\n5d 22h 10m, load average: 0.12, 0.24, 0.18',
       stderr: '',
       exitCode: 0,
       durationMs: 12,
@@ -132,40 +125,40 @@ export function TerminalTab({ isLocked, onOpenAuthModal }: TerminalTabProps) {
     { label: 'Free RAM Memory', cmd: 'free -h' },
     { label: 'Disk Partitions', cmd: 'df -h -x tmpfs -x devtmpfs' },
     { label: 'Thermal Sensors', cmd: 'sensors 2>/dev/null || cat /sys/class/thermal/thermal_zone0/temp' },
-    { label: 'Docker Containers', cmd: 'sudo -n docker ps -a' },
+    { label: 'Docker PS', cmd: 'sudo -n docker ps -a' },
     { label: 'Active Sockets', cmd: 'sudo -n ss -tulpn' },
     { label: 'Tailscale Status', cmd: 'tailscale status' },
-    { label: 'Recent Error Logs', cmd: 'sudo -n journalctl -p err..emerg -n 15 --no-pager' },
+    { label: 'Recent Errors', cmd: 'sudo -n journalctl -p err..emerg -n 15 --no-pager' },
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
+    <div className="space-y-6 sm:space-y-8">
+      {/* Header Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <TerminalIcon className="w-5 h-5 text-cyan-400" />
-            Interactive Server Terminal & Safe Actions
+          <h2 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
+            <TerminalIcon className="w-6 h-6 text-[#00f2fe]" />
+            Interactive Server Terminal
           </h2>
-          <p className="text-xs text-slate-400">
-            Eksekusi perintah terminal secara langsung pada node Arch Linux dengan output real-time
+          <p className="text-xs text-slate-400 font-mono">
+            Execute direct bash commands with ANSI output stream on Arch Linux node
           </p>
         </div>
 
         <button
           onClick={() => setHistory([])}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-white/10 hover:bg-white/10 text-xs font-mono text-slate-400 hover:text-white transition-colors"
+          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] text-xs font-mono text-slate-400 hover:text-white transition-colors"
         >
           <Trash2 className="w-3.5 h-3.5" />
-          <span>Clear Console</span>
+          <span>Clear Screen</span>
         </button>
       </div>
 
-      {/* Preset Quick Actions Bar */}
+      {/* Preset Quick Actions */}
       <div className="space-y-2">
         <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-          <span>Preset Quick Commands:</span>
+          <Sparkles className="w-3.5 h-3.5 text-[#00f2fe]" />
+          <span>Preset Command Triggers:</span>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {presets.map((p, idx) => (
@@ -173,7 +166,7 @@ export function TerminalTab({ isLocked, onOpenAuthModal }: TerminalTabProps) {
               key={idx}
               onClick={() => executeCommand(p.cmd)}
               disabled={loading}
-              className="px-3 py-1.5 rounded-xl bg-slate-900/80 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-500/30 text-xs font-mono text-slate-300 hover:text-cyan-300 transition-all active:scale-95 disabled:opacity-50"
+              className="px-3.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-[#00f2fe]/20 border border-white/[0.08] hover:border-[#00f2fe]/30 text-xs font-mono text-slate-300 hover:text-[#00f2fe] transition-all active:scale-95 disabled:opacity-50"
             >
               {p.label}
             </button>
@@ -181,81 +174,80 @@ export function TerminalTab({ isLocked, onOpenAuthModal }: TerminalTabProps) {
         </div>
       </div>
 
-      {/* Terminal Window Box */}
-      <div className="rounded-2xl border border-white/10 bg-slate-950 p-4 font-mono text-xs shadow-2xl space-y-4">
-        {/* Terminal Title Bar */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/10 text-slate-400 text-[11px]">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-            <span className="ml-2 font-bold text-slate-300">apu@archlinux: ~ (bash / node executor)</span>
-          </div>
-          <span className="text-[10px] text-slate-500">History: {history.length} entries</span>
-        </div>
-
-        {/* History Stream */}
-        <div className="max-h-[500px] overflow-y-auto space-y-4 pr-2 select-text scrollbar-thin">
-          {history.map((item, idx) => (
-            <div key={idx} className="space-y-1.5">
-              {/* Command Prompt */}
-              <div className="flex items-center justify-between text-slate-400 text-[11px] bg-slate-900/60 px-2.5 py-1 rounded-lg border border-white/5">
-                <div className="flex items-center gap-1.5 truncate">
-                  <span className="text-cyan-400 font-bold">apu@archlinux:~$</span>
-                  <span className="text-white font-bold">{item.cmd}</span>
-                </div>
-                <div className="flex items-center gap-2 shrink-0 text-[10px]">
-                  <span>{item.durationMs}ms</span>
-                  <span>{item.time}</span>
-                  <span
-                    className={`px-1.5 py-0.2 rounded font-bold ${
-                      item.exitCode === 0 ? 'text-emerald-400 bg-emerald-500/10' : 'text-rose-400 bg-rose-500/10'
-                    }`}
-                  >
-                    exit {item.exitCode}
-                  </span>
-                </div>
-              </div>
-
-              {/* Stdout */}
-              {item.stdout && (
-                <div className="bg-slate-900/30 p-3 rounded-lg text-slate-200 whitespace-pre-wrap leading-relaxed overflow-x-auto">
-                  {item.stdout}
-                </div>
-              )}
-
-              {/* Stderr */}
-              {item.stderr && (
-                <div className="bg-rose-950/30 border border-rose-500/20 p-3 rounded-lg text-rose-300 whitespace-pre-wrap leading-relaxed overflow-x-auto">
-                  {item.stderr}
-                </div>
-              )}
+      {/* Terminal Window Box with Doppelrand */}
+      <div className="doppelrand-shell">
+        <div className="doppelrand-core p-4 font-mono text-xs space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] text-slate-400 text-[11px]">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#f43f5e]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#10b981]" />
+              <span className="ml-2 font-bold text-slate-300">apu@archlinux: ~ (bash executor)</span>
             </div>
-          ))}
-          <div ref={bottomRef} />
-        </div>
+            <span className="text-[10px] text-slate-500">{history.length} entries</span>
+          </div>
 
-        {/* Command Input Row */}
-        <div className="flex items-center gap-2 pt-2 border-t border-white/10">
-          <span className="text-cyan-400 font-bold">apu@archlinux:~$</span>
-          <input
-            type="text"
-            value={command}
-            onChange={(e) => setCommand(e.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={loading}
-            placeholder="Ketik perintah bash lalu tekan Enter (misal: 'htop -b -n 1', 'ip a', 'df -h')..."
-            className="flex-1 bg-transparent text-white font-mono text-xs outline-none placeholder:text-slate-600 disabled:opacity-50"
-            autoFocus
-          />
-          <button
-            onClick={() => executeCommand()}
-            disabled={loading || !command.trim()}
-            className="px-4 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center gap-1 transition-all active:scale-95 disabled:opacity-50"
-          >
-            <Play className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
-            <span>Run</span>
-          </button>
+          <div className="max-h-[500px] overflow-y-auto space-y-4 pr-2 select-text scrollbar-thin">
+            {history.map((item, idx) => (
+              <div key={idx} className="space-y-1.5">
+                <div className="flex items-center justify-between text-slate-400 text-[11px] bg-black/40 px-3 py-1.5 rounded-xl border border-white/[0.06]">
+                  <div className="flex items-center gap-2 truncate">
+                    <span className="text-[#00f2fe] font-bold">apu@archlinux:~$</span>
+                    <span className="text-white font-bold">{item.cmd}</span>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0 text-[10px]">
+                    <span>{item.durationMs}ms</span>
+                    <span>{item.time}</span>
+                    <span
+                      className={`px-2 py-0.2 rounded-full font-bold ${
+                        item.exitCode === 0 ? 'text-[#10b981] bg-[#10b981]/15' : 'text-[#f43f5e] bg-[#f43f5e]/15'
+                      }`}
+                    >
+                      exit {item.exitCode}
+                    </span>
+                  </div>
+                </div>
+
+                {item.stdout && (
+                  <div className="bg-black/60 p-3.5 rounded-xl border border-white/[0.04] text-slate-200 whitespace-pre-wrap leading-relaxed overflow-x-auto">
+                    {item.stdout}
+                  </div>
+                )}
+
+                {item.stderr && (
+                  <div className="bg-[#f43f5e]/10 border border-[#f43f5e]/20 p-3.5 rounded-xl text-[#f43f5e] whitespace-pre-wrap leading-relaxed overflow-x-auto">
+                    {item.stderr}
+                  </div>
+                )}
+              </div>
+            ))}
+            <div ref={bottomRef} />
+          </div>
+
+          {/* Command Input Bar */}
+          <div className="flex items-center gap-2 pt-2 border-t border-white/[0.08]">
+            <span className="text-[#00f2fe] font-bold">apu@archlinux:~$</span>
+            <input
+              type="text"
+              value={command}
+              onChange={(e) => setCommand(e.target.value)}
+              onKeyDown={handleKeyDown}
+              disabled={loading}
+              placeholder="Type bash command (e.g., 'free -h', 'lsblk', 'sensors')..."
+              className="flex-1 bg-transparent text-white font-mono text-xs outline-none placeholder:text-slate-600 disabled:opacity-50"
+              autoFocus
+            />
+            <button
+              onClick={() => executeCommand()}
+              disabled={loading || !command.trim()}
+              className="btn-nested group"
+            >
+              <span>Execute</span>
+              <div className="btn-nested-icon">
+                <Play className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : 'text-[#00f2fe]'}`} />
+              </div>
+            </button>
+          </div>
         </div>
       </div>
     </div>
