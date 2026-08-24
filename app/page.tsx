@@ -9,6 +9,7 @@ import { ServicesTab } from '@/components/ServicesTab';
 import { ProcessesTab } from '@/components/ProcessesTab';
 import { DockerTab } from '@/components/DockerTab';
 import { NetworkTab } from '@/components/NetworkTab';
+import { AgentHubTab } from '@/components/AgentHubTab';
 import { LogsTab } from '@/components/LogsTab';
 import { TerminalTab } from '@/components/TerminalTab';
 import { AiWatchdogTab } from '@/components/AiWatchdogTab';
@@ -24,6 +25,7 @@ const ORDERED_TABS: ActiveTab[] = [
   'processes',
   'docker',
   'network',
+  'agents',
   'logs',
   'terminal',
   'watchdog',
@@ -154,10 +156,9 @@ export default function Home() {
       const currentY = e.touches[0].clientY;
       const dy = currentY - touchStartY.current;
 
-      // Only allow pull-to-refresh at the top of the page
       if (window.scrollY === 0 && dy > 0) {
         setIsPulling(true);
-        setPullDistance(Math.min(dy * 0.45, 100)); // Elastic resistance
+        setPullDistance(Math.min(dy * 0.45, 100));
       }
     };
 
@@ -167,7 +168,6 @@ export default function Home() {
       const dy = touchEndY - touchStartY.current;
       const dx = touchEndX - touchStartX.current;
 
-      // 1. Pull to refresh trigger
       if (isPulling) {
         if (pullDistance > 65) {
           triggerHaptic('success');
@@ -177,7 +177,6 @@ export default function Home() {
         setPullDistance(0);
       }
 
-      // 2. Horizontal Swipe between tabs (ignore if target is inside an input or scrollable element)
       if (Math.abs(dx) > 90 && Math.abs(dy) < 45 && !isPulling) {
         const target = e.target as HTMLElement;
         if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.closest('.overflow-x-auto'))) {
@@ -186,10 +185,8 @@ export default function Home() {
 
         const currentIndex = ORDERED_TABS.indexOf(activeTab);
         if (dx < 0 && currentIndex < ORDERED_TABS.length - 1) {
-          // Swipe Left -> Next Tab
           switchTab(ORDERED_TABS[currentIndex + 1]);
         } else if (dx > 0 && currentIndex > 0) {
-          // Swipe Right -> Previous Tab
           switchTab(ORDERED_TABS[currentIndex - 1]);
         }
       }
@@ -283,7 +280,7 @@ export default function Home() {
         isRefreshing={isRefreshing}
       />
 
-      {/* Main Content Area: Responsive Mobile Spacing */}
+      {/* Main Content Area */}
       <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 pt-20 sm:pt-28 pb-28 sm:pb-16 transition-opacity duration-300">
         {activeTab === 'overview' && (
           <OverviewTab
@@ -322,6 +319,8 @@ export default function Home() {
         )}
 
         {activeTab === 'network' && <NetworkTab />}
+
+        {activeTab === 'agents' && <AgentHubTab onNavigateTab={switchTab} />}
 
         {activeTab === 'logs' && <LogsTab initialUnit={logModalUnit || 'all'} />}
 

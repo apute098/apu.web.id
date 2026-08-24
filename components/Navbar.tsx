@@ -15,6 +15,7 @@ import {
   Bot,
   Radio,
   Command,
+  Sparkles,
 } from 'lucide-react';
 import { triggerHaptic } from '@/lib/haptics';
 
@@ -24,6 +25,7 @@ export type ActiveTab =
   | 'processes'
   | 'docker'
   | 'network'
+  | 'agents'
   | 'logs'
   | 'terminal'
   | 'watchdog';
@@ -61,6 +63,7 @@ export function Navbar({
     { id: 'processes', label: 'Processes', icon: Cpu },
     { id: 'docker', label: 'Docker', icon: Boxes },
     { id: 'network', label: 'Network', icon: Network },
+    { id: 'agents', label: 'AI Hub', icon: Sparkles },
     { id: 'logs', label: 'Logs', icon: FileText },
     { id: 'terminal', label: 'Terminal', icon: Terminal },
     { id: 'watchdog', label: 'Watchdog', icon: Bot },
@@ -93,7 +96,7 @@ export function Navbar({
                 </span>
               </div>
 
-              {/* Quick Metrics Ticker (Visible on Tablet/Desktop) */}
+              {/* Quick Metrics Ticker */}
               <div className="hidden md:flex items-center gap-3 font-mono text-[11px] text-slate-400">
                 <span className="flex items-center gap-1.5">
                   <span className="text-slate-500">CPU</span>
@@ -116,7 +119,7 @@ export function Navbar({
               </div>
             </div>
 
-            {/* Desktop Center Tabs (Hidden on Mobile) */}
+            {/* Desktop Center Tabs */}
             <nav className="hidden lg:flex items-center gap-1">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
@@ -213,7 +216,7 @@ export function Navbar({
 
       {/* 2. MOBILE BOTTOM THUMB DOCK (Visible on Mobile/Tablet < lg) */}
       <nav className="lg:hidden fixed bottom-3 left-3 right-3 z-50 select-none">
-        <div className="floating-island rounded-full p-1.5 flex items-center justify-around gap-1 max-w-lg mx-auto shadow-2xl border border-white/[0.12] bg-[#080914]/90 backdrop-blur-2xl">
+        <div className="floating-island rounded-full p-1 flex items-center justify-around gap-0.5 max-w-lg mx-auto shadow-2xl border border-white/[0.12] bg-[#080914]/90 backdrop-blur-2xl">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -221,14 +224,14 @@ export function Navbar({
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id as ActiveTab)}
-                className={`flex flex-col items-center justify-center p-2 rounded-full min-w-[44px] min-h-[44px] transition-all duration-300 active:scale-90 ${
+                className={`flex flex-col items-center justify-center p-1.5 rounded-full min-w-[38px] min-h-[40px] transition-all duration-300 active:scale-90 ${
                   isActive
                     ? 'bg-[#00f2fe]/20 text-[#00f2fe] border border-[#00f2fe]/40 shadow-sm shadow-[#00f2fe]/25 scale-105'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                <Icon className="w-4 h-4" />
-                <span className="text-[9px] font-mono mt-0.5 font-bold">{tab.label}</span>
+                <Icon className="w-3.5 h-3.5" />
+                <span className="text-[8px] font-mono mt-0.5 font-bold">{tab.label}</span>
               </button>
             );
           })}

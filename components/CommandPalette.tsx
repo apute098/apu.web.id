@@ -18,6 +18,7 @@ import {
   Unlock,
   Archive,
   Send,
+  Sparkles,
 } from 'lucide-react';
 import { ActiveTab } from './Navbar';
 
@@ -60,6 +61,7 @@ export function CommandPalette({
     { id: 'tab-processes', label: 'Go to Process Manager (Top)', category: 'Navigation', icon: Cpu, action: () => onNavigateTab('processes') },
     { id: 'tab-docker', label: 'Go to Docker & Containers', category: 'Navigation', icon: Boxes, action: () => onNavigateTab('docker') },
     { id: 'tab-network', label: 'Go to Network, Ports & Ingress', category: 'Navigation', icon: Network, action: () => onNavigateTab('network') },
+    { id: 'tab-agents', label: 'Go to AI Agents Matrix & Power Tools Hub', category: 'Navigation', icon: Sparkles, action: () => onNavigateTab('agents') },
     { id: 'tab-logs', label: 'Go to Live Journal Logs Streamer', category: 'Navigation', icon: FileText, action: () => onNavigateTab('logs') },
     { id: 'tab-terminal', label: 'Go to Server Terminal', category: 'Navigation', icon: Terminal, action: () => onNavigateTab('terminal') },
     { id: 'tab-watchdog', label: 'Go to AI Ecosystem Watchdog', category: 'Navigation', icon: Bot, action: () => onNavigateTab('watchdog') },
