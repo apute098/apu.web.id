@@ -2,275 +2,211 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect } from 'react';
-import { Navbar, SubdomainTab } from '@/components/Navbar';
-import { AdminControlTab } from '@/components/AdminControlTab';
-import { AiHubTab } from '@/components/AiHubTab';
-import OTPVerification from '@/components/OTPVerification';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Navbar, ActiveTab } from '@/components/Navbar';
+import { OverviewTab } from '@/components/OverviewTab';
+import { ServicesTab } from '@/components/ServicesTab';
+import { ProcessesTab } from '@/components/ProcessesTab';
+import { DockerTab } from '@/components/DockerTab';
+import { NetworkTab } from '@/components/NetworkTab';
+import { LogsTab } from '@/components/LogsTab';
+import { TerminalTab } from '@/components/TerminalTab';
+import { AiWatchdogTab } from '@/components/AiWatchdogTab';
+import { AuthModal } from '@/components/AuthModal';
 import { CommandPalette } from '@/components/CommandPalette';
-import LandingPage from '@/components/landing/LandingPage';
-import { Lock, LogIn, ShieldAlert, KeyRound } from 'lucide-react';
+import { MASTER_PIN } from '@/lib/auth';
 
 export default function Home() {
-  const [isCmdPaletteOpen, setIsCmdPaletteOpen] = useState(false);
-
-  // view: 'landing' (website profesional, default) | 'app' (dashboard)
-  const [view, setView] = useState<'landing' | 'app'>(() => {
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash;
-      if (hash === '#admin' || hash === '#ai-hub' || hash === '#app') {
-        return 'app';
-      }
-    }
-    return 'landing';
-  });
-  const [activeTab, setActiveTab] = useState<SubdomainTab>(() => {
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash;
-      if (hash === '#admin') return 'admin';
-    }
-    return 'ai-hub';
-  });
+  const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
   const [systemData, setSystemData] = useState<any>(null);
-  const [systemError, setSystemError] = useState<string | null>(null);
-  const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [tokenInput, setTokenInput] = useState<string>('');
+  const [historyData, setHistoryData] = useState<any[]>([]);
+  const [refreshInterval, setRefreshInterval] = useState<number>(3000);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [isCmdPaletteOpen, setIsCmdPaletteOpen] = useState<boolean>(false);
+  const [logModalUnit, setLogModalUnit] = useState<string | null>(null);
 
-  // Register form state
-  const [regUsername, setRegUsername] = useState('');
-  const [regEmail, setRegEmail] = useState('');
-  const [regPassword, setRegPassword] = useState('');
-  const [loginError, setLoginError] = useState<string | null>(null);
-  const [authSuccess, setAuthSuccess] = useState<string | null>(null);
-  // OTP 2FA state: step-1 token valid → tampil form OTP
-  const [otpStage, setOtpStage] = useState(false);
-
-  // Admin session state
-  const [isAdminSession, setIsAdminSession] = useState<boolean>(() => {
+  // Auth / Lock state
+  const [isLocked, setIsLocked] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
-      return !!localStorage.getItem('apu_admin_token');
+      const token = localStorage.getItem('apu_admin_token');
+      return !token;
     }
-    return false;
+    return true;
   });
 
-  const handleLoginSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoginError(null);
-    setAuthSuccess(null);
-    if (!tokenInput.trim()) {
-      setLoginError('Token atau kredensial tidak boleh kosong');
-      return;
-    }
-
+  const fetchSystemData = useCallback(async () => {
     try {
-      const res = await fetch('/api/v1/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'login', identifier: tokenInput, password: tokenInput }),
-      });
-
-      const json = await res.json();
-      if (res.ok && json.success) {
-        localStorage.setItem('apu_admin_token', json.token || tokenInput);
-        setIsAdminSession(true);
-        setAuthSuccess('Login berhasil! Selamat datang Kembali.');
-        setTimeout(() => {
-          setActiveTab('admin');
-          setAuthSuccess(null);
-        }, 1000);
-      } else if (res.ok && json.otpSent) {
-        // Step-1 valid → pindah ke stage OTP
-        setOtpStage(true);
-        setAuthSuccess('Token valid! Cek Telegram untuk kode OTP.');
-      } else {
-        setLoginError(json.message || 'Akses ditolak. Kredensial tidak valid.');
-      }
-    } catch (err: any) {
-      setLoginError(err.message || 'Akses ditolak. Terjadi kesalahan jaringan.');
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('apu_admin_token');
-    setIsAdminSession(false);
-    setOtpStage(false);
-    setActiveTab('ai-hub');
-  };
-
-  // ---- OTP 2FA handlers (admin master) ----
-  const handleRequestOtp = async (): Promise<string | null> => {
-    try {
-      const res = await fetch('/api/v1/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'login', identifier: tokenInput, password: tokenInput }),
-      });
-      const json = await res.json();
-      return json.otpSent ? null : (json.error || json.message || 'Gagal kirim OTP');
-    } catch {
-      return 'Gangguan jaringan, coba lagi.';
-    }
-  };
-
-  const handleVerifyOtp = async (code: string): Promise<string | null> => {
-    try {
-      const res = await fetch('/api/v1/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'verify_otp', code }),
-      });
-      const json = await res.json();
-      if (res.ok && json.success && json.token) {
-        localStorage.setItem('apu_admin_token', json.token);
-        setIsAdminSession(true);
-        setOtpStage(false);
-        setTokenInput('');
-        setActiveTab('admin');
-        return null;
-      }
-      return json.error || 'Verifikasi gagal';
-    } catch {
-      return 'Gangguan jaringan, coba lagi.';
-    }
-  };
-
-  const fetchSystemData = async () => {
-    try {
-      setRefreshing(true);
-      setSystemError(null);
+      setIsRefreshing(true);
       const res = await fetch('/api/v1/system-status');
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      setSystemData(json);
-    } catch (err) {
-      setSystemError('Gagal memuat data sistem.');
-    } finally {
-      setRefreshing(false);
-    }
-  };
+      if (res.ok) {
+        const json = await res.json();
+        setSystemData(json);
 
-  useEffect(() => {
-    let isMounted = true;
-    const loadInitialData = async () => {
-      try {
-        setRefreshing(true);
-        const res = await fetch('/api/v1/system-status');
-        if (res.ok) {
-          const json = await res.json();
-          if (isMounted) setSystemData(json);
-        }
-      } catch {
-        /* ignore */
-      } finally {
-        if (isMounted) setRefreshing(false);
-      }
-    };
-
-    loadInitialData();
-
-    const interval = setInterval(() => {
-      loadInitialData();
-    }, 4000);
-
-    const onHashChange = () => {
-      const h = window.location.hash;
-      // Landing anchors (#about/#skills/...) tidak mengganti view
-      if (h === '#admin') {
-        setView('app');
-        setActiveTab('admin');
-      } else if (h === '#ai-hub' || h === '#app') {
-        setView('app');
-        setActiveTab('ai-hub');
-      } else if (h === '' || h === '#') {
-        // kosong saat di app → tetap app; saat di landing → tetap landing
-        setActiveTab('ai-hub');
-      }
-    };
-    window.addEventListener('hashchange', onHashChange);
-
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-      window.removeEventListener('hashchange', onHashChange);
-    };
-  }, []);
-
-  // IntersectionObserver for scroll reveals — re-run saat view berubah
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
+        // Append to history for live sparkline charts
+        setHistoryData((prev) => {
+          const newPoint = {
+            time: new Date().toLocaleTimeString(),
+            cpu: json.cpu?.totalUsage ?? 0,
+            ram: json.ram?.usagePercent ?? 0,
+            rxKbps: json.network?.downloadKbps ?? 0,
+            txKbps: json.network?.uploadKbps ?? 0,
+          };
+          const updated = [...prev, newPoint];
+          return updated.slice(-30); // Keep last 30 data points
         });
-      },
-      { threshold: 0.1 }
-    );
-
-    const elements = document.querySelectorAll('.reveal');
-    elements.forEach((el) => observer.observe(el));
-
-    return () => {
-      elements.forEach((el) => observer.unobserve(el));
-      observer.disconnect();
-    };
-  }, [view]);
-
-  // Global Ctrl+K / Cmd+K Command Palette listener
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        setIsCmdPaletteOpen((prev) => !prev);
       }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    } catch (err) {
+      console.error('Failed to fetch system status:', err);
+    } finally {
+      setIsRefreshing(false);
+    }
   }, []);
 
-  const switchTab = (tab: SubdomainTab) => {
+  // Polling effect
+  useEffect(() => {
+    fetchSystemData();
+    if (refreshInterval <= 0) return;
+
+    const interval = setInterval(fetchSystemData, refreshInterval);
+    return () => clearInterval(interval);
+  }, [fetchSystemData, refreshInterval]);
+
+  // URL Hash router sync
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      const validTabs: ActiveTab[] = ['overview', 'services', 'processes', 'docker', 'network', 'logs', 'terminal', 'watchdog'];
+      if (validTabs.includes(hash as ActiveTab)) {
+        setActiveTab(hash as ActiveTab);
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const switchTab = (tab: ActiveTab) => {
     setActiveTab(tab);
     if (typeof window !== 'undefined') {
-      const hash = tab === 'admin' ? '#admin' : '';
-      if (window.location.hash !== hash) window.location.hash = hash;
+      window.location.hash = tab === 'overview' ? '' : tab;
     }
   };
 
-  // Landing = pintu depan profesional; app = dashboard (2 tab)
-  if (view === 'landing') {
-    return (
-      <>
-        <LandingPage />
-        <CommandPalette
-          isOpen={isCmdPaletteOpen}
-          onClose={() => setIsCmdPaletteOpen(false)}
-          onNavigateTab={(tab) => {
-            setView('app');
-            switchTab(tab);
-          }}
-        />
-      </>
-    );
-  }
+  // Quick Action execution handler
+  const handleTriggerAction = async (action: string) => {
+    const token = localStorage.getItem('apu_admin_token') || MASTER_PIN;
+    try {
+      const res = await fetch('/api/v1/terminal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ action }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert(`Sukses: ${data.stdout || 'Perintah berhasil dieksekusi.'}`);
+        fetchSystemData();
+      } else {
+        alert(`Gagal: ${data.error || data.stderr || 'Terjadi kesalahan eksekusi'}`);
+      }
+    } catch (err: any) {
+      alert(`Error: ${err.message}`);
+    }
+  };
 
   return (
-    <div className="min-h-screen text-slate-100 flex flex-col font-sans selection:bg-[#22d3ee] selection:text-[#030309] bg-slate-950">
-      {/* Ambient Orbs */}
-      <div className="fixed top-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-cyan-500/5 blur-3xl pointer-events-none z-0 animate-float-orb" />
-      <div 
-        className="fixed bottom-1/4 -right-1/4 w-[500px] h-[500px] rounded-full bg-purple-500/5 blur-3xl pointer-events-none z-0 animate-float-orb" 
-        style={{ animationDelay: '3s' }} 
-      />
+    <div className="min-h-screen text-slate-100 flex flex-col font-sans selection:bg-cyan-400 selection:text-slate-950 bg-[#05050d]">
+      {/* Ambient Cyberpunk Glows */}
+      <div className="fixed top-1/4 -left-1/4 w-[700px] h-[700px] rounded-full bg-cyan-500/5 blur-3xl pointer-events-none z-0" />
+      <div className="fixed bottom-1/4 -right-1/4 w-[600px] h-[600px] rounded-full bg-purple-500/5 blur-3xl pointer-events-none z-0" />
 
-      {/* Navigation Bar */}
+      {/* Global Navbar */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={switchTab}
-        serverOnline={systemData?.status === 'online'}
-        onLogout={handleLogout}
-        isAdmin={isAdminSession}
-        onOpenCommandPalette={() => setIsCmdPaletteOpen(true)}
+        systemData={systemData}
+        refreshInterval={refreshInterval}
+        setRefreshInterval={setRefreshInterval}
+        isLocked={isLocked}
+        setIsLocked={(locked) => {
+          if (locked) {
+            localStorage.removeItem('apu_admin_token');
+            setIsLocked(true);
+          } else {
+            setIsAuthModalOpen(true);
+          }
+        }}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onOpenCmdPalette={() => setIsCmdPaletteOpen(true)}
+        onManualRefresh={fetchSystemData}
+        isRefreshing={isRefreshing}
+      />
+
+      {/* Main Content Area */}
+      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 pt-28 md:pt-32 pb-16">
+        {activeTab === 'overview' && (
+          <OverviewTab
+            systemData={systemData}
+            historyData={historyData}
+            onTriggerAction={handleTriggerAction}
+            isLocked={isLocked}
+            onOpenAuthModal={() => setIsAuthModalOpen(true)}
+            onNavigateTab={switchTab}
+          />
+        )}
+
+        {activeTab === 'services' && (
+          <ServicesTab
+            isLocked={isLocked}
+            onOpenAuthModal={() => setIsAuthModalOpen(true)}
+            onOpenLogModal={(unit) => {
+              setLogModalUnit(unit);
+              switchTab('logs');
+            }}
+          />
+        )}
+
+        {activeTab === 'processes' && (
+          <ProcessesTab
+            isLocked={isLocked}
+            onOpenAuthModal={() => setIsAuthModalOpen(true)}
+          />
+        )}
+
+        {activeTab === 'docker' && (
+          <DockerTab
+            isLocked={isLocked}
+            onOpenAuthModal={() => setIsAuthModalOpen(true)}
+          />
+        )}
+
+        {activeTab === 'network' && <NetworkTab />}
+
+        {activeTab === 'logs' && <LogsTab initialUnit={logModalUnit || 'all'} />}
+
+        {activeTab === 'terminal' && (
+          <TerminalTab
+            isLocked={isLocked}
+            onOpenAuthModal={() => setIsAuthModalOpen(true)}
+          />
+        )}
+
+        {activeTab === 'watchdog' && <AiWatchdogTab />}
+      </main>
+
+      {/* Auth / PIN Unlock Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={() => {
+          setIsLocked(false);
+          fetchSystemData();
+        }}
       />
 
       {/* Command Palette Modal */}
@@ -278,113 +214,21 @@ export default function Home() {
         isOpen={isCmdPaletteOpen}
         onClose={() => setIsCmdPaletteOpen(false)}
         onNavigateTab={switchTab}
+        onTriggerAction={handleTriggerAction}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
       />
 
-      {/* Main Content Area */}
-      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 pt-28 md:pt-32 pb-36 md:pb-12">
-        {activeTab === 'ai-hub' && <AiHubTab />}
-
-        {activeTab === 'admin' && (
-          isAdminSession ? (
-            <AdminControlTab
-              systemData={systemData}
-              systemError={systemError}
-              refreshing={refreshing}
-              onManualRefreshSystem={fetchSystemData}
-            />
-          ) : (
-            <div className="p-1 rounded-2xl liquid-glass border border-white/10 shadow-2xl max-w-md mx-auto my-12 reveal opacity-0 translate-y-8 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] [&.visible]:opacity-100 [&.visible]:translate-y-0">
-              <div className="rounded-2xl bg-slate-950 p-6 sm:p-8 space-y-6">
-                {otpStage ? (
-                  <OTPVerification
-                    onRequestOtp={handleRequestOtp}
-                    onVerify={handleVerifyOtp}
-                    onResend={() => void handleRequestOtp()}
-                  />
-                ) : (
-                <>
-                <div className="flex items-center gap-3 border-b border-white/10 pb-4">
-                  <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
-                    <Lock className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-base font-bold text-white">Login Admin Master</h2>
-                    <p className="text-xs text-slate-400">Akses khusus Telemetri, Keuangan, & 9Router</p>
-                  </div>
-                </div>
-
-                {loginError && (
-                  <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2 font-sans">
-                    <ShieldAlert className="w-4 h-4 shrink-0" />
-                    <span>{loginError}</span>
-                  </div>
-                )}
-
-                {authSuccess && (
-                  <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2 font-sans">
-                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                    <span>{authSuccess}</span>
-                  </div>
-                )}
-
-                <form onSubmit={handleLoginSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      Username / Email / Admin Token
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        value={tokenInput}
-                        onChange={(e) => setTokenInput(e.target.value)}
-                        placeholder="Token Admin Master..."
-                        className="w-full px-4 py-3 bg-slate-950 border border-white/10 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl text-xs text-white placeholder:text-slate-600 font-mono outline-none transition-all"
-                        autoFocus
-                      />
-                      <KeyRound className="w-4 h-4 text-slate-500 absolute right-4 top-3.5" />
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-3 rounded-full bg-cyan-400 text-slate-950 font-sans text-xs font-extrabold hover:bg-cyan-300 transition-all flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400"
-                  >
-                    <LogIn className="w-4 h-4" />
-                    <span>Masuk Admin Control</span>
-                  </button>
-                </form>
-                </>
-                )}
-              </div>
-            </div>
-          )
-        )}
-      </main>
-
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-white/10 bg-slate-950/80 mt-12 ">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 reveal opacity-0 translate-y-8 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] [&.visible]:opacity-100 [&.visible]:translate-y-0">
-          <div>
-            <div className="flex items-center gap-2.5 mb-3">
-              <div className="w-8 h-8 rounded-none liquid-glass border border-white/10 flex items-center justify-center text-cyan-400 font-bold text-xs">
-                AI
-              </div>
-              <h3 className="font-bold text-white text-sm">apu.web.id</h3>
-            </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Pusat Berbagi Knowledge & Hub AI Indonesia — model benchmarking, prompt engineering & 9Router AI Gateway.
-            </p>
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Navigasi Utama</h4>
-            <ul className="space-y-2 text-xs text-slate-400">
-              <li><button onClick={() => switchTab('ai-hub')} className="hover:text-cyan-400 transition-colors">AI Hub & Direktori Model</button></li>
-              <li><button onClick={() => switchTab('admin')} className="hover:text-cyan-400 transition-colors">Admin Control Panel</button></li>
-            </ul>
-          </div>
-          <div className="flex flex-col justify-end items-start lg:items-end">
-            <p className="text-[11px] text-slate-500 font-mono">© 2026 apu.web.id — Powered by Arch Linux & 9Router</p>
-          </div>
+      {/* Footer System Status Bar */}
+      <footer className="relative z-10 border-t border-white/10 bg-slate-950/80 px-4 sm:px-8 py-4 text-[11px] font-mono text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="flex items-center gap-3">
+          <span className="text-slate-400 font-bold">apu.web.id Server Control Station</span>
+          <span>•</span>
+          <span>Node: archlinux</span>
+          <span>•</span>
+          <span className="text-emerald-400">Telemetry Active</span>
+        </div>
+        <div>
+          <span>Arch Linux x86_64 • 9Router Gateway • Next.js 16</span>
         </div>
       </footer>
     </div>

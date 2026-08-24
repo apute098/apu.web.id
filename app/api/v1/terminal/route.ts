@@ -1,0 +1,82 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { exec } from 'child_process';
+import { isAuthorized, unauthorized } from '@/lib/auth';
+
+export const dynamic = 'force-dynamic';
+
+const PRESET_ACTIONS: Record<string, { cmd: string; desc: string }> = {
+  clean_cache: {
+    cmd: 'sync && sudo -n bash -c "echo 3 > /proc/sys/vm/drop_caches" && echo "✓ System Pagecache, Dentries & Inodes successfully dropped."',
+    desc: 'Bersihkan Cache RAM (Drop Caches)',
+  },
+  trim_ssd: {
+    cmd: 'sudo -n fstrim -av',
+    desc: 'Trim SSD & Storage blocks',
+  },
+  check_storage: {
+    cmd: 'df -h -x tmpfs -x devtmpfs; echo "\n--- BLOCK DEVICES ---"; lsblk -o NAME,SIZE,TYPE,MOUNTPOINTS',
+    desc: 'Cek Detail Partisi & Storage',
+  },
+  restart_caddy: {
+    cmd: 'sudo -n systemctl restart caddy && sudo -n systemctl is-active caddy && echo "✓ Caddy Web Server restarted and active."',
+    desc: 'Restart Caddy Reverse Proxy',
+  },
+  restart_cloudflared: {
+    cmd: 'sudo -n systemctl restart cloudflared && sudo -n systemctl is-active cloudflared && echo "✓ Cloudflare Tunnel restarted and active."',
+    desc: 'Restart Cloudflare Tunnel Ingress',
+  },
+  system_diagnostic: {
+    cmd: 'echo "=== SYSTEM DIAGNOSTIC ===" && uname -a && uptime && echo "\n=== MEMORY ===" && free -h && echo "\n=== CRITICAL RECENT LOGS ===" && sudo -n journalctl -p err..emerg -n 8 --no-pager',
+    desc: 'Jalankan Diagnostik Kesehatan Lengkap',
+  },
+};
+
+export async function POST(req: NextRequest) {
+  if (!isAuthorized(req)) return unauthorized();
+
+  try {
+    const body = await req.json();
+    const { action, command } = body;
+
+    let targetCmd = '';
+
+    if (action && PRESET_ACTIONS[action]) {
+      targetCmd = PRESET_ACTIONS[action].cmd;
+    } else if (command && typeof command === 'string') {
+      targetCmd = command.trim();
+    } else {
+      return NextResponse.json({ success: false, error: 'Command atau preset action diperlukan' }, { status: 400 });
+    }
+
+    // Safety checks against hazardous destructive actions
+    if (/rm\s+-rf\s+\/(?!\w)/.test(targetCmd) || /mkfs\./.test(targetCmd) || /dd\s+if=/.test(targetCmd)) {
+      return NextResponse.json({ success: false, error: 'Perintah berbahaya diblokir oleh keamanan server.' }, { status: 403 });
+    }
+
+    const start = Date.now();
+
+    return new Promise<NextResponse>((resolve) => {
+      exec(targetCmd, { timeout: 15000, maxBuffer: 1024 * 1024 }, (error, stdout, stderr) => {
+        const durationMs = Date.now() - start;
+
+        resolve(
+          NextResponse.json({
+            success: !error || error.code === 0,
+            command: targetCmd,
+            stdout: stdout || '',
+            stderr: stderr || (error ? error.message : ''),
+            exitCode: error ? error.code || 1 : 0,
+            durationMs,
+            timestamp: new Date().toISOString(),
+          })
+        );
+      });
+    });
+  } catch (err: unknown) {
+    console.error('POST /api/v1/terminal error:', err);
+    return NextResponse.json(
+      { success: false, error: err instanceof Error ? err.message : 'Eksekusi perintah gagal' },
+      { status: 500 }
+    );
+  }
+}
