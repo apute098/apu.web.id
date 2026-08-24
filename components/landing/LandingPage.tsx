@@ -1,24 +1,22 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Globe, Bot, Network } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 // ============================================================
-// Landing + Portfolio page untuk apu.web.id
-// Pintu depan profesional; dashboard (ai-hub/admin) tetap di belakang.
-// Entrance ke dashboard: set hash '#ai-hub' / '#admin'. page.tsx yang listen.
+// Landing + Portfolio apu.web.id — "System Readout"
+// Signature: panel fastfetch hidup, data langsung dari
+// /api/v1/system-status (mesin asli, bukan dekorasi).
+// Entrance dashboard: hash '#ai-hub' / '#admin', page.tsx listen.
 // ============================================================
 
-// ==== ISI KONTEN DI SINI: ganti placeholder di bawah dengan data pribadi ====
 const SITE = {
-  nama: 'Regsi Wahyu Saputra', // ISI KONTEN DI SINI
+  nama: 'Regsi Wahyu Saputra',
   peran: 'Homelab Engineer & AI Tinkerer',
-  tagline:
-    'Membangun self-hosted infrastructure, benchmarking LLM, & crafting AI agents.',
+  tagline: 'Membangun self-hosted infrastructure, benchmarking LLM, & crafting AI agents.',
 };
 
 const SKILLS = [
-  // ISI KONTEN DI SINI: tambah/kurangi skill sesuai realita
   'Linux/Server',
   'AI/LLM',
   'Web Dev',
@@ -31,10 +29,9 @@ const PROJECTS = [
   {
     title: 'apu.web.id Portal',
     description:
-      'Self-hosted web portal: server monitor, finance tracker, AI hub & dashboard terpadu.',
+      'Portal self-hosted: server monitor, finance tracker, AI hub & dashboard terpadu.',
     githubLink: 'https://github.com/apute098',
     tag: 'Next.js 16',
-    icon: Globe,
   },
   {
     title: 'Hermes AI Agent',
@@ -42,7 +39,6 @@ const PROJECTS = [
       'AI assistant agent (Nous Research) dengan durable session, memory & tool-use.',
     githubLink: 'https://github.com/apute098',
     tag: 'AI Agent',
-    icon: Bot,
   },
   {
     title: '9Router AI Gateway',
@@ -50,54 +46,67 @@ const PROJECTS = [
       'AI gateway dengan routing provider & fallback untuk agent dan tools.',
     githubLink: 'https://github.com/apute098',
     tag: 'AI Gateway',
-    icon: Network,
   },
 ];
 
 const EXPERIENCE = [
   {
+    period: '2022 — kini',
     role: 'Store Ops & Service Crew',
     company: 'Seblak Dower, Purwokerto',
-    period: '2022 - sekarang',
     description: 'Operasional harian store, pelayanan pelanggan, dan koordinasi tim service.',
   },
   {
+    period: '2019 — 2022',
     role: 'Service Crew',
     company: 'RM Pempek Ny Kamto, Yogyakarta',
-    period: '2019 - 2022',
     description: 'Pelayanan pelanggan dan operasional restoran.',
   },
   {
+    period: '2018 — 2019',
     role: 'Staf Operasional',
     company: 'PT Propack Kreasi Mandiri',
-    period: '2018 - 2019',
     description: 'Mendukung operasional produksi dan logistik.',
   },
   {
+    period: 'aktif',
     role: 'Homelab Engineer',
     company: 'Self-Hosted, apu.web.id',
-    period: 'Aktif',
     description:
       'Merawat server Arch Linux x86_64, 9Router AI Gateway (localhost:20128), Hermes agent & layanan self-hosted lain.',
   },
 ];
 
-export default function LandingPage() {
-  const [systemStatus, setSystemStatus] = useState<'checking' | 'online' | 'offline'>('checking');
+// Bentuk minimum payload /api/v1/system-status yang dipakai panel
+type SystemStatus = {
+  status?: string | boolean;
+  os?: string;
+  uptime?: string;
+  cpu?: { usagePercent?: number; cores?: number; model?: string };
+  ram?: { usedGB?: number; totalGB?: number; usagePercent?: number };
+  hdd?: { usedTB?: number; totalTB?: number; freeTB?: number; usagePercent?: number };
+  temperature?: { currentC?: number | null; status?: string };
+  loadAverage?: number[];
+  services?: Record<string, string>;
+};
 
-  // Fetch status server asli untuk badge LIVE di hero (data real, bukan mock)
+function kernelFromOs(os?: string): string {
+  const m = os?.match(/Linux\s+([^\s)]+)/);
+  return m ? m[1] : 'linux';
+}
+
+export default function LandingPage() {
+  const [sys, setSys] = useState<SystemStatus | null>(null);
+
+  // Telemetri nyata untuk panel fastfetch (poll 30s)
   useEffect(() => {
     const fetchStatus = async () => {
       try {
         const res = await fetch('/api/v1/system-status');
-        if (res.ok) {
-          const json = await res.json();
-          setSystemStatus(json?.status === 'online' || json?.status === true ? 'online' : 'offline');
-        } else {
-          setSystemStatus('offline');
-        }
+        const json = await res.json();
+        setSys(json);
       } catch {
-        setSystemStatus('offline');
+        /* biarkan panel memakai nilai terakhir */
       }
     };
     fetchStatus();
@@ -105,8 +114,6 @@ export default function LandingPage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Masuk dashboard: set hash, biar page.tsx (hashchange listener) yang ganti view.
-  // Jangan pakai hash anchor landing (#about/#skills/...) untuk nyamain hash routing app.
   const enterDashboard = (tab: 'ai-hub' | 'admin') => {
     window.location.hash = tab === 'admin' ? '#admin' : '#ai-hub';
   };
@@ -115,441 +122,321 @@ export default function LandingPage() {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  return (
-    <div className="min-h-screen text-slate-100 flex flex-col font-sans bg-slate-950 overflow-x-hidden">
-      {/* Ambient orbs, tema app */}
-      <div className="fixed top-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-cyan-500/8 pointer-events-none z-0 animate-float-orb" />
-      <div
-        className="fixed bottom-1/4 -right-1/4 w-[500px] h-[500px] rounded-full bg-cyan-500/8 pointer-events-none z-0 animate-float-orb-reverse"
-        style={{ animationDelay: '3s' }}
-      />
+  const online = sys ? !!(sys.status === 'online' || sys.status === true) : false;
+  const services = sys?.services ?? {};
+  const svcTotal = Object.keys(services).length;
+  const svcActive = Object.values(services).filter((s) => s.startsWith('active')).length;
+  const tempC = sys?.temperature?.currentC;
+  const hot = typeof tempC === 'number' && (tempC > 75 || sys?.temperature?.status === 'warning');
+  const loads = sys?.loadAverage ?? [];
 
+  return (
+    <div className="min-h-screen flex flex-col bg-[#05050d] text-[#e8eaf2] apu-root overflow-x-hidden">
       {/* ===== NAV ===== */}
-      <nav className="fixed top-0 left-0 right-0 z-50 liquid-glass border-b border-white/10 py-4 px-6 md:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between flex-col md:flex-row gap-4 md:gap-0">
-          <button onClick={() => scrollTo('hero')} className="text-left focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none">
-            <span className="text-xl font-bold tracking-tighter text-cyan-400">
-              apu<span className="text-green-500">.web.id</span>
-            </span>
+      <nav className="fixed top-0 inset-x-0 z-50 bg-[#05050d]/90 backdrop-blur-sm border-b border-white/[0.07]">
+        <div className="max-w-6xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between gap-4">
+          <button
+            onClick={() => scrollTo('hero')}
+            className="font-mono text-sm tracking-tight text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f5ff]/70 rounded px-1"
+          >
+            <span className="text-white">apu</span>
+            <span className="text-[#f97316]">.web.id</span>
           </button>
 
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-7">
             {[
-              ['hero', 'Home'],
-              ['about', 'Tentang'],
-              ['skills', 'Skills'],
-              ['projects', 'Project'],
-              ['experience', 'Pengalaman'],
-              ['contact', 'Kontak'],
+              ['about', 'tentang'],
+              ['skills', 'skills'],
+              ['projects', 'project'],
+              ['experience', 'log'],
+              ['contact', 'kontak'],
             ].map(([id, label]) => (
               <button
                 key={id}
                 onClick={() => scrollTo(id)}
-                className="text-slate-400 hover:text-cyan-400 transition-colors text-sm font-medium focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
+                className="font-mono text-xs text-[#8a90a5] hover:text-[#00f5ff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f5ff]/70 rounded px-1"
               >
                 {label}
               </button>
             ))}
           </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => enterDashboard('ai-hub')}
-              className="px-4 py-2 rounded-full bg-cyan-400 text-slate-950 font-sans text-xs font-bold hover:bg-cyan-300 transition-all shadow-lg shadow-cyan-500/20 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
-            >
-              Dashboard
-            </button>
-          </div>
+          <button
+            onClick={() => enterDashboard('ai-hub')}
+            className="px-4 py-2 min-h-[36px] rounded-md bg-[#00f5ff] text-[#05050d] text-xs font-bold hover:bg-[#5cf7ff] transition-colors active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f5ff]/70"
+          >
+            Dashboard
+          </button>
         </div>
       </nav>
 
-      {/* ===== HERO (apu-hero) ===== */}
-      <section
-        id="hero"
-        className="apu-hero relative min-h-[75vh] flex items-center justify-center overflow-hidden reveal"
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950" />
-        <div className="absolute inset-0 opacity-5">
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path
-              d="M0 0 L50 100 L100 0 L0 100 Z M20 30 L80 70 L40 90 L60 50 Z M10 60 L90 40 L50 10 L70 80 Z"
-              fill="rgba(34, 211, 238, 0.03)"
-            />
-          </svg>
-        </div>
+      {/* ===== HERO ===== */}
+      <section id="hero" className="pt-32 pb-20 md:pt-40 md:pb-28 px-5 md:px-8">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-[1.15fr_1fr] gap-12 md:gap-10 items-center">
+          {/* Kiri: identitas */}
+          <div>
+            <p className="apu-in apu-in-1 font-mono text-xs text-[#8a90a5] mb-6 flex items-center gap-2">
+              <span className={`inline-block w-2 h-2 rounded-full ${online ? 'bg-[#00f5ff]' : 'bg-[#f97316]'}`} />
+              {online ? 'arch linux · online' : sys ? 'arch linux · degraded' : 'arch linux'}
+            </p>
 
-        <div className="relative max-w-7xl mx-auto px-6 py-24 md:py-28 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full liquid-glass border border-white/10 text-xs font-medium text-slate-400 mb-6">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                systemStatus === 'online' ? 'bg-green-500 animate-pulse' : systemStatus === 'offline' ? 'bg-red-400' : 'bg-slate-500'
-              }`}
-            />
-            Server:{' '}
-            <span
-              className={`font-medium ${
-                systemStatus === 'online' ? 'text-green-400' : systemStatus === 'offline' ? 'text-red-400' : 'text-slate-400'
-              }`}
-            >
-              {systemStatus === 'online' ? 'LIVE' : systemStatus === 'offline' ? 'OFFLINE' : '···'}
-            </span>
-            <span className="text-slate-600">· Arch Linux x86_64</span>
-          </div>
+            <h1 className="apu-in apu-in-2 font-display font-extrabold tracking-[-0.03em] leading-[0.95] text-[clamp(2.75rem,8vw,5.25rem)] text-white">
+              Regsi Wahyu
+              <br />
+              Saputra
+            </h1>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none mb-6">
-            {SITE.nama}
-            <span className="block text-3xl sm:text-4xl lg:text-5xl text-cyan-400 mt-3">
-              {SITE.peran}
-            </span>
-          </h1>
+            <p className="apu-in apu-in-3 mt-6 text-lg text-[#aab0c4] max-w-md leading-relaxed">
+              {SITE.tagline}
+              <span className="apu-cursor ml-1 select-none" aria-hidden="true" />
+            </p>
 
-          <p className="text-xl sm:text-2xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            {SITE.tagline}
-          </p>
-
-          <div className="inline-flex flex-wrap items-center justify-center gap-4">
-            <button
-              onClick={() => enterDashboard('ai-hub')}
-              className="gradient-border px-6 py-3 rounded-full bg-slate-950/60 text-cyan-400 font-sans text-xs font-bold hover:brightness-125 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
-            >
-              Buka Dashboard
-            </button>
-            <button
-              onClick={() => scrollTo('projects')}
-              className="px-6 py-3 rounded-full bg-slate-900 border border-white/10 text-white font-sans text-xs font-bold hover:bg-slate-950 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
-            >
-              Lihat Project
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== ABOUT (apu-about) ===== */}
-      <section id="about" className="apu-about py-16 md:py-24 px-6 md:px-8 reveal">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
-              Tentang Saya
-            </h2>
-            <p className="text-slate-300 text-lg max-w-2xl mx-auto leading-relaxed">
-                        Homelab enthusiast. Bangun, monitor, dan otomasi infrastruktur self-hosted.
-                      </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <article className="group liquid-glass border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all lg:col-span-2">
-              <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                  <path d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
-                Arch Linux Homelab
-              </h3>
-              <p className="text-slate-300 text-sm mt-1">
-                Server Arch Linux x86_64 di apu.web.id: server monitor, finance tracker, AI hub & bot.
-              </p>
-            </article>
-
-            <article className="group liquid-glass border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all">
-              <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                  <path d="M12 3v18M3 12h18" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
-                9Router AI Gateway
-              </h3>
-              <p className="text-slate-300 text-sm mt-1">
-                AI request routing & provider failover di lapisan gateway (localhost:20128).
-              </p>
-            </article>
-
-            <article className="group liquid-glass border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all">
-              <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                  <path d="M12 8v4l3 3M12 21a9 9 0 100-18 9 9 0 000 18z" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
-                Hermes AI Agent
-              </h3>
-              <p className="text-slate-300 text-sm mt-1">
-                AI assistant agent (Nous Research) dengan durable session, memory & tool-use.
-              </p>
-            </article>
-          </div>
-
-          {/* SKILLS — digabung ke bagian tentang biar halaman pendek */}
-          <div id="skills" className="apu-skills mt-12">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2">Skills</h2>
-              <p className="text-slate-300 text-sm max-w-2xl mx-auto leading-relaxed">
-                Core competencies: Linux, AI, Web & otomasi. {/* ISI KONTEN DI SINI */}
-              </p>
-            </div>
-            {/* ISI KONTEN DI SINI: sesuaikan daftar skill di konstanta SKILLS atas file */}
-          <div className="flex flex-wrap justify-center gap-4">
-            {SKILLS.map((label, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-2 px-4 py-2 rounded-full liquid-glass border border-white/10 text-sm"
+            <div className="apu-in apu-in-4 mt-9 flex flex-wrap gap-3">
+              <button
+                onClick={() => enterDashboard('ai-hub')}
+                className="px-5 py-3 min-h-[44px] rounded-md bg-[#00f5ff] text-[#05050d] text-sm font-bold hover:bg-[#5cf7ff] transition-colors active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f5ff]/70"
               >
-                <span className="w-3 h-3 rounded-full flex-shrink-0 bg-cyan-400" />
-                {label}
-              </div>
-            ))}
-          </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== PROJECTS (apu-projects) ===== */}
-      <section id="projects" className="apu-projects py-16 md:py-24 px-6 md:px-8 reveal">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
-              Projects
-            </h2>
-            <p className="text-slate-300 text-lg max-w-2xl mx-auto leading-relaxed">
-                        Selected self-hosted projects: portal web, AI agent, dan AI gateway.
-                      </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {PROJECTS.map((project, i) => (
-              <article
-                                key={i}
-                                className="group liquid-glass border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/30 transition-all flex flex-col"
-                              >
-                                <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-4">
-                                  <project.icon className="w-6 h-6 text-cyan-400" strokeWidth={1.5} />
-                                </div>
-                                <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
-                  {project.title}
-                </h3>
-                <p className="text-slate-300 text-sm mt-2 flex-1">{project.description}</p>
-                <div className="mt-4 flex gap-2 items-center">
-                  <a
-                    href={project.githubLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-medium hover:bg-cyan-500/30 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
-                  >
-                    GitHub
-                  </a>
-                  {project.tag && (
-                    <span className="px-2 py-0.5 rounded-xs text-xs font-medium text-slate-500 bg-slate-950/50">
-                      {project.tag}
-                    </span>
-                  )}
-                </div>
-              </article>
-            ))}
-
-            {/* CTA card tambah project */}
-            <a
-              href="https://github.com/apute098"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group liquid-glass border border-dashed border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/40 transition-all flex flex-col items-center justify-center text-center min-h-[180px] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
-            >
-              <svg className="w-8 h-8 text-slate-500 group-hover:text-cyan-400 transition-colors mb-3" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z" />
-              </svg>
-              <p className="text-slate-500 group-hover:text-cyan-400 transition-colors text-sm font-medium">
-                Lihat semua di GitHub
-              </p>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== EXPERIENCE (apu-experience) ===== */}
-      <section id="experience" className="apu-experience py-16 md:py-24 px-6 md:px-8 bg-slate-950/50 reveal">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
-              Pengalaman
-            </h2>
-            <p className="text-slate-300 text-lg max-w-2xl mx-auto leading-relaxed">
-                        Riwayat kerja, pendidikan, dan proyek pribadi.
-                      </p>
-          </div>
-
-          {/* Timeline */}
-          <div className="relative">
-            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px liquid-glass md:-translate-x-px" />
-            <div className="space-y-8">
-              {EXPERIENCE.map((entry, i) => (
-                <div
-                  key={i}
-                  className={`relative flex flex-col md:flex-row md:items-start gap-4 pl-12 md:pl-0 ${
-                    i % 2 === 0 ? 'md:pr-[calc(50%+2rem)]' : 'md:pl-[calc(50%+2rem)]'
-                  }`}
-                >
-                  <span className="absolute left-2 md:left-1/2 top-1.5 w-4 h-4 rounded-full bg-cyan-400 border-2 border-[#05050d] md:-translate-x-1/2" />
-                  <div className="group liquid-glass border border-white/10 rounded-2xl p-6 hover:border-cyan-500/30 transition-all">
-                    <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
-                      {entry.role}
-                    </h3>
-                    <p className="text-slate-500 text-sm mb-1">{entry.company}</p>
-                    <p className="text-slate-400 text-xs mb-3">{entry.period}</p>
-                    <p className="text-slate-300 text-sm">{entry.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== CONTACT (apu-contact) ===== */}
-      <section id="contact" className="apu-contact py-16 md:py-24 px-6 md:px-8 reveal">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">Kontak</h2>
-          <p className="text-slate-300 text-lg max-w-xl mx-auto leading-relaxed">
-            Bot aktif 24/7. Konsultasi, kolaborasi, atau sekadar ngobrol.
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-            <a
-              href="https://wa.me/62877511509544"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group liquid-glass border border-white/10 rounded-2xl p-5 hover:border-green-500/40 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
-            >
-              <div className="w-10 h-10 rounded-full bg-green-500/20 border border-green-500/30 flex items-center justify-center mx-auto mb-3">
-                <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                </svg>
-              </div>
-              <p className="font-medium text-white group-hover:text-cyan-400 transition-colors">WhatsApp</p>
-              <p className="text-slate-500 text-xs mt-1">0877-5115-09544</p>
-              <div className="text-xs text-slate-500 mt-2">Bot aktif 24/7</div>
-            </a>
-
-            <a
-              href="https://t.me/locomaniac_bot"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group liquid-glass border border-white/10 rounded-2xl p-5 hover:border-cyan-500/40 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
-            >
-              <div className="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center mx-auto mb-3">
-                <svg className="w-5 h-5 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
-                </svg>
-              </div>
-              <p className="font-medium text-white group-hover:text-cyan-400 transition-colors">Telegram</p>
-              <p className="text-slate-500 text-xs mt-1">@locomaniac_bot</p>
-              <div className="text-xs text-slate-500 mt-2">Bot aktif 24/7</div>
-            </a>
-
-            <div className="group liquid-glass border border-white/10 rounded-2xl p-5">
-              <div className="w-10 h-10 rounded-full bg-slate-400/30 flex items-center justify-center mx-auto mb-3">
-                <svg className="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                  <path d="M3 8l9 6 9-6M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z" />
-                </svg>
-              </div>
-              <p className="font-medium text-white">Email</p>
-              <p className="text-slate-500 text-xs mt-1">you@example.com</p>
-              {/* ISI KONTEN DI SINI: ganti you@example.com dengan email asli + jadikan <a href="mailto:..."> */}
-              <div className="text-xs text-slate-500 mt-2">Balasan dalam 24 jam</div>
-            </div>
-
-            <a
-              href="https://github.com/apute098"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group liquid-glass border border-white/10 rounded-2xl p-5 hover:border-cyan-500/40 transition-all active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400/60 focus-visible:outline-none"
-            >
-              <div className="w-10 h-10 rounded-full bg-slate-400/30 flex items-center justify-center mx-auto mb-3">
-                <svg className="w-5 h-5 text-slate-300" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z" />
-                </svg>
-              </div>
-              <p className="font-medium text-white group-hover:text-cyan-400 transition-colors">GitHub</p>
-              <p className="text-slate-500 text-xs mt-1">@apute098</p>
-              <div className="text-xs text-slate-500 mt-2">Source code & projects</div>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== FOOTER (apu-footer) ===== */}
-      <footer className="apu-footer relative z-10 border-t border-white/10 bg-slate-950/80">
-        <div className="max-w-7xl mx-auto px-6 md:px-8 py-8 sm:py-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            <div>
-              <button onClick={() => scrollTo('hero')} className="text-left mb-3">
-                <span className="font-bold text-white text-sm">
-                  apu<span className="text-cyan-400">.web.id</span>
-                </span>
+                Buka Dashboard
               </button>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Pusat berbagi knowledge & hub AI: model benchmarking, prompt engineering & 9Router
-                AI Gateway. Powered by Arch Linux.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Navigasi</h4>
-              <ul className="space-y-2 text-xs text-slate-400">
-                <li>
-                  <button onClick={() => scrollTo('projects')} className="hover:text-cyan-400 transition-colors">
-                    Projects
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => enterDashboard('ai-hub')} className="hover:text-cyan-400 transition-colors">
-                    AI Hub & Direktori Model
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => enterDashboard('admin')} className="hover:text-cyan-400 transition-colors">
-                    Admin Control Panel
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-4">Kontak</h4>
-              <ul className="space-y-2 text-xs text-slate-400">
-                <li>
-                  <a
-                    href="https://t.me/locomaniac_bot"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-cyan-400 transition-colors"
-                  >
-                    Telegram @locomaniac_bot
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://wa.me/62877511509544"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-cyan-400 transition-colors"
-                  >
-                    WhatsApp 0877-5115-09544
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://github.com/apute098"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-cyan-400 transition-colors"
-                  >
-                    GitHub @apute098
-                  </a>
-                </li>
-              </ul>
+              <button
+                onClick={() => scrollTo('projects')}
+                className="px-5 py-3 min-h-[44px] rounded-md border border-white/15 text-sm font-semibold text-white hover:border-[#00f5ff]/60 hover:text-[#00f5ff] transition-colors active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f5ff]/70"
+              >
+                Lihat Project
+              </button>
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-white/10 text-center text-xs text-slate-500">
-            © 2026 apu.web.id. Powered by Arch Linux & 9Router
+
+          {/* Kanan: SIGNATURE — panel fastfetch hidup */}
+          <aside className="apu-in apu-in-3 apu-panel rounded-lg border border-white/10 bg-[#0b0b16]" aria-label="Status server langsung">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/10">
+              <span className="font-mono text-[11px] text-[#8a90a5]">regsi@archlinux</span>
+              <span className="flex gap-1.5" aria-hidden="true">
+                <i className="w-2.5 h-2.5 rounded-full bg-white/10" />
+                <i className="w-2.5 h-2.5 rounded-full bg-white/10" />
+                <i className={`w-2.5 h-2.5 rounded-full ${online ? 'bg-[#00f5ff]' : 'bg-[#f97316]'}`} />
+              </span>
+            </div>
+
+            <div className="p-4 sm:p-5 flex gap-4 sm:gap-5">
+              {/* Logo Arch ASCII */}
+              <pre className="hidden xs:block sm:block font-mono text-[9px] sm:text-[10px] leading-[1.35] text-[#00f5ff] shrink-0 select-none" aria-hidden="true">{`       /\\
+      /  \\
+     /\\   \\
+    /  __  \\
+   /  (  )  \\
+  / __|  |__ \\\\\\
+ /.\\\`        \\.\\\``}</pre>
+
+              {/* Readout */}
+              <dl className="font-mono text-[11px] sm:text-xs leading-relaxed min-w-0 flex-1">
+                {[
+                  ['os', 'Arch Linux x86_64'],
+                  ['kernel', kernelFromOs(sys?.os)],
+                  ['uptime', sys?.uptime ?? '—'],
+                  [
+                    'cpu',
+                    sys?.cpu
+                      ? `${(sys.cpu.model ?? '').replace(/^Intel\(R\)\s*Core\(TM\)\s*/, 'i3 ').replace(/\s*CPU.*$/, '')} (${sys.cpu.cores}) ${sys.cpu.usagePercent}%`
+                      : '—',
+                  ],
+                  [
+                    'ram',
+                    sys?.ram ? `${sys.ram.usedGB}G / ${sys.ram.totalGB}G (${sys.ram.usagePercent}%)` : '—',
+                  ],
+                  [
+                    'disk',
+                    sys?.hdd
+                      ? `${Math.round((sys.hdd.usedTB ?? 0) * 1000)}G / ${Math.round((sys.hdd.totalTB ?? 0) * 1000)}G (${sys.hdd.usagePercent}%)`
+                      : '—',
+                  ],
+                  [
+                    'temp',
+                    typeof tempC === 'number' ? `${tempC}°C${hot ? ' ⚠' : ''}` : '—',
+                  ],
+                  ['load', loads.length ? loads.join(' ') : '—'],
+                  ['svc', svcTotal ? `${svcActive}/${svcTotal} aktif` : '—'],
+                ].map(([k, v]) => (
+                  <div key={k} className="flex gap-3">
+                    <dt className={`w-12 shrink-0 ${k === 'temp' && hot ? 'text-[#f97316]' : 'text-[#00f5ff]'}`}>{k}</dt>
+                    <dd className="text-[#c6cbdd] truncate">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      {/* ===== TENTANG + SKILLS ===== */}
+      <section id="about" className="py-16 md:py-24 px-5 md:px-8 border-t border-white/[0.07]">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-[1fr_1.2fr] gap-10 md:gap-16">
+          <div>
+            <p className="font-mono text-xs text-[#f97316] mb-4">## tentang</p>
+            <h2 className="font-display font-bold tracking-tight text-3xl md:text-4xl text-white leading-tight">
+              Satu mesin,
+              <br />
+              semua layanan.
+            </h2>
+            <p className="mt-5 text-[#aab0c4] leading-relaxed max-w-sm">
+              Homelab enthusiast. Bangun, monitor, dan otomasi infrastruktur self-hosted —
+              dari telemetri kernel sampai gateway AI.
+            </p>
           </div>
+
+          {/* Lembar spesifikasi */}
+          <dl className="rounded-lg border border-white/10 divide-y divide-white/[0.07] self-start">
+            {[
+              ['Lokasi', 'Purwokerto, Indonesia'],
+              ['Fokus', 'Self-hosted infra, LLM tooling, otomasi'],
+              ['Stack', 'Next.js 16 · Bun · SQLite WAL · systemd'],
+              ['Rig', 'i3-7100 · 8 GB RAM · 500 GB HDD · Arch Linux'],
+            ].map(([k, v]) => (
+              <div key={k} className="px-5 py-4 flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6">
+                <dt className="font-mono text-[11px] uppercase tracking-wider text-[#8a90a5] w-20 shrink-0">{k}</dt>
+                <dd className="text-sm text-[#e8eaf2]">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        {/* Skills strip */}
+        <div id="skills" className="max-w-6xl mx-auto mt-12 scroll-mt-24">
+          <ul className="flex flex-wrap gap-x-2 gap-y-2">
+            {SKILLS.map((label) => (
+              <li
+                key={label}
+                className="font-mono text-xs px-3.5 py-2 rounded-md border border-white/10 bg-[#0b0b16] text-[#c6cbdd]"
+              >
+                {label}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ===== PROJECT (baris indeks, bukan grid kartu) ===== */}
+      <section id="projects" className="py-16 md:py-24 px-5 md:px-8 border-t border-white/[0.07]">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <p className="font-mono text-xs text-[#f97316] mb-4">## project</p>
+              <h2 className="font-display font-bold tracking-tight text-3xl md:text-4xl text-white">
+                Yang dibangun di atasnya.
+              </h2>
+            </div>
+          </div>
+
+          <ul className="border-t border-white/10">
+            {PROJECTS.map((project) => (
+              <li key={project.title} className="border-b border-white/10">
+                <a
+                  href={project.githubLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group grid grid-cols-[1fr_auto] md:grid-cols-[minmax(0,20rem)_1fr_auto_auto] gap-x-6 gap-y-1 items-center py-5 md:py-6 px-2 -mx-2 rounded-md hover:bg-white/[0.03] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f5ff]/70"
+                >
+                  <h3 className="font-semibold text-white group-hover:text-[#00f5ff] transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="col-span-2 md:col-span-1 text-sm text-[#8a90a5] leading-relaxed">
+                    {project.description}
+                  </p>
+                  <span className="hidden md:inline-block font-mono text-[11px] text-[#8a90a5] border border-white/10 rounded px-2 py-1">
+                    {project.tag}
+                  </span>
+                  <ArrowUpRight className="w-4 h-4 text-[#8a90a5] group-hover:text-[#00f5ff] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                </a>
+              </li>
+            ))}
+            <li className="border-b border-white/10">
+              <a
+                href="https://github.com/apute098"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between py-5 md:py-6 px-2 -mx-2 rounded-md hover:bg-white/[0.03] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f5ff]/70"
+              >
+                <span className="font-mono text-sm text-[#8a90a5] group-hover:text-white transition-colors">
+                  $ ls ~/projects --all
+                </span>
+                <span className="font-mono text-xs text-[#00f5ff] group-hover:underline underline-offset-4">
+                  github.com/apute098
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      {/* ===== PENGALAMAN — log kronologis ===== */}
+      <section id="experience" className="py-16 md:py-24 px-5 md:px-8 border-t border-white/[0.07]">
+        <div className="max-w-6xl mx-auto">
+          <p className="font-mono text-xs text-[#f97316] mb-4">## log</p>
+          <h2 className="font-display font-bold tracking-tight text-3xl md:text-4xl text-white mb-10">
+            Riwayat.
+          </h2>
+
+          <ol className="space-y-0 border-t border-white/10">
+            {EXPERIENCE.map((entry, i) => (
+              <li key={i} className="grid md:grid-cols-[10rem_1fr] gap-x-8 gap-y-1 py-5 border-b border-white/10">
+                <span className="font-mono text-xs text-[#8a90a5] pt-1">[{entry.period}]</span>
+                <div>
+                  <h3 className="font-semibold text-white">
+                    {entry.role}
+                    <span className="text-[#8a90a5] font-normal"> — {entry.company}</span>
+                  </h3>
+                  <p className="text-sm text-[#aab0c4] mt-1 leading-relaxed max-w-2xl">{entry.description}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ===== KONTAK ===== */}
+      <section id="contact" className="py-16 md:py-28 px-5 md:px-8 border-t border-white/[0.07]">
+        <div className="max-w-6xl mx-auto">
+          <p className="font-mono text-xs text-[#f97316] mb-4">## kontak</p>
+          <a
+            href="mailto:contact@apu.web.id"
+            className="group inline-block font-display font-extrabold tracking-tight text-[clamp(1.6rem,5vw,3.25rem)] text-white hover:text-[#00f5ff] transition-colors break-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f5ff]/70 rounded"
+          >
+            contact@apu.web.id
+            <span className="apu-cursor ml-2 select-none align-baseline" aria-hidden="true" />
+          </a>
+
+          <div className="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {[
+              { label: 'WhatsApp', value: '0877-5115-09544', href: 'https://wa.me/62877511509544', note: 'bot aktif 24/7' },
+              { label: 'Telegram', value: '@locomaniac_bot', href: 'https://t.me/locomaniac_bot', note: 'bot aktif 24/7' },
+              { label: 'Email', value: 'contact@apu.web.id', href: 'mailto:contact@apu.web.id', note: 'balasan < 24 jam' },
+              { label: 'GitHub', value: '@apute098', href: 'https://github.com/apute098', note: 'source code' },
+            ].map((c) => (
+              <a
+                key={c.label}
+                href={c.href}
+                target={c.href.startsWith('http') ? '_blank' : undefined}
+                rel="noopener noreferrer"
+                className="rounded-lg border border-white/10 bg-[#0b0b16] p-4 hover:border-[#00f5ff]/50 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f5ff]/70"
+              >
+                <p className="font-mono text-[11px] uppercase tracking-wider text-[#8a90a5] group-hover:text-[#00f5ff] transition-colors">
+                  {c.label}
+                </p>
+                <p className="font-mono text-xs text-[#e8eaf2] mt-2 truncate">{c.value}</p>
+                <p className="text-[11px] text-[#8a90a5] mt-1">{c.note}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FOOTER ===== */}
+      <footer className="mt-auto border-t border-white/[0.07] px-5 md:px-8 py-6">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <span className="font-mono text-xs text-[#8a90a5]">
+            © 2026 apu<span className="text-[#f97316]">.web.id</span> — arch linux · 9router
+          </span>
+          <span className="font-mono text-[11px] text-[#585f75]">uptime {sys?.uptime ?? '—'} · {svcTotal ? `${svcActive}/${svcTotal} svc` : ''}</span>
         </div>
       </footer>
     </div>

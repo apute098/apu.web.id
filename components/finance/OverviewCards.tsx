@@ -24,9 +24,9 @@ export const OverviewCards: React.FC<Props> = ({ summary, monthlyTrends }) => (
       <div className="floating-card">
         <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
           <span className="flex items-center gap-1.5 font-medium">
-            <TrendingUp className="w-4 h-4 text-[#22C55E]" /> Total Pemasukan
+            <TrendingUp className="w-4 h-4 text-emerald-400" /> Total Pemasukan
           </span>
-          <span className="text-[10px] bg-[#22C55E]/10 text-[#22C55E] px-2 py-0.5 rounded font-mono">
+          <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-mono font-semibold">
             INCOME
           </span>
         </div>
@@ -38,13 +38,13 @@ export const OverviewCards: React.FC<Props> = ({ summary, monthlyTrends }) => (
       <div className="floating-card">
         <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
           <span className="flex items-center gap-1.5 font-medium">
-            <TrendingDown className="w-4 h-4 text-[#f43f5e]" /> Total Pengeluaran
+            <TrendingDown className="w-4 h-4 text-rose-400" /> Total Pengeluaran
           </span>
-          <span className="text-[10px] bg-[#f43f5e]/10 text-[#f43f5e] px-2 py-0.5 rounded font-mono">
+          <span className="text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2.5 py-0.5 rounded-full font-mono font-semibold">
             EXPENSE
           </span>
         </div>
-        <div className="text-2xl md:text-3xl font-extrabold text-[#f43f5e] font-mono">
+        <div className="text-2xl md:text-3xl font-extrabold text-rose-400 font-mono">
           {formatRupiah(summary?.totalPengeluaran || 0)}
         </div>
       </div>
@@ -52,13 +52,13 @@ export const OverviewCards: React.FC<Props> = ({ summary, monthlyTrends }) => (
       <div className="floating-card">
         <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
           <span className="flex items-center gap-1.5 font-medium">
-            <DollarSign className="w-4 h-4 text-[#22d3ee]" /> Laba Bersih (Net)
+            <DollarSign className="w-4 h-4 text-cyan-400" /> Laba Bersih (Net)
           </span>
-          <span className="text-[10px] bg-[#22d3ee]/10 text-[#22d3ee] px-2 py-0.5 rounded font-mono">
+          <span className="text-[10px] bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-2.5 py-0.5 rounded-full font-mono font-semibold">
             NET PROFIT
           </span>
         </div>
-        <div className="text-2xl md:text-3xl font-extrabold text-[#06b6d4] font-mono">
+        <div className="text-2xl md:text-3xl font-extrabold text-cyan-400 font-mono">
           {formatRupiah(summary?.labaBersih || 0)}
         </div>
       </div>

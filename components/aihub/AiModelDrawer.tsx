@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, Cpu, Zap, DollarSign, BarChart3, CheckCircle2, XCircle, Sparkles, Layers, Terminal } from 'lucide-react';
 import { AiModelSpec } from './types';
 
@@ -11,17 +11,31 @@ interface AiModelDrawerProps {
 }
 
 export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onClose }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen || !model) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80  animate-in fade-in duration-300">
-      <div className="p-1 rounded-full bg-gradient-to-br from-white/10 via-white/5 to-white/0 border border-white/10 shadow-2xl  w-full max-w-3xl max-h-[90vh] flex flex-col">
-        <div className="rounded-full bg-slate-950 p-6 sm:p-8 flex flex-col overflow-hidden">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="model-drawer-title"
+    >
+      <div className="p-1 rounded-2xl bg-gradient-to-br from-white/10 via-white/5 to-white/0 border border-white/10 shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+        <div className="rounded-2xl bg-slate-950 p-6 sm:p-8 flex flex-col overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-5">
             <div className="flex items-center gap-3">
               <div
-                className="w-10 h-10 rounded-full flex items-center justify-center border shadow-lg"
+                className="w-10 h-10 rounded-xl flex items-center justify-center border shadow-lg"
                 style={{
                   backgroundColor: `${model.accentColor}15`,
                   borderColor: `${model.accentColor}40`,
@@ -31,7 +45,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-xl font-black text-white">{model.name}</h3>
+                  <h3 id="model-drawer-title" className="text-xl font-black text-white">{model.name}</h3>
                   <span
                     className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border ${model.badgeColor}`}
                   >
@@ -45,7 +59,8 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-full text-slate-400 hover:text-white hover:bg-blue-600 text-white active:scale-95 transition-all"
+              aria-label="Tutup modal"
+              className="p-2 rounded-full text-slate-400 hover:text-white hover:bg-white/10 active:scale-95 transition-all focus-visible:ring-2 focus-visible:ring-cyan-400"
             >
               <X className="w-5 h-5" />
             </button>
@@ -55,7 +70,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
           <div className="flex-1 overflow-y-auto py-5 space-y-6 pr-1 custom-scrollbar">
             {/* Quick Metrics Bar */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="p-3 rounded-full liquid-glass border border-white/10 border border-white/10 text-center">
+              <div className="p-3 rounded-xl liquid-glass border border-white/10 text-center">
                 <span className="text-[10px] uppercase font-bold text-slate-400 block">
                   Context Window
                 </span>
@@ -63,7 +78,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                   {model.contextWindowLabel}
                 </span>
               </div>
-              <div className="p-3 rounded-full liquid-glass border border-white/10 border border-white/10 text-center">
+              <div className="p-3 rounded-xl liquid-glass border border-white/10 text-center">
                 <span className="text-[10px] uppercase font-bold text-slate-400 block">
                   Generation Speed
                 </span>
@@ -71,7 +86,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                   {model.speedLabel}
                 </span>
               </div>
-              <div className="p-3 rounded-full liquid-glass border border-white/10 border border-white/10 text-center">
+              <div className="p-3 rounded-xl liquid-glass border border-white/10 text-center">
                 <span className="text-[10px] uppercase font-bold text-slate-400 block">
                   Input / 1M Tokens
                 </span>
@@ -79,7 +94,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                   ${model.pricing.inputPer1M.toFixed(2)}
                 </span>
               </div>
-              <div className="p-3 rounded-full liquid-glass border border-white/10 border border-white/10 text-center">
+              <div className="p-3 rounded-xl liquid-glass border border-white/10 text-center">
                 <span className="text-[10px] uppercase font-bold text-slate-400 block">
                   Output / 1M Tokens
                 </span>
@@ -90,7 +105,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
             </div>
 
             {/* Description */}
-            <div className="p-4 rounded-full liquid-glass border border-white/10 border border-white/10">
+            <div className="p-4 rounded-xl liquid-glass border border-white/10">
               <p className="text-xs text-slate-300 leading-relaxed">{model.description}</p>
             </div>
 
@@ -106,7 +121,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                     <span>Reasoning & Logic (MATH-500 / GPQA)</span>
                     <span className="text-cyan-400 font-bold">{model.benchmarks.reasoningScore}/100</span>
                   </div>
-                  <div className="w-full h-2 rounded-full bg-blue-600 text-white overflow-hidden">
+                  <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
                     <div
                       className="h-full bg-cyan-400 rounded-full transition-all duration-500"
                       style={{ width: `${model.benchmarks.reasoningScore}%` }}
@@ -119,7 +134,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                     <span>Coding & Engineering (SWE-bench / HumanEval)</span>
                     <span className="text-green-400 font-bold">{model.benchmarks.codingScore}/100</span>
                   </div>
-                  <div className="w-full h-2 rounded-full bg-blue-600 text-white overflow-hidden">
+                  <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
                     <div
                       className="h-full bg-green-500 rounded-full transition-all duration-500"
                       style={{ width: `${model.benchmarks.codingScore}%` }}
@@ -132,7 +147,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                     <span>General Knowledge & MMLU-Pro</span>
                     <span className="text-purple-400 font-bold">{model.benchmarks.generalMMLU}/100</span>
                   </div>
-                  <div className="w-full h-2 rounded-full bg-blue-600 text-white overflow-hidden">
+                  <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
                     <div
                       className="h-full bg-purple-400 rounded-full transition-all duration-500"
                       style={{ width: `${model.benchmarks.generalMMLU}%` }}
@@ -152,10 +167,10 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                 {Object.entries(model.capabilities).map(([key, enabled]) => (
                   <div
                     key={key}
-                    className={`flex items-center gap-1.5 p-2 rounded-full border ${
+                    className={`flex items-center gap-1.5 p-2 rounded-xl border ${
                       enabled
                         ? 'bg-green-500/10 text-green-300 border-green-500/20'
-                        : 'liquid-glass border border-white/10 text-slate-500 border-white/10'
+                        : 'liquid-glass border border-white/10 text-slate-500'
                     }`}
                   >
                     {enabled ? (
@@ -178,7 +193,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                 {model.bestFor.map((item, idx) => (
                   <li
                     key={idx}
-                    className="flex items-center gap-2 p-2.5 rounded-full liquid-glass border border-white/10 border border-white/10"
+                    className="flex items-center gap-2 p-2.5 rounded-xl liquid-glass border border-white/10"
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
                     <span>{item}</span>
@@ -193,7 +208,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
                 <Terminal className="w-4 h-4 text-slate-400" />
                 Contoh Interaksi & Output
               </h4>
-              <div className="rounded-full bg-slate-950 border border-white/10 p-4 space-y-3 font-mono text-xs shadow-inner">
+              <div className="rounded-xl bg-slate-950 border border-white/10 p-4 space-y-3 font-mono text-xs shadow-inner">
                 <div>
                   <span className="text-[10px] text-cyan-400 font-bold block mb-1">PROMPT:</span>
                   <p className="text-slate-300">{model.sampleQuery.prompt}</p>
@@ -216,7 +231,7 @@ export const AiModelDrawer: React.FC<AiModelDrawerProps> = ({ model, isOpen, onC
           <div className="flex items-center justify-end border-t border-white/10 pt-4 mt-2">
             <button
               onClick={onClose}
-              className="px-5 py-2 rounded-full bg-blue-600 text-white hover:bg-white/15 text-slate-200 text-xs font-semibold active:scale-95 transition-all"
+              className="px-5 py-2 rounded-full bg-slate-900 border border-white/10 hover:border-cyan-400/40 text-slate-200 text-xs font-semibold active:scale-95 transition-all focus-visible:ring-2 focus-visible:ring-cyan-400"
             >
               Tutup Spesifikasi
             </button>

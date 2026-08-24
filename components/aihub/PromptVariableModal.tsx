@@ -17,16 +17,27 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
 }) => {
   const [values, setValues] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState(false);
+  const [prevPromptId, setPrevPromptId] = useState<string | null>(null);
 
+  // Sync state when prompt changes without cascading effect
+  if (prompt && prompt.id !== prevPromptId) {
+    setPrevPromptId(prompt.id);
+    const initial: Record<string, string> = {};
+    prompt.variables.forEach((v) => {
+      initial[v.key] = v.defaultValue || '';
+    });
+    setValues(initial);
+  }
+
+  // Keyboard Escape listener
   useEffect(() => {
-    if (prompt) {
-      const initial: Record<string, string> = {};
-      prompt.variables.forEach((v) => {
-        initial[v.key] = v.defaultValue || '';
-      });
-      setValues(initial);
-    }
-  }, [prompt]);
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen || !prompt) return null;
 
@@ -44,17 +55,22 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80  animate-in fade-in duration-300">
-      <div className="p-1 rounded-full bg-gradient-to-br from-white/10 via-white/5 to-white/0 border border-white/10 shadow-2xl  w-full max-w-3xl max-h-[90vh] flex flex-col">
-        <div className="rounded-full bg-slate-950 p-6 sm:p-8 flex flex-col overflow-hidden">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="prompt-modal-title"
+    >
+      <div className="p-1 rounded-2xl bg-gradient-to-br from-white/10 via-white/5 to-white/0 border border-white/10 shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+        <div className="rounded-2xl bg-slate-950 p-6 sm:p-8 flex flex-col overflow-hidden">
           {/* Modal Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+              <span className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                 <Sliders className="w-5 h-5" />
               </span>
               <div>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <h3 id="prompt-modal-title" className="text-lg font-bold text-white flex items-center gap-2">
                   {prompt.title}
                 </h3>
                 <p className="text-xs text-slate-400">
@@ -64,7 +80,8 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-full text-slate-400 hover:text-white hover:bg-blue-600 text-white active:scale-95 transition-all"
+              aria-label="Tutup modal"
+              className="p-2 rounded-full text-slate-400 hover:text-white hover:bg-white/10 active:scale-95 transition-all"
             >
               <X className="w-5 h-5" />
             </button>
@@ -95,7 +112,7 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
                           setValues((prev) => ({ ...prev, [v.key]: e.target.value }))
                         }
                         placeholder={v.placeholder}
-                        className="w-full rounded-full liquid-glass border border-white/10 px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50 font-mono"
+                        className="w-full rounded-xl liquid-glass border border-white/10 px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50 font-mono"
                       />
                     ) : (
                       <input
@@ -105,7 +122,7 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
                           setValues((prev) => ({ ...prev, [v.key]: e.target.value }))
                         }
                         placeholder={v.placeholder}
-                        className="w-full rounded-full liquid-glass border border-white/10 px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
+                        className="w-full rounded-xl liquid-glass border border-white/10 px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
                       />
                     )}
                   </div>
@@ -119,7 +136,7 @@ export const PromptVariableModal: React.FC<PromptVariableModalProps> = ({
                 <FileText className="w-3.5 h-3.5 text-slate-400" />
                 Live Hydrated Prompt Preview
               </h4>
-              <div className="rounded-full bg-slate-950 border border-white/10 p-4 text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-56 overflow-y-auto leading-relaxed shadow-inner">
+              <div className="rounded-xl bg-slate-950 border border-white/10 p-4 text-xs text-slate-300 font-mono whitespace-pre-wrap max-h-56 overflow-y-auto leading-relaxed shadow-inner">
                 {hydratedPrompt}
               </div>
             </div>

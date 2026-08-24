@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   ShieldCheck,
   UserCheck,
@@ -98,9 +98,8 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
     return '';
   };
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
-      setLoadingUsers(true);
       const token = getAuthToken();
       const res = await fetch('/api/v1/auth', {
         method: 'POST',
@@ -119,11 +118,10 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
     } finally {
       setLoadingUsers(false);
     }
-  };
+  }, []);
 
-  const fetchProcessesAndServices = async () => {
+  const fetchProcessesAndServices = useCallback(async () => {
     try {
-      setLoadingProcesses(true);
       const token = getAuthToken();
       const res = await fetch('/api/v1/processes', {
         headers: { Authorization: `Bearer ${token}` },
@@ -142,7 +140,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
     } finally {
       setLoadingProcesses(false);
     }
-  };
+  }, []);
 
   const handleUpdateStatus = async (userId: string, newAction: 'approve_user' | 'reject_user') => {
     try {
@@ -201,7 +199,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
   useEffect(() => {
     fetchUsers();
     fetchProcessesAndServices();
-  }, []);
+  }, [fetchUsers, fetchProcessesAndServices]);
 
   const pendingCount = users.filter((u) => u.status === 'pending').length;
   const approvedCount = users.filter((u) => u.status === 'approved').length;
@@ -224,14 +222,14 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
   return (
     <div className="space-y-8 font-sans selection:bg-cyan-400 selection:text-slate-950">
       {/* ===== Double-Bezel Header Shell ===== */}
-      <div className="p-1.5 rounded-2xl liquid-glass border border-white/10 border border-white/10 shadow-2xl  relative overflow-hidden group">
+      <div className="p-1.5 rounded-2xl liquid-glass border border-white/10 shadow-2xl relative overflow-hidden group">
         <div className="absolute -top-24 -left-24 w-72 h-72 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-72 h-72 rounded-full bg-green-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-72 h-72 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
 
-        <div className="rounded-full bg-slate-950 p-6 md:p-8 relative z-10">
+        <div className="rounded-2xl bg-slate-950 p-6 md:p-8 relative z-10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="flex items-center gap-5">
-              <div className="w-14 h-14 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shadow-inner shrink-0">
+              <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shadow-inner shrink-0">
                 <ShieldCheck className="w-7 h-7" />
               </div>
               <div>
@@ -248,12 +246,12 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
             </div>
 
             {/* Sub-Tab Navigation Bar */}
-            <div className="flex items-center bg-slate-950 p-1.5 rounded-full border border-white/10 self-start md:self-auto font-sans flex-wrap gap-1">
+            <div className="flex items-center bg-slate-900/80 p-1.5 rounded-full border border-white/10 self-start md:self-auto font-sans flex-wrap gap-1">
               <button
                 onClick={() => setActiveAdminSubTab('users')}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all duration-300 ${
                   activeAdminSubTab === 'users'
-                    ? 'bg-cyan-400 text-slate-950 font-bold shadow-md'
+                    ? 'bg-cyan-400 text-slate-950 font-bold shadow-md shadow-cyan-500/20'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -265,7 +263,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                 onClick={() => setActiveAdminSubTab('keuangan')}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all duration-300 ${
                   activeAdminSubTab === 'keuangan'
-                    ? 'bg-cyan-400 text-slate-950 font-bold shadow-md'
+                    ? 'bg-cyan-400 text-slate-950 font-bold shadow-md shadow-cyan-500/20'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -277,7 +275,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                 onClick={() => setActiveAdminSubTab('telemetri')}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all duration-300 ${
                   activeAdminSubTab === 'telemetri'
-                    ? 'bg-cyan-400 text-slate-950 font-bold shadow-md'
+                    ? 'bg-cyan-400 text-slate-950 font-bold shadow-md shadow-cyan-500/20'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -289,7 +287,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                 onClick={() => setActiveAdminSubTab('services')}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all duration-300 ${
                   activeAdminSubTab === 'services'
-                    ? 'bg-cyan-400 text-slate-950 font-bold shadow-md'
+                    ? 'bg-cyan-400 text-slate-950 font-bold shadow-md shadow-cyan-500/20'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -304,13 +302,13 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
       {/* Action Notification */}
       {msg && (
         <div
-          className={`p-4 rounded-full text-xs font-semibold flex items-center gap-3 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+          className={`p-4 rounded-xl text-xs font-semibold flex items-center gap-3 transition-all duration-300 ${
             msg.type === 'success'
-              ? 'bg-green-500/10 border border-green-500/20 text-green-400'
+              ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
               : 'bg-rose-500/10 border border-rose-500/20 text-rose-400'
           }`}
         >
-          <div className={`w-2 h-2 rounded-full ${msg.type === 'success' ? 'bg-green-500 animate-ping' : 'bg-rose-400'}`} />
+          <div className={`w-2 h-2 rounded-full ${msg.type === 'success' ? 'bg-emerald-400 animate-ping' : 'bg-rose-400'}`} />
           <span>{msg.text}</span>
         </div>
       )}
@@ -325,12 +323,12 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
               { label: 'User Disetujui', value: `${approvedCount} User`, icon: <CheckCircle2 className="w-5 h-5" />, color: 'emerald' },
               { label: 'User Ditolak', value: `${rejectedCount} User`, icon: <XCircle className="w-5 h-5" />, color: 'rose' },
             ].map((m) => (
-              <div key={m.label} className="p-1 rounded-full liquid-glass border border-white/10 border border-white/10 shadow-lg">
-                <div className="rounded-full bg-slate-950 p-4 flex items-center justify-between">
+              <div key={m.label} className="p-1 rounded-2xl liquid-glass border border-white/10 shadow-lg">
+                <div className="rounded-2xl bg-slate-950 p-5 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${
                       m.color === 'amber' ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' :
-                      m.color === 'emerald' ? 'bg-green-500/10 border-green-500/20 text-green-400' :
+                      m.color === 'emerald' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' :
                       'bg-rose-500/10 border-rose-500/20 text-rose-400'
                     }`}>
                       {m.icon}
@@ -346,8 +344,8 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
           </div>
 
           {/* User Table Card */}
-          <div className="p-1 rounded-full liquid-glass border border-white/10 border border-white/10 shadow-2xl">
-            <div className="rounded-full bg-slate-950 p-6 space-y-4">
+          <div className="p-1 rounded-2xl liquid-glass border border-white/10 shadow-2xl">
+            <div className="rounded-2xl bg-slate-950 p-6 space-y-4">
               <div className="flex items-center justify-between gap-4 flex-wrap">
                 <div className="flex items-center gap-3">
                   <Users className="w-5 h-5 text-cyan-400" />
@@ -396,14 +394,14 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                   <tbody className="divide-y divide-white/5">
                     {filteredUsers.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="py-8 text-center text-slate-500">
+                        <td colSpan={7} className="py-8 text-center text-slate-400">
                           {users.length === 0 ? 'Belum ada registrasi user baru.' : 'Tidak ada user yang cocok dengan pencarian.'}
                         </td>
                       </tr>
                     ) : (
                       filteredUsers.map((u) => (
-                        <tr key={u.id} className="hover:bg-slate-900 border border-white/10 transition-colors">
-                          <td className="py-3.5 px-4 font-mono text-slate-500">#{u.id}</td>
+                        <tr key={u.id} className="hover:bg-slate-900/60 transition-colors">
+                          <td className="py-3.5 px-4 font-mono text-slate-400">#{u.id}</td>
                           <td className="py-3.5 px-4 font-bold text-white font-mono">@{u.username}</td>
                           <td className="py-3.5 px-4 text-slate-300">{u.email}</td>
                           <td className="py-3.5 px-4">
@@ -418,7 +416,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                             <span
                               className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                                 u.status === 'approved'
-                                  ? 'bg-green-500/10 text-green-400 border border-green-500/20'
+                                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                                   : u.status === 'rejected'
                                   ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
                                   : 'bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse'
@@ -432,10 +430,10 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                               {u.status !== 'approved' && (
                                 <button
                                   onClick={() => handleUpdateStatus(u.id, 'approve_user')}
-                                  className="group relative inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20 active:scale-[0.98] transition-all text-xs font-semibold"
+                                  className="group relative inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 active:scale-[0.98] transition-all text-xs font-semibold"
                                 >
                                   <span>Setujui</span>
-                                  <span className="w-4 h-4 rounded-full bg-green-500/20 flex items-center justify-center">
+                                  <span className="w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center">
                                     <UserCheck className="w-2.5 h-2.5" />
                                   </span>
                                 </button>
@@ -466,8 +464,8 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
 
       {/* ===== Admin Sub-Tab 2: Keuangan Dashboard ===== */}
       {activeAdminSubTab === 'keuangan' && (
-        <div className="p-1 rounded-full liquid-glass border border-white/10 border border-white/10 shadow-2xl">
-          <div className="rounded-full bg-slate-950 p-6">
+        <div className="p-1 rounded-2xl liquid-glass border border-white/10 shadow-2xl">
+          <div className="rounded-2xl bg-slate-950 p-6">
             <FinanceTab />
           </div>
         </div>
@@ -475,8 +473,8 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
 
       {/* ===== Admin Sub-Tab 3: Telemetri Server Arch ===== */}
       {activeAdminSubTab === 'telemetri' && (
-        <div className="p-1 rounded-full liquid-glass border border-white/10 border border-white/10 shadow-2xl">
-          <div className="rounded-full bg-slate-950 p-6">
+        <div className="p-1 rounded-2xl liquid-glass border border-white/10 shadow-2xl">
+          <div className="rounded-2xl bg-slate-950 p-6">
             <HardwareTab
               systemData={systemData}
               refreshing={refreshing}
@@ -491,8 +489,8 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
       {activeAdminSubTab === 'services' && (
         <div className="space-y-6">
           {/* Services Grid */}
-          <div className="p-1 rounded-full liquid-glass border border-white/10 border border-white/10 shadow-2xl">
-            <div className="rounded-full bg-slate-950 p-6 space-y-6">
+          <div className="p-1 rounded-2xl liquid-glass border border-white/10 shadow-2xl">
+            <div className="rounded-2xl bg-slate-950 p-6 space-y-6">
               <div className="flex items-center justify-between gap-4 flex-wrap">
                 <div className="flex items-center gap-3">
                   <Server className="w-5 h-5 text-cyan-400" />
@@ -523,7 +521,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                   return (
                     <div
                       key={svc.name}
-                      className="p-4 rounded-full bg-slate-900 border border-white/10 border border-white/10 flex flex-col justify-between space-y-4 hover:border-cyan-500/30 transition-all"
+                      className="p-5 rounded-xl bg-slate-900 border border-white/10 flex flex-col justify-between space-y-4 hover:border-cyan-500/30 transition-all"
                     >
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
@@ -533,7 +531,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                           <span
                             className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border ${
                               isRunning
-                                ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                                 : isFailed
                                 ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
                                 : 'bg-slate-500/10 text-slate-400 border-slate-500/20'
@@ -555,7 +553,7 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                       </div>
 
                       <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                        <span className="text-[10px] text-slate-500 uppercase tracking-wider font-mono">
+                        <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">
                           {svc.type === 'system' ? 'systemctl' : 'systemctl --user'}
                         </span>
 
@@ -582,8 +580,8 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
           </div>
 
           {/* Top 20 System Processes Inspector */}
-          <div className="p-1 rounded-full liquid-glass border border-white/10 border border-white/10 shadow-2xl">
-            <div className="rounded-full bg-slate-950 p-6 space-y-4">
+          <div className="p-1 rounded-2xl liquid-glass border border-white/10 shadow-2xl">
+            <div className="rounded-2xl bg-slate-950 p-6 space-y-4">
               <div className="flex items-center justify-between gap-4 flex-wrap">
                 <div className="flex items-center gap-3">
                   <Terminal className="w-5 h-5 text-cyan-400" />
@@ -621,20 +619,20 @@ export const AdminControlTab: React.FC<AdminControlTabProps> = ({
                   <tbody className="divide-y divide-white/5 font-mono text-[11px]">
                     {filteredProcesses.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="py-6 text-center text-slate-500">
+                        <td colSpan={7} className="py-6 text-center text-slate-400">
                           {processes.length === 0 ? 'Memuat data proses...' : 'Tidak ada proses yang cocok.'}
                         </td>
                       </tr>
                     ) : (
                       filteredProcesses.map((p) => (
-                        <tr key={p.pid} className="hover:bg-slate-900 border border-white/10 transition-colors">
+                        <tr key={p.pid} className="hover:bg-slate-900/60 transition-colors">
                           <td className="py-2.5 px-3 text-cyan-400 font-bold">#{p.pid}</td>
                           <td className="py-2.5 px-3 text-slate-400">{p.user}</td>
                           <td className="py-2.5 px-3 text-white font-bold">{p.name}</td>
                           <td className="py-2.5 px-3 text-amber-400 font-semibold">{p.cpu}%</td>
                           <td className="py-2.5 px-3 text-purple-400 font-semibold">{p.ramMB} MB</td>
                           <td className="py-2.5 px-3">
-                            <span className="px-2 py-0.5 rounded-full liquid-glass border border-white/10 border border-white/10 text-slate-300 text-[10px]">
+                            <span className="px-2 py-0.5 rounded-full liquid-glass border border-white/10 text-slate-300 text-[10px]">
                               {p.status}
                             </span>
                           </td>

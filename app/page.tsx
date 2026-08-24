@@ -6,13 +6,31 @@ import React, { useState, useEffect } from 'react';
 import { Navbar, SubdomainTab } from '@/components/Navbar';
 import { AdminControlTab } from '@/components/AdminControlTab';
 import { AiHubTab } from '@/components/AiHubTab';
+import OTPVerification from '@/components/OTPVerification';
+import { CommandPalette } from '@/components/CommandPalette';
 import LandingPage from '@/components/landing/LandingPage';
 import { Lock, LogIn, ShieldAlert, KeyRound } from 'lucide-react';
 
 export default function Home() {
+  const [isCmdPaletteOpen, setIsCmdPaletteOpen] = useState(false);
+
   // view: 'landing' (website profesional, default) | 'app' (dashboard)
-  const [view, setView] = useState<'landing' | 'app'>('landing');
-  const [activeTab, setActiveTab] = useState<SubdomainTab>('ai-hub');
+  const [view, setView] = useState<'landing' | 'app'>(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash;
+      if (hash === '#admin' || hash === '#ai-hub' || hash === '#app') {
+        return 'app';
+      }
+    }
+    return 'landing';
+  });
+  const [activeTab, setActiveTab] = useState<SubdomainTab>(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash;
+      if (hash === '#admin') return 'admin';
+    }
+    return 'ai-hub';
+  });
   const [systemData, setSystemData] = useState<any>(null);
   const [systemError, setSystemError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -24,30 +42,16 @@ export default function Home() {
   const [regPassword, setRegPassword] = useState('');
   const [loginError, setLoginError] = useState<string | null>(null);
   const [authSuccess, setAuthSuccess] = useState<string | null>(null);
+  // OTP 2FA state: step-1 token valid → tampil form OTP
+  const [otpStage, setOtpStage] = useState(false);
 
   // Admin session state
-  const [isAdminSession, setIsAdminSession] = useState<boolean>(false);
-
-  useEffect(() => {
+  const [isAdminSession, setIsAdminSession] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
-      const storedToken = localStorage.getItem('apu_admin_token');
-      if (storedToken) {
-        setIsAdminSession(true);
-      }
-      const hash = window.location.hash;
-      // Hash app → dashboard langsung; selain itu landing
-      if (hash === '#admin') {
-        setView('app');
-        setActiveTab('admin');
-      } else if (hash === '#ai-hub' || hash === '#app') {
-        setView('app');
-        setActiveTab('ai-hub');
-      } else {
-        setView('landing');
-        setActiveTab('ai-hub');
-      }
+      return !!localStorage.getItem('apu_admin_token');
     }
-  }, []);
+    return false;
+  });
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,18 +78,60 @@ export default function Home() {
           setActiveTab('admin');
           setAuthSuccess(null);
         }, 1000);
+      } else if (res.ok && json.otpSent) {
+        // Step-1 valid → pindah ke stage OTP
+        setOtpStage(true);
+        setAuthSuccess('Token valid! Cek Telegram untuk kode OTP.');
       } else {
-        setLoginError(json.message || 'Access denied. Fuck you!');
+        setLoginError(json.message || 'Akses ditolak. Kredensial tidak valid.');
       }
     } catch (err: any) {
-      setLoginError(err.message || 'Access denied. Fuck you!');
+      setLoginError(err.message || 'Akses ditolak. Terjadi kesalahan jaringan.');
     }
   };
 
   const handleLogout = () => {
     localStorage.removeItem('apu_admin_token');
     setIsAdminSession(false);
+    setOtpStage(false);
     setActiveTab('ai-hub');
+  };
+
+  // ---- OTP 2FA handlers (admin master) ----
+  const handleRequestOtp = async (): Promise<string | null> => {
+    try {
+      const res = await fetch('/api/v1/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'login', identifier: tokenInput, password: tokenInput }),
+      });
+      const json = await res.json();
+      return json.otpSent ? null : (json.error || json.message || 'Gagal kirim OTP');
+    } catch {
+      return 'Gangguan jaringan, coba lagi.';
+    }
+  };
+
+  const handleVerifyOtp = async (code: string): Promise<string | null> => {
+    try {
+      const res = await fetch('/api/v1/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'verify_otp', code }),
+      });
+      const json = await res.json();
+      if (res.ok && json.success && json.token) {
+        localStorage.setItem('apu_admin_token', json.token);
+        setIsAdminSession(true);
+        setOtpStage(false);
+        setTokenInput('');
+        setActiveTab('admin');
+        return null;
+      }
+      return json.error || 'Verifikasi gagal';
+    } catch {
+      return 'Gangguan jaringan, coba lagi.';
+    }
   };
 
   const fetchSystemData = async () => {
@@ -171,6 +217,18 @@ export default function Home() {
     };
   }, [view]);
 
+  // Global Ctrl+K / Cmd+K Command Palette listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsCmdPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const switchTab = (tab: SubdomainTab) => {
     setActiveTab(tab);
     if (typeof window !== 'undefined') {
@@ -181,15 +239,27 @@ export default function Home() {
 
   // Landing = pintu depan profesional; app = dashboard (2 tab)
   if (view === 'landing') {
-    return <LandingPage />;
+    return (
+      <>
+        <LandingPage />
+        <CommandPalette
+          isOpen={isCmdPaletteOpen}
+          onClose={() => setIsCmdPaletteOpen(false)}
+          onNavigateTab={(tab) => {
+            setView('app');
+            switchTab(tab);
+          }}
+        />
+      </>
+    );
   }
 
   return (
     <div className="min-h-screen text-slate-100 flex flex-col font-sans selection:bg-[#22d3ee] selection:text-[#030309] bg-slate-950">
       {/* Ambient Orbs */}
-      <div className="fixed top-1/4 -left-1/4 w-[600px] h-[600px] rounded-none bg-cyan-500/8  pointer-events-none z-0 animate-float-orb" />
+      <div className="fixed top-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-cyan-500/5 blur-3xl pointer-events-none z-0 animate-float-orb" />
       <div 
-        className="fixed bottom-1/4 -right-1/4 w-[500px] h-[500px] rounded-none bg-purple-500/8  pointer-events-none z-0 animate-float-orb" 
+        className="fixed bottom-1/4 -right-1/4 w-[500px] h-[500px] rounded-full bg-purple-500/5 blur-3xl pointer-events-none z-0 animate-float-orb" 
         style={{ animationDelay: '3s' }} 
       />
 
@@ -200,6 +270,14 @@ export default function Home() {
         serverOnline={systemData?.status === 'online'}
         onLogout={handleLogout}
         isAdmin={isAdminSession}
+        onOpenCommandPalette={() => setIsCmdPaletteOpen(true)}
+      />
+
+      {/* Command Palette Modal */}
+      <CommandPalette
+        isOpen={isCmdPaletteOpen}
+        onClose={() => setIsCmdPaletteOpen(false)}
+        onNavigateTab={switchTab}
       />
 
       {/* Main Content Area */}
@@ -215,10 +293,18 @@ export default function Home() {
               onManualRefreshSystem={fetchSystemData}
             />
           ) : (
-            <div className="p-1 rounded-none liquid-glass border border-slate-700 border border-white/10 shadow-2xl max-w-md mx-auto my-12 reveal opacity-0 translate-y-8 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] [&.visible]:opacity-100 [&.visible]:translate-y-0">
-              <div className="rounded-none bg-slate-950 p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
-                  <div className="w-10 h-10 rounded-none bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+            <div className="p-1 rounded-2xl liquid-glass border border-white/10 shadow-2xl max-w-md mx-auto my-12 reveal opacity-0 translate-y-8 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] [&.visible]:opacity-100 [&.visible]:translate-y-0">
+              <div className="rounded-2xl bg-slate-950 p-6 sm:p-8 space-y-6">
+                {otpStage ? (
+                  <OTPVerification
+                    onRequestOtp={handleRequestOtp}
+                    onVerify={handleVerifyOtp}
+                    onResend={() => void handleRequestOtp()}
+                  />
+                ) : (
+                <>
+                <div className="flex items-center gap-3 border-b border-white/10 pb-4">
+                  <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
                     <Lock className="w-5 h-5" />
                   </div>
                   <div>
@@ -228,15 +314,15 @@ export default function Home() {
                 </div>
 
                 {loginError && (
-                  <div className="mb-4 p-3.5 rounded-none bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2 font-sans">
+                  <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2 font-sans">
                     <ShieldAlert className="w-4 h-4 shrink-0" />
                     <span>{loginError}</span>
                   </div>
                 )}
 
                 {authSuccess && (
-                  <div className="mb-4 p-3.5 rounded-none bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2 font-sans">
-                    <div className="w-2 h-2 rounded-none bg-emerald-400 animate-ping" />
+                  <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2 font-sans">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
                     <span>{authSuccess}</span>
                   </div>
                 )}
@@ -252,7 +338,7 @@ export default function Home() {
                         value={tokenInput}
                         onChange={(e) => setTokenInput(e.target.value)}
                         placeholder="Token Admin Master..."
-                        className="w-full px-4 py-3 bg-slate-950 border border-white/10 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-none text-xs text-white placeholder:text-slate-600 font-mono outline-none transition-all"
+                        className="w-full px-4 py-3 bg-slate-950 border border-white/10 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 rounded-xl text-xs text-white placeholder:text-slate-600 font-mono outline-none transition-all"
                         autoFocus
                       />
                       <KeyRound className="w-4 h-4 text-slate-500 absolute right-4 top-3.5" />
@@ -261,12 +347,14 @@ export default function Home() {
 
                   <button
                     type="submit"
-                    className="w-full py-3 rounded-none bg-cyan-400 text-slate-950 font-sans text-xs font-bold hover:bg-cyan-300 transition-all flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 active:scale-[0.98]"
+                    className="w-full py-3 rounded-full bg-cyan-400 text-slate-950 font-sans text-xs font-extrabold hover:bg-cyan-300 transition-all flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-cyan-400"
                   >
                     <LogIn className="w-4 h-4" />
                     <span>Masuk Admin Control</span>
                   </button>
                 </form>
+                </>
+                )}
               </div>
             </div>
           )

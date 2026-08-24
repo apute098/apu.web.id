@@ -38,26 +38,26 @@ export const NineRouterCurlBuilder: React.FC = () => {
   };
 
   return (
-    <div className="p-1 rounded-full liquid-glass border border-white/10 border border-white/10 shadow-xl ">
-      <div className="rounded-full bg-slate-950 p-5 space-y-4">
+    <div className="p-1 rounded-2xl liquid-glass border border-white/10 shadow-xl">
+      <div className="rounded-2xl bg-slate-950 p-6 space-y-5">
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <div className="flex items-center gap-2">
             <Sliders className="w-4 h-4 text-cyan-400" />
             <h4 className="text-sm font-bold text-slate-200">Interactive cURL Generator</h4>
           </div>
-          <span className="text-[11px] font-mono text-slate-400 liquid-glass border border-white/10 px-2 py-0.5 rounded-full border border-white/10">
+          <span className="text-[11px] font-mono text-slate-400 liquid-glass border border-white/10 px-2.5 py-0.5 rounded-full">
             Endpoint: /v1/chat/completions
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div className="space-y-1">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div className="space-y-1.5">
             <label className="text-slate-400 font-medium">Model Target</label>
             <select
               value={model}
               onChange={(e) => setModel(e.target.value)}
               aria-label="Model Target"
-              className="w-full rounded-full liquid-glass border border-white/10 px-3 py-2 text-slate-200 focus:outline-none focus:border-cyan-500/50"
+              className="w-full rounded-xl liquid-glass border border-white/10 px-3.5 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-400/60 bg-slate-950 font-mono text-[11px]"
             >
               {AVAILABLE_MODELS.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -67,10 +67,10 @@ export const NineRouterCurlBuilder: React.FC = () => {
             </select>
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <label className="text-slate-400 font-medium flex justify-between">
               <span>Temperature</span>
-              <span className="font-mono text-cyan-400">{temperature}</span>
+              <span className="font-mono text-cyan-400 font-bold">{temperature}</span>
             </label>
             <input
               type="range"
@@ -80,11 +80,11 @@ export const NineRouterCurlBuilder: React.FC = () => {
               value={temperature}
               onChange={(e) => setTemperature(e.target.value)}
               aria-label="Temperature"
-              className="w-full accent-cyan-400 mt-2"
+              className="w-full accent-cyan-400 mt-2 cursor-pointer"
             />
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <label className="text-slate-400 font-medium">Streaming Output</label>
             <div className="flex items-center gap-2 pt-2">
               <input
@@ -92,16 +92,16 @@ export const NineRouterCurlBuilder: React.FC = () => {
                 id="stream-check"
                 checked={stream}
                 onChange={(e) => setStream(e.target.checked)}
-                className="rounded accent-cyan-400"
+                className="w-4 h-4 rounded accent-cyan-400 cursor-pointer"
               />
-              <label htmlFor="stream-check" className="text-slate-300 cursor-pointer">
+              <label htmlFor="stream-check" className="text-slate-300 text-xs cursor-pointer select-none">
                 Enable Server-Sent Events (SSE)
               </label>
             </div>
           </div>
         </div>
 
-        <div className="space-y-1 text-xs">
+        <div className="space-y-1.5 text-xs">
           <label className="text-slate-400 font-medium">User Prompt Content</label>
           <input
             type="text"
@@ -109,21 +109,21 @@ export const NineRouterCurlBuilder: React.FC = () => {
             onChange={(e) => setPrompt(e.target.value)}
             aria-label="User Prompt Content"
             placeholder="Masukkan prompt..."
-            className="w-full rounded-full liquid-glass border border-white/10 px-3 py-2 text-slate-200 focus:outline-none focus:border-cyan-500/50"
+            className="w-full rounded-xl liquid-glass border border-white/10 px-3.5 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-400/60"
           />
         </div>
 
         {/* Generated Command Output */}
-        <div className="relative rounded-full bg-slate-950/90 border border-white/10 p-4 font-mono text-[11px] text-cyan-300/90 overflow-x-auto">
+        <div className="relative rounded-xl bg-slate-950 border border-white/10 p-5 font-mono text-[11px] text-cyan-300/90 overflow-x-auto shadow-inner">
           <pre className="whitespace-pre">{curlCommand}</pre>
           <button
             onClick={handleCopy}
-            className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/30 active:scale-95 transition-all text-xs font-semibold"
+            className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/30 active:scale-95 transition-all text-xs font-semibold focus-visible:ring-2 focus-visible:ring-cyan-400"
           >
             {copied ? (
               <>
-                <Check className="w-3.5 h-3.5 text-green-400" />
-                <span className="text-green-400">Tersalin!</span>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-400">Tersalin!</span>
               </>
             ) : (
               <>

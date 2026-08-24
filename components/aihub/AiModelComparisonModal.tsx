@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, CheckCircle2, XCircle, Sliders, Cpu, ArrowRightLeft, Trash2 } from 'lucide-react';
 import { AiModelSpec } from './types';
 
@@ -19,20 +19,34 @@ export const AiModelComparisonModal: React.FC<AiModelComparisonModalProps> = ({
   onRemoveModel,
   onClearAll,
 }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen || selectedModels.length === 0) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80  animate-in fade-in duration-300">
-      <div className="p-1 rounded-full bg-gradient-to-br from-white/10 via-white/5 to-white/0 border border-white/10 shadow-2xl  w-full max-w-5xl max-h-[90vh] flex flex-col">
-        <div className="rounded-full bg-slate-950 p-6 sm:p-8 flex flex-col overflow-hidden">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="comparison-modal-title"
+    >
+      <div className="p-1 rounded-2xl bg-gradient-to-br from-white/10 via-white/5 to-white/0 border border-white/10 shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col">
+        <div className="rounded-2xl bg-slate-950 p-6 sm:p-8 flex flex-col overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <div className="flex items-center gap-3">
-              <span className="p-2 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+              <span className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                 <ArrowRightLeft className="w-5 h-5" />
               </span>
               <div>
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                <h3 id="comparison-modal-title" className="text-xl font-bold text-white flex items-center gap-2">
                   Komparasi Model Flagship AI
                   <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                     {selectedModels.length} Model Terpilih
@@ -47,14 +61,15 @@ export const AiModelComparisonModal: React.FC<AiModelComparisonModalProps> = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={onClearAll}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold text-rose-400 hover:bg-rose-500/10 transition-all flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-full text-xs font-semibold text-rose-400 hover:bg-rose-500/10 transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-rose-400"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 Reset
               </button>
               <button
                 onClick={onClose}
-                className="p-2 rounded-full text-slate-400 hover:text-white hover:bg-blue-600 text-white active:scale-95 transition-all"
+                aria-label="Tutup komparasi"
+                className="p-2 rounded-full text-slate-400 hover:text-white hover:bg-white/10 active:scale-95 transition-all focus-visible:ring-2 focus-visible:ring-cyan-400"
               >
                 <X className="w-5 h-5" />
               </button>

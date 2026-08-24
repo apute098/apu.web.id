@@ -47,10 +47,10 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
   return (
     <form
       onSubmit={handleAddTransaction}
-      className="floating-card border-[#22d3ee]/40 liquid-glass space-y-4"
+      className="floating-card border-cyan-400/30 liquid-glass space-y-5 rounded-2xl p-6 shadow-2xl"
     >
       <h3 className="text-sm font-bold text-white flex items-center gap-2">
-        <Plus className="w-4 h-4 text-[#22C55E]" /> Tambah Transaksi Keuangan Manual
+        <Plus className="w-4 h-4 text-emerald-400" /> Tambah Transaksi Keuangan Manual
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -62,7 +62,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
             type="date"
             value={tanggal}
             onChange={(e) => setTanggal(e.target.value)}
-            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full px-3.5 py-2.5 min-h-[44px] rounded-xl liquid-glass border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-cyan-400/60"
             required
           />
         </div>
@@ -74,7 +74,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
           <select
             value={tipe}
             onChange={(e) => setTipe(e.target.value as any)}
-            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-white/10 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full px-3.5 py-2.5 min-h-[44px] rounded-xl liquid-glass border border-white/10 text-white text-xs focus:outline-none focus:border-cyan-400/60 bg-slate-950"
           >
             <option value="Pemasukan">Pemasukan (Income)</option>
             <option value="Pengeluaran">Pengeluaran (Expense)</option>
@@ -90,7 +90,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
             value={kategori}
             onChange={(e) => setKategori(e.target.value)}
             placeholder="Misal: Hosting, Client Payment, Listrik"
-            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-white/10 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full px-3.5 py-2.5 min-h-[44px] rounded-xl liquid-glass border border-white/10 text-white text-xs focus:outline-none focus:border-cyan-400/60"
             required
           />
         </div>
@@ -104,7 +104,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
             value={jumlah}
             onChange={(e) => setJumlah(e.target.value)}
             placeholder="Contoh: 1500000"
-            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full px-3.5 py-2.5 min-h-[44px] rounded-xl liquid-glass border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-cyan-400/60"
             required
           />
         </div>
@@ -118,7 +118,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
             value={metode}
             onChange={(e) => setMetode(e.target.value)}
             placeholder="Bank Transfer, Midtrans, Cash"
-            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-white/10 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full px-3.5 py-2.5 min-h-[44px] rounded-xl liquid-glass border border-white/10 text-white text-xs focus:outline-none focus:border-cyan-400/60"
           />
         </div>
 
@@ -131,7 +131,7 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
             value={keterangan}
             onChange={(e) => setKeterangan(e.target.value)}
             placeholder="Deskripsi transaksi..."
-            className="w-full px-3 py-2.5 min-h-[44px] rounded-full liquid-glass border border-white/10 text-white text-xs focus:outline-none focus:border-[#22d3ee]/40"
+            className="w-full px-3.5 py-2.5 min-h-[44px] rounded-xl liquid-glass border border-white/10 text-white text-xs focus:outline-none focus:border-cyan-400/60"
             required
           />
         </div>
@@ -141,14 +141,14 @@ export const TransactionForm: React.FC<Props> = ({ onClose, onSaved }) => {
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2.5 min-h-[44px] rounded-full text-xs text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
+          className="px-4 py-2.5 min-h-[44px] rounded-full text-xs text-slate-400 hover:text-white hover:bg-slate-800 transition-all focus-visible:ring-2 focus-visible:ring-cyan-400"
         >
           Batal
         </button>
         <button
           type="submit"
           disabled={submitting}
-          className="px-5 py-2 rounded-full text-xs font-bold bg-[#22d3ee] text-white hover:bg-[#22d3ee] disabled:opacity-50"
+          className="px-6 py-2.5 min-h-[44px] rounded-full text-xs font-extrabold bg-cyan-400 text-slate-950 hover:bg-cyan-300 transition-all shadow-md shadow-cyan-500/20 active:scale-[0.98] disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-cyan-400"
         >
           {submitting ? 'Menyimpan...' : 'Simpan Transaksi'}
         </button>

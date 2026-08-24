@@ -24,6 +24,7 @@ import { AiModelComparisonModal } from './aihub/AiModelComparisonModal';
 import { AiPromptCard } from './aihub/AiPromptCard';
 import { PromptVariableModal } from './aihub/PromptVariableModal';
 import { NineRouterGuide } from './aihub/NineRouterGuide';
+import { FreeAiDirectory } from './aihub/FreeAiDirectory';
 
 export const AiHubTab: React.FC = () => {
   // State for Models
@@ -45,7 +46,10 @@ export const AiHubTab: React.FC = () => {
       m.provider.toLowerCase().includes(modelSearch.toLowerCase()) ||
       m.description.toLowerCase().includes(modelSearch.toLowerCase());
     const matchesProvider =
-      selectedProvider === 'all' || m.providerSlug === selectedProvider;
+      selectedProvider === 'all' ||
+      (selectedProvider === 'free'
+        ? m.capabilities.openWeights || m.pricing.inputPer1M === 0 || m.tag.toLowerCase().includes('open') || m.id.includes('free')
+        : m.providerSlug === selectedProvider);
     return matchesSearch && matchesProvider;
   });
 
@@ -80,41 +84,41 @@ export const AiHubTab: React.FC = () => {
   return (
     <div className="space-y-16 py-6 max-w-7xl mx-auto">
       {/* 1. Hero Section & Architecture Highlights */}
-      <div className="relative p-1 rounded-full bg-gradient-to-br from-cyan-500/20 via-white/5 to-purple-500/10 border border-white/10 shadow-2xl  overflow-hidden">
-        <div className="rounded-full bg-slate-950 p-8 sm:p-12 relative z-10 space-y-8">
+      <div className="relative p-1 rounded-3xl bg-gradient-to-br from-emerald-500/20 via-cyan-500/10 to-purple-500/10 border border-emerald-500/30 shadow-2xl overflow-hidden">
+        <div className="rounded-3xl bg-slate-950 p-8 sm:p-12 relative z-10 space-y-8">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
             <div className="space-y-4 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono font-semibold">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-semibold">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>AI Knowledge Hub & Local Relay Ecosystem</span>
+                <span>100% Free AI Hub & Open Resources Ecosystem</span>
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
                 Pusat Intelijen AI & <br />
-                <span className="bg-clip-text text-transparent bg-gradient-to-br from-cyan-400 via-green-400 to-cyan-600">
-                  9Router Gateway Relay
+                <span className="bg-clip-text text-transparent bg-gradient-to-br from-emerald-400 via-cyan-400 to-cyan-500">
+                  Direktori AI Serba Gratis
                 </span>
               </h2>
               <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-                Eksplorasi katalog model AI flagship SOTA dunia (DeepSeek, Claude 3.7, GPT-4o, Gemini), pustaka prompt presisi berstandar V-Model, dan integrasi gateway lokal 9Router port 20128.
+                Berbagi semua hal seputar AI 100% gratis: kuota API cloud free tier (Google, Groq, OpenRouter), model open-weights (DeepSeek, Llama), relay lokal 9Router port 20128, dan pustaka prompt presisi tanpa biaya sepeserpun.
               </p>
             </div>
 
             {/* Quick Metrics Cards */}
             <div className="grid grid-cols-2 gap-3 w-full lg:w-auto min-w-[280px]">
-              <div className="p-4 rounded-full liquid-glass border border-white/10 border border-white/10 text-center">
-                <span className="text-2xl font-black text-cyan-400 font-mono block">6</span>
-                <span className="text-xs text-slate-400 font-medium">Flagship Models</span>
+              <div className="p-4 rounded-2xl liquid-glass border border-white/10 text-center">
+                <span className="text-2xl font-black text-emerald-400 font-mono block">100%</span>
+                <span className="text-xs text-slate-400 font-medium">Bebas Biaya / Free</span>
               </div>
-              <div className="p-4 rounded-full liquid-glass border border-white/10 border border-white/10 text-center">
-                <span className="text-2xl font-black text-green-400 font-mono block">7</span>
-                <span className="text-xs text-slate-400 font-medium">Prompt Disciplines</span>
+              <div className="p-4 rounded-2xl liquid-glass border border-white/10 text-center">
+                <span className="text-2xl font-black text-cyan-400 font-mono block">8+</span>
+                <span className="text-xs text-slate-400 font-medium">Free AI Platforms</span>
               </div>
-              <div className="p-4 rounded-full liquid-glass border border-white/10 border border-white/10 text-center">
+              <div className="p-4 rounded-2xl liquid-glass border border-white/10 text-center">
                 <span className="text-2xl font-black text-amber-400 font-mono block">2M</span>
-                <span className="text-xs text-slate-400 font-medium">Max Context Window</span>
+                <span className="text-xs text-slate-400 font-medium">Free Context Window</span>
               </div>
-              <div className="p-4 rounded-full liquid-glass border border-white/10 border border-white/10 text-center">
-                <span className="text-2xl font-black text-purple-400 font-mono block">:20128</span>
+              <div className="p-4 rounded-2xl liquid-glass border border-white/10 text-center">
+                <span className="text-2xl font-black text-cyan-300 font-mono block">:20128</span>
                 <span className="text-xs text-slate-400 font-medium">9Router Local Port</span>
               </div>
             </div>
@@ -124,26 +128,35 @@ export const AiHubTab: React.FC = () => {
           <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-white/10 text-xs">
             <span className="text-slate-400 font-medium">Navigasi Cepat:</span>
             <a
+              href="#free-ai-catalog"
+              className="px-3.5 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/30 transition-all font-bold"
+            >
+              🎁 Platform AI Gratis
+            </a>
+            <a
               href="#models-showcase"
-              className="px-3 py-1.5 rounded-full bg-slate-900 border border-white/10 hover:bg-blue-600 text-white text-slate-300 border border-white/10 transition-all"
+              className="px-3.5 py-1.5 rounded-full bg-slate-900 border border-white/10 hover:border-cyan-400/40 text-slate-300 hover:text-cyan-400 transition-all font-medium"
             >
               🚀 Model Directory
             </a>
             <a
               href="#ninerouter-guide"
-              className="px-3 py-1.5 rounded-full bg-slate-900 border border-white/10 hover:bg-blue-600 text-white text-slate-300 border border-white/10 transition-all"
+              className="px-3.5 py-1.5 rounded-full bg-slate-900 border border-white/10 hover:border-cyan-400/40 text-slate-300 hover:text-cyan-400 transition-all font-medium"
             >
               ⚡ 9Router Gateway Guide
             </a>
             <a
               href="#prompt-library"
-              className="px-3 py-1.5 rounded-full bg-slate-900 border border-white/10 hover:bg-blue-600 text-white text-slate-300 border border-white/10 transition-all"
+              className="px-3.5 py-1.5 rounded-full bg-slate-900 border border-white/10 hover:border-cyan-400/40 text-slate-300 hover:text-cyan-400 transition-all font-medium"
             >
               📚 Prompt Vault
             </a>
           </div>
         </div>
       </div>
+
+      {/* 2. Direktori AI 100% Gratis */}
+      <FreeAiDirectory />
 
       {/* 2. Flagship Models Showcase */}
       <section id="models-showcase" className="space-y-6">
@@ -177,6 +190,7 @@ export const AiHubTab: React.FC = () => {
             <div className="flex items-center gap-1 liquid-glass p-1 rounded-full border border-white/10 text-xs overflow-x-auto max-w-full no-scrollbar whitespace-nowrap shrink-0">
               {[
                 { id: 'all', label: 'Semua' },
+                { id: 'free', label: '✨ Gratis & Open' },
                 { id: 'deepseek', label: 'DeepSeek' },
                 { id: 'anthropic', label: 'Anthropic' },
                 { id: 'openai', label: 'OpenAI' },
@@ -189,8 +203,8 @@ export const AiHubTab: React.FC = () => {
                   onClick={() => setSelectedProvider(prov.id)}
                   className={`px-3 py-1.5 rounded-full font-semibold transition-all shrink-0 ${
                     selectedProvider === prov.id
-                      ? 'bg-cyan-500 text-slate-950 shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-cyan-400 text-slate-950 shadow-md shadow-cyan-500/20'
+                      : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   {prov.label}

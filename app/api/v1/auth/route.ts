@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createHash } from 'node:crypto';
 import { createUser, findUserByUsernameOrEmail, listAllUsers, updateUserStatus } from '@/lib/db';
 import { isAuthorized } from '@/lib/auth';
+import { issueOtp, verifyOtp } from '@/lib/otp';
 
 export const dynamic = 'force-dynamic';
 
@@ -98,12 +99,39 @@ export async function POST(req: NextRequest) {
     // Default: Login
     const { identifier, password, token: providedToken } = body;
 
-    // Check admin token fallback first
+    // Check admin token fallback first — juga kena OTP biar gak bisa bypass 2FA
     const masterToken = process.env.WEBHOOK_TOKEN;
     if (providedToken && providedToken.trim() === masterToken) {
+      const code = issueOtp('admin');
+      const botToken = process.env.TELEGRAM_BOT_TOKEN;
+      const chatId = process.env.TELEGRAM_CHAT_ID;
+      if (botToken && chatId) {
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: `🔐 OTP Admin apu.web.id: *${code}*\nBerlaku 5 menit. Jangan share!`,
+            parse_mode: 'Markdown',
+          }),
+        }).catch(() => {});
+      }
+      return NextResponse.json({ otpSent: true, success: true, message: 'OTP dikirim ke Telegram admin' });
+    }
+
+    // Step 1 admin login: master token valid → issue OTP, kirim ke Telegram (jangan kasih token dulu)
+    if (action === 'verify_otp') {
+      const { code } = body;
+      if (!code || !/^\d{4}$/.test(String(code))) {
+        return NextResponse.json({ success: false, error: 'Format OTP salah (4 digit)' }, { status: 400 });
+      }
+      const result = verifyOtp('admin', String(code));
+      if (!result.ok) {
+        return NextResponse.json({ success: false, error: result.error }, { status: 403 });
+      }
       return NextResponse.json({
         success: true,
-        message: 'Login Admin Master berhasil!',
+        message: 'Verifikasi OTP berhasil!',
         user: { id: '0', username: 'admin', email: 'admin@apu.web.id', role: 'admin', status: 'approved' },
         token: masterToken,
       });
@@ -116,13 +144,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Fallback: master token input as password
+    // Fallback: master token input as password → JANGAN kasih token langsung.
+    // Issue OTP + kirim ke Telegram (2FA admin).
     if (password.trim() === masterToken || identifier.trim() === masterToken) {
+      const code = issueOtp('admin');
+      const botToken = process.env.TELEGRAM_BOT_TOKEN;
+      const chatId = process.env.TELEGRAM_CHAT_ID;
+      if (botToken && chatId) {
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: `🔐 OTP Admin apu.web.id: *${code}*\nBerlaku 5 menit. Jangan share!`,
+            parse_mode: 'Markdown',
+          }),
+        }).catch(() => {});
+      }
       return NextResponse.json({
+        otpSent: true,
         success: true,
-        message: 'Login Admin Master berhasil!',
-        user: { id: '0', username: 'admin', email: 'admin@apu.web.id', role: 'admin', status: 'approved' },
-        token: masterToken,
+        message: 'OTP 4-digit dikirim ke Telegram admin',
       });
     }
 
