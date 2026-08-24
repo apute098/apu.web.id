@@ -29,6 +29,14 @@ const PRESET_ACTIONS: Record<string, { cmd: string; desc: string }> = {
     cmd: 'echo "=== SYSTEM DIAGNOSTIC ===" && uname -a && uptime && echo "\n=== MEMORY ===" && free -h && echo "\n=== CRITICAL RECENT LOGS ===" && sudo -n journalctl -p err..emerg -n 8 --no-pager',
     desc: 'Jalankan Diagnostik Kesehatan Lengkap',
   },
+  backup_snapshot: {
+    cmd: 'mkdir -p /home/apu/Backups && BACKUP_FILE="/home/apu/Backups/apu-snapshot-$(date +%Y%m%d_%H%M%S).tar.gz" && tar -czf "$BACKUP_FILE" -C /home/apu/projects/apu.web.id .env.local database.sqlite 2>/dev/null || true && echo "✓ Snapshot backup created: $BACKUP_FILE ("$(du -h "$BACKUP_FILE" 2>/dev/null | cut -f1)")"',
+    desc: 'Buat Snapshot Backup Database & Config',
+  },
+  test_telegram_alert: {
+    cmd: 'curl -s -X POST "https://api.telegram.org/bot8591251718:AAGd3NznPEaSd-KZ3Rw-DDmid9YmSJZ1K0s/sendMessage" -H "Content-Type: application/json" -d \'{"chat_id":"947345525","text":"🚨 *[TEST ALERT] apu.web.id Server Monitor*\nNode: archlinux\nUptime: \'$(uptime -p)\'\nHealth: 100%\nAll microservices active.","parse_mode":"Markdown"}\' && echo "✓ Telegram Alert Sent successfully."',
+    desc: 'Kirim Test Alert ke Telegram Master',
+  },
 };
 
 export async function POST(req: NextRequest) {
@@ -56,7 +64,7 @@ export async function POST(req: NextRequest) {
     const start = Date.now();
 
     return new Promise<NextResponse>((resolve) => {
-      exec(targetCmd, { timeout: 15000, maxBuffer: 1024 * 1024 }, (error, stdout, stderr) => {
+      exec(targetCmd, { timeout: 20000, maxBuffer: 1024 * 1024 }, (error, stdout, stderr) => {
         const durationMs = Date.now() - start;
 
         resolve(

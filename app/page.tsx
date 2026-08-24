@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Navbar, ActiveTab } from '@/components/Navbar';
 import { OverviewTab } from '@/components/OverviewTab';
 import { ServicesTab } from '@/components/ServicesTab';
@@ -20,11 +20,13 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
   const [systemData, setSystemData] = useState<any>(null);
   const [historyData, setHistoryData] = useState<any[]>([]);
-  const [refreshInterval, setRefreshInterval] = useState<number>(3000);
+  const [refreshInterval, setRefreshInterval] = useState<number>(-1); // Default to SSE Stream (-1)
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isCmdPaletteOpen, setIsCmdPaletteOpen] = useState<boolean>(false);
   const [logModalUnit, setLogModalUnit] = useState<string | null>(null);
+
+  const eventSourceRef = useRef<EventSource | null>(null);
 
   // Auth / Lock state
   const [isLocked, setIsLocked] = useState<boolean>(() => {
@@ -35,6 +37,20 @@ export default function Home() {
     return true;
   });
 
+  const appendHistory = useCallback((json: any) => {
+    setHistoryData((prev) => {
+      const newPoint = {
+        time: new Date().toLocaleTimeString(),
+        cpu: json.cpu?.totalUsage ?? 0,
+        ram: json.ram?.usagePercent ?? 0,
+        rxKbps: json.network?.downloadKbps ?? 0,
+        txKbps: json.network?.uploadKbps ?? 0,
+      };
+      const updated = [...prev, newPoint];
+      return updated.slice(-30);
+    });
+  }, []);
+
   const fetchSystemData = useCallback(async () => {
     try {
       setIsRefreshing(true);
@@ -42,35 +58,51 @@ export default function Home() {
       if (res.ok) {
         const json = await res.json();
         setSystemData(json);
-
-        // Append to history for live sparkline charts
-        setHistoryData((prev) => {
-          const newPoint = {
-            time: new Date().toLocaleTimeString(),
-            cpu: json.cpu?.totalUsage ?? 0,
-            ram: json.ram?.usagePercent ?? 0,
-            rxKbps: json.network?.downloadKbps ?? 0,
-            txKbps: json.network?.uploadKbps ?? 0,
-          };
-          const updated = [...prev, newPoint];
-          return updated.slice(-30); // Keep last 30 data points
-        });
+        appendHistory(json);
       }
     } catch (err) {
       console.error('Failed to fetch system status:', err);
     } finally {
       setIsRefreshing(false);
     }
-  }, []);
+  }, [appendHistory]);
 
-  // Polling effect
+  // Telemetry stream / polling effect
   useEffect(() => {
-    fetchSystemData();
-    if (refreshInterval <= 0) return;
+    // Mode SSE Stream (-1)
+    if (refreshInterval === -1) {
+      fetchSystemData();
+      try {
+        const es = new EventSource('/api/v1/stream');
+        eventSourceRef.current = es;
 
-    const interval = setInterval(fetchSystemData, refreshInterval);
-    return () => clearInterval(interval);
-  }, [fetchSystemData, refreshInterval]);
+        es.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            setSystemData(data);
+            appendHistory(data);
+          } catch {}
+        };
+
+        es.onerror = () => {
+          es.close();
+        };
+
+        return () => {
+          es.close();
+          eventSourceRef.current = null;
+        };
+      } catch {
+        fetchSystemData();
+      }
+    } else if (refreshInterval > 0) {
+      fetchSystemData();
+      const interval = setInterval(fetchSystemData, refreshInterval);
+      return () => clearInterval(interval);
+    } else {
+      fetchSystemData();
+    }
+  }, [refreshInterval, fetchSystemData, appendHistory]);
 
   // URL Hash router sync
   useEffect(() => {
@@ -225,7 +257,7 @@ export default function Home() {
           <span>•</span>
           <span>Node: archlinux</span>
           <span>•</span>
-          <span className="text-emerald-400">Telemetry Active</span>
+          <span className="text-emerald-400">SSE Telemetry Active</span>
         </div>
         <div>
           <span>Arch Linux x86_64 • 9Router Gateway • Next.js 16</span>

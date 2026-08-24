@@ -19,6 +19,8 @@ import {
   Network,
   Layers,
   ChevronRight,
+  Archive,
+  Send,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -145,13 +147,11 @@ export function OverviewTab({
             </div>
           </div>
 
-          {/* Big Metric Display */}
           <div className="my-2 flex items-baseline justify-between">
             <span className="text-3xl font-black text-white font-mono">{cpu.totalUsage}%</span>
             <span className="text-xs text-slate-400 font-mono">Load: {sys.loadAverage ? sys.loadAverage.join(', ') : '-'}</span>
           </div>
 
-          {/* Mini Sparkline */}
           <div className="h-14 w-full -mb-2">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={historyData}>
@@ -166,7 +166,6 @@ export function OverviewTab({
             </ResponsiveContainer>
           </div>
 
-          {/* Per Core Breakdown */}
           {cpu.cores && cpu.cores.length > 0 && (
             <div className="mt-3 pt-3 border-t border-white/5 space-y-1.5">
               <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-slate-400">
@@ -213,7 +212,6 @@ export function OverviewTab({
             <span className="text-xs text-slate-400 font-mono">Free: {ram.availableGB || ram.freeGB} GB</span>
           </div>
 
-          {/* Mini Sparkline */}
           <div className="h-14 w-full -mb-2">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={historyData}>
@@ -228,7 +226,6 @@ export function OverviewTab({
             </ResponsiveContainer>
           </div>
 
-          {/* RAM & Swap Progress Bars */}
           <div className="mt-3 pt-3 border-t border-white/5 space-y-2">
             <div className="space-y-1">
               <div className="flex justify-between text-[10px] font-mono text-slate-400">
@@ -275,7 +272,6 @@ export function OverviewTab({
             <span className="text-xs text-slate-400 font-mono">Free: {disks[0]?.freeGB ?? 0} GB</span>
           </div>
 
-          {/* Disk I/O Speeds */}
           <div className="bg-slate-950/60 rounded-xl p-2.5 border border-white/5 space-y-1.5 font-mono text-xs">
             <div className="flex items-center justify-between">
               <span className="text-slate-400 text-[10px] flex items-center gap-1">
@@ -291,7 +287,6 @@ export function OverviewTab({
             </div>
           </div>
 
-          {/* Partition list preview */}
           <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
             {disks.slice(0, 2).map((d: any, i: number) => (
               <div key={i} className="text-[10px] font-mono text-slate-400">
@@ -342,7 +337,6 @@ export function OverviewTab({
             </div>
           </div>
 
-          {/* Mini Sparkline for Net */}
           <div className="h-14 w-full -mb-2">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={historyData}>
@@ -357,7 +351,6 @@ export function OverviewTab({
             </ResponsiveContainer>
           </div>
 
-          {/* Interfaces quick summary */}
           <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-400">
             <span>Tailscale: {net.tailscaleIp}</span>
             <span className="text-slate-300 font-bold">{net.interfaces?.length || 1} Interfaces</span>
@@ -373,7 +366,7 @@ export function OverviewTab({
               <Zap className="w-4 h-4 text-cyan-400" />
               Quick Server Controls & Maintenance
             </h3>
-            <p className="text-xs text-slate-400">Eksekusi cepat perintah optimasi dan pemeliharaan server secara aman</p>
+            <p className="text-xs text-slate-400">Eksekusi cepat perintah optimasi, snapshot backup, dan pemeliharaan server</p>
           </div>
           {isLocked && (
             <span className="text-[11px] text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-md">
@@ -402,21 +395,21 @@ export function OverviewTab({
           </button>
 
           <button
-            onClick={() => handleAction('restart_caddy')}
-            disabled={runningAction === 'restart_caddy'}
+            onClick={() => handleAction('backup_snapshot')}
+            disabled={runningAction === 'backup_snapshot'}
             className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/30 text-xs font-semibold text-slate-200 hover:text-purple-300 transition-all active:scale-95 disabled:opacity-50"
           >
-            <RotateCcw className={`w-3.5 h-3.5 ${runningAction === 'restart_caddy' ? 'animate-spin' : 'text-purple-400'}`} />
-            <span>Reload Caddy</span>
+            <Archive className={`w-3.5 h-3.5 ${runningAction === 'backup_snapshot' ? 'animate-spin' : 'text-purple-400'}`} />
+            <span>Backup Snapshot</span>
           </button>
 
           <button
-            onClick={() => handleAction('restart_cloudflared')}
-            disabled={runningAction === 'restart_cloudflared'}
+            onClick={() => handleAction('test_telegram_alert')}
+            disabled={runningAction === 'test_telegram_alert'}
             className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-blue-500/20 border border-white/10 hover:border-blue-500/30 text-xs font-semibold text-slate-200 hover:text-blue-300 transition-all active:scale-95 disabled:opacity-50"
           >
-            <Network className={`w-3.5 h-3.5 ${runningAction === 'restart_cloudflared' ? 'animate-spin' : 'text-blue-400'}`} />
-            <span>Tunnel Reset</span>
+            <Send className={`w-3.5 h-3.5 ${runningAction === 'test_telegram_alert' ? 'animate-spin' : 'text-blue-400'}`} />
+            <span>Test TG Alert</span>
           </button>
 
           <button
@@ -438,7 +431,7 @@ export function OverviewTab({
         </div>
       </div>
 
-      {/* Grid: System Vitals Breakdown & Thermal Zones */}
+      {/* Grid: System Vitals Breakdown & Thermal Sensors */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Load Average & Process Stats */}
         <div className="rounded-2xl bg-slate-900/70 border border-white/10 p-5 backdrop-blur-md">

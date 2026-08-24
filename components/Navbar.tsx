@@ -17,6 +17,7 @@ import {
   Bot,
   Zap,
   Command,
+  Radio,
 } from 'lucide-react';
 
 export type ActiveTab =
@@ -107,27 +108,29 @@ export function Navbar({
             </span>
             <span className="hidden md:inline">
               HEALTH:{' '}
-              <strong className={healthScore > 85 ? 'text-emerald-400' : 'text-amber-400'}>
+              <strong className={healthScore > 80 ? 'text-emerald-400' : 'text-amber-400'}>
                 {healthScore}%
               </strong>
             </span>
           </div>
         </div>
 
-        {/* Right controls: Refresh selector, lock/unlock */}
+        {/* Right controls: Refresh / SSE selector, lock/unlock */}
         <div className="flex items-center gap-2 shrink-0 ml-2">
           {/* Refresh interval dropdown */}
           <div className="hidden sm:flex items-center gap-1.5 bg-slate-900 border border-white/10 rounded-md px-2 py-0.5 text-xs text-slate-300">
-            <span className="text-slate-400 text-[10px]">POLL:</span>
+            <span className="text-slate-400 text-[10px] flex items-center gap-1">
+              {refreshInterval === -1 ? <Radio className="w-2.5 h-2.5 text-emerald-400 animate-pulse" /> : 'MODE:'}
+            </span>
             <select
               value={refreshInterval}
               onChange={(e) => setRefreshInterval(Number(e.target.value))}
               className="bg-transparent text-cyan-400 text-[11px] font-mono outline-none cursor-pointer"
             >
-              <option value={1000} className="bg-slate-900 text-white">1s</option>
-              <option value={2000} className="bg-slate-900 text-white">2s</option>
-              <option value={5000} className="bg-slate-900 text-white">5s</option>
-              <option value={10000} className="bg-slate-900 text-white">10s</option>
+              <option value={-1} className="bg-slate-900 text-emerald-400">SSE Stream (Live)</option>
+              <option value={1000} className="bg-slate-900 text-white">Poll 1s</option>
+              <option value={2000} className="bg-slate-900 text-white">Poll 2s</option>
+              <option value={5000} className="bg-slate-900 text-white">Poll 5s</option>
               <option value={0} className="bg-slate-900 text-white">Pause</option>
             </select>
           </div>
