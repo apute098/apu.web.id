@@ -6,29 +6,18 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Navbar, ActiveTab } from '@/components/Navbar';
 import { OverviewTab } from '@/components/OverviewTab';
 import { ServicesTab } from '@/components/ServicesTab';
-import { ProcessesTab } from '@/components/ProcessesTab';
-import { DockerTab } from '@/components/DockerTab';
-import { NetworkTab } from '@/components/NetworkTab';
 import { AgentHubTab } from '@/components/AgentHubTab';
-import { LogsTab } from '@/components/LogsTab';
 import { TerminalTab } from '@/components/TerminalTab';
-import { AiWatchdogTab } from '@/components/AiWatchdogTab';
 import { AuthModal } from '@/components/AuthModal';
 import { CommandPalette } from '@/components/CommandPalette';
-import { MASTER_PIN } from '@/lib/auth';
 import { triggerHaptic } from '@/lib/haptics';
 import { RefreshCw } from 'lucide-react';
 
 const ORDERED_TABS: ActiveTab[] = [
   'overview',
   'services',
-  'processes',
-  'docker',
-  'network',
   'agents',
-  'logs',
   'terminal',
-  'watchdog',
 ];
 
 export default function Home() {
@@ -87,15 +76,22 @@ export default function Home() {
     }
   }, [appendHistory]);
 
-  // Telemetry stream / polling effect
+  // Telemetry stream / polling effect with auto-reconnect
   useEffect(() => {
-    if (refreshInterval === -1) {
-      fetchSystemData();
+    let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+    let isMounted = true;
+
+    const setupSSE = () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+      }
+
       try {
         const es = new EventSource('/api/v1/stream');
         eventSourceRef.current = es;
 
         es.onmessage = (event) => {
+          if (!isMounted) return;
           try {
             const data = JSON.parse(event.data);
             setSystemData(data);
@@ -104,16 +100,24 @@ export default function Home() {
         };
 
         es.onerror = () => {
+          if (!isMounted) return;
           es.close();
-        };
-
-        return () => {
-          es.close();
-          eventSourceRef.current = null;
+          // Fallback poll once, then schedule SSE reconnect in 3s
+          fetchSystemData();
+          if (refreshInterval === -1) {
+            reconnectTimer = setTimeout(() => {
+              if (isMounted && refreshInterval === -1) setupSSE();
+            }, 3000);
+          }
         };
       } catch {
         fetchSystemData();
       }
+    };
+
+    if (refreshInterval === -1) {
+      fetchSystemData();
+      setupSSE();
     } else if (refreshInterval > 0) {
       fetchSystemData();
       const interval = setInterval(fetchSystemData, refreshInterval);
@@ -121,6 +125,30 @@ export default function Home() {
     } else {
       fetchSystemData();
     }
+
+    // Auto-refresh when tab comes into foreground / device wakes up
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchSystemData();
+        if (refreshInterval === -1 && (!eventSourceRef.current || eventSourceRef.current.readyState === EventSource.CLOSED)) {
+          setupSSE();
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleVisibilityChange);
+
+    return () => {
+      isMounted = false;
+      if (reconnectTimer) clearTimeout(reconnectTimer);
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
+      }
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleVisibilityChange);
+    };
   }, [refreshInterval, fetchSystemData, appendHistory]);
 
   // URL Hash router sync
@@ -205,7 +233,13 @@ export default function Home() {
 
   // Quick Action execution handler
   const handleTriggerAction = async (action: string) => {
-    const token = localStorage.getItem('apu_admin_token') || MASTER_PIN;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('apu_admin_token') : null;
+    if (!token) {
+      triggerHaptic('light');
+      setIsAuthModalOpen(true);
+      return;
+    }
+
     triggerHaptic('medium');
     try {
       const res = await fetch('/api/v1/terminal', {
@@ -216,6 +250,14 @@ export default function Home() {
         },
         body: JSON.stringify({ action }),
       });
+
+      if (res.status === 401) {
+        localStorage.removeItem('apu_admin_token');
+        setIsLocked(true);
+        setIsAuthModalOpen(true);
+        alert('Sesi otorisasi telah berakhir. Silakan masukkan PIN ulang.');
+        return;
+      }
 
       const data = await res.json();
       if (res.ok && data.success) {
@@ -299,30 +341,12 @@ export default function Home() {
             onOpenAuthModal={() => setIsAuthModalOpen(true)}
             onOpenLogModal={(unit) => {
               setLogModalUnit(unit);
-              switchTab('logs');
+              switchTab('terminal');
             }}
           />
         )}
 
-        {activeTab === 'processes' && (
-          <ProcessesTab
-            isLocked={isLocked}
-            onOpenAuthModal={() => setIsAuthModalOpen(true)}
-          />
-        )}
-
-        {activeTab === 'docker' && (
-          <DockerTab
-            isLocked={isLocked}
-            onOpenAuthModal={() => setIsAuthModalOpen(true)}
-          />
-        )}
-
-        {activeTab === 'network' && <NetworkTab />}
-
         {activeTab === 'agents' && <AgentHubTab onNavigateTab={switchTab} />}
-
-        {activeTab === 'logs' && <LogsTab initialUnit={logModalUnit || 'all'} />}
 
         {activeTab === 'terminal' && (
           <TerminalTab
@@ -330,8 +354,6 @@ export default function Home() {
             onOpenAuthModal={() => setIsAuthModalOpen(true)}
           />
         )}
-
-        {activeTab === 'watchdog' && <AiWatchdogTab />}
       </main>
 
       {/* Auth / PIN Unlock Modal */}

@@ -78,6 +78,7 @@ function parseProcesses(): ProcessItem[] {
 }
 
 export async function GET(req: NextRequest) {
+  if (!isAuthorized(req)) return unauthorized();
   try {
     const processes = parseProcesses();
     const total = processes.length;

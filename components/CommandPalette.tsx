@@ -57,14 +57,9 @@ export function CommandPalette({
 
   const items = [
     { id: 'tab-overview', label: 'Go to Vitals / Mission Control', category: 'Navigation', icon: Activity, action: () => onNavigateTab('overview') },
-    { id: 'tab-services', label: 'Go to Services Controller', category: 'Navigation', icon: Layers, action: () => onNavigateTab('services') },
-    { id: 'tab-processes', label: 'Go to Process Manager (Top)', category: 'Navigation', icon: Cpu, action: () => onNavigateTab('processes') },
-    { id: 'tab-docker', label: 'Go to Docker & Containers', category: 'Navigation', icon: Boxes, action: () => onNavigateTab('docker') },
-    { id: 'tab-network', label: 'Go to Network, Ports & Ingress', category: 'Navigation', icon: Network, action: () => onNavigateTab('network') },
-    { id: 'tab-agents', label: 'Go to AI Agents Matrix & Power Tools Hub', category: 'Navigation', icon: Sparkles, action: () => onNavigateTab('agents') },
-    { id: 'tab-logs', label: 'Go to Live Journal Logs Streamer', category: 'Navigation', icon: FileText, action: () => onNavigateTab('logs') },
-    { id: 'tab-terminal', label: 'Go to Server Terminal', category: 'Navigation', icon: Terminal, action: () => onNavigateTab('terminal') },
-    { id: 'tab-watchdog', label: 'Go to AI Ecosystem Watchdog', category: 'Navigation', icon: Bot, action: () => onNavigateTab('watchdog') },
+    { id: 'tab-services', label: 'Go to Services Controller (WA/TG/AI Daemons)', category: 'Navigation', icon: Layers, action: () => onNavigateTab('services') },
+    { id: 'tab-agents', label: 'Go to AI Agents Matrix & Models Hub', category: 'Navigation', icon: Sparkles, action: () => onNavigateTab('agents') },
+    { id: 'tab-terminal', label: 'Go to Diagnostics & Web Shell', category: 'Navigation', icon: Terminal, action: () => onNavigateTab('terminal') },
 
     { id: 'act-drop-cache', label: 'Quick Action: Drop RAM Caches', category: 'Server Ops', icon: Trash2, action: () => onTriggerAction('clean_cache') },
     { id: 'act-trim', label: 'Quick Action: Trim SSD Storage', category: 'Server Ops', icon: HardDrive, action: () => onTriggerAction('trim_ssd') },

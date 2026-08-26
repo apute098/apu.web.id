@@ -2,11 +2,16 @@
 @import "tailwindcss";
 
 :root {
-  --bg-oled: #030308;
-  --surface-card: #080914;
-  --accent-cyan: #00f2fe;
+  --bg-obsidian: #050609;
+  --surface-base: #090c12;
+  --surface-card: #0d1118;
+  --surface-elevated: #131822;
+  --border-hairline: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-accent: rgba(16, 185, 129, 0.4);
   --accent-emerald: #10b981;
-  --accent-violet: #8b5cf6;
+  --accent-cyan: #06b6d4;
+  --accent-amber: #f59e0b;
   --accent-rose: #f43f5e;
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -19,143 +24,111 @@
     scroll-behavior: smooth;
   }
   body {
-    background-color: var(--bg-oled);
+    background-color: var(--bg-obsidian);
     color: #f1f5f9;
     font-family: var(--font-sans);
     overflow-x: hidden;
     min-height: 100dvh;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.03) 0%, transparent 40%),
+      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
   }
   ::selection {
-    background: rgba(0, 242, 254, 0.25);
+    background: rgba(6, 182, 212, 0.25);
     color: #ffffff;
   }
-}
 
-/* ==========================================================================
-   DOPPELRAND / DOUBLE-BEZEL HARDWARE ENCLOSURE (Nested Architecture)
-   ========================================================================== */
-.doppelrand-shell {
-  padding: 0.375rem; /* 6px */
-  border-radius: 1.75rem; /* 28px */
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.5s cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-.doppelrand-shell:hover {
-  border-color: rgba(0, 242, 254, 0.25);
-  box-shadow: 0 24px 50px -12px rgba(0, 242, 254, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.18);
-}
-
-.doppelrand-core {
-  border-radius: calc(1.75rem - 0.375rem); /* 22px concentric */
-  background: radial-gradient(120% 120% at 50% 0%, #0d0e1c 0%, #06070f 100%);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
-  padding: 1.25rem;
-}
-
-@media (min-width: 640px) {
-  .doppelrand-core {
-    padding: 1.5rem;
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+    letter-spacing: -0.03em;
   }
 }
 
 /* ==========================================================================
-   BUTTON-IN-BUTTON KINETIC CTA (Nested Island Architecture)
+   INDUSTRIAL OBSIDIAN HARDWARE DECK STYLES
    ========================================================================== */
-.btn-nested {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.5rem 0.625rem 0.5rem 1.125rem;
-  border-radius: 9999px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #f8fafc;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  transition: all 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+
+/* Tactile Hardware Card */
+.deck-card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(13, 17, 24, 0.85) 0%, rgba(9, 12, 18, 0.95) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-hairline);
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.btn-nested:hover {
-  background: linear-gradient(135deg, rgba(0, 242, 254, 0.15) 0%, rgba(255, 255, 255, 0.06) 100%);
-  border-color: rgba(0, 242, 254, 0.4);
-  color: #00f2fe;
+.deck-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 14px 40px -10px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
-.btn-nested:active {
-  transform: scale(0.97);
-}
-
-.btn-nested .btn-nested-icon {
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-.btn-nested:hover .btn-nested-icon {
-  transform: translate(2px, -2px) scale(1.05);
-  background: rgba(0, 242, 254, 0.2);
-  color: #00f2fe;
-}
-
-/* ==========================================================================
-   AMBIENT VOLUMETRIC MESH LIGHTING
-   ========================================================================== */
-.ambient-glow-cyan {
-  position: fixed;
-  width: 700px;
-  height: 700px;
+/* LED Matrix Glow */
+.led-dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 242, 254, 0.06) 0%, rgba(0, 0, 0, 0) 70%);
-  filter: blur(80px);
-  pointer-events: none;
-  z-index: 0;
 }
-
-.ambient-glow-violet {
-  position: fixed;
-  width: 600px;
-  height: 600px;
+.led-dot::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, rgba(0, 0, 0, 0) 70%);
-  filter: blur(80px);
-  pointer-events: none;
-  z-index: 0;
+  background: inherit;
+  opacity: 0.4;
+  filter: blur(2px);
 }
 
-/* ==========================================================================
-   GLASS MORPHISM & SCROLLBAR
-   ========================================================================== */
-.floating-island {
-  background: rgba(8, 9, 20, 0.75);
-  backdrop-filter: blur(32px) saturate(180%);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+/* Hardware Metric Bar */
+.hardware-bar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 2px;
+  overflow: hidden;
 }
 
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+.hardware-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-::-webkit-scrollbar-track {
-  background: #030308;
+
+/* Mechanical Button */
+.tactile-btn {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.15s ease;
 }
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+
+.tactile-btn:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+
+.tactile-btn:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Monospace HUD Chip */
+.hud-chip {
+  font-family: var(--font-mono);
+  font-size: 0.725rem;
+  letter-spacing: -0.02em;
+  padding: 0.25rem 0.625rem;
   border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 242, 254, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { exec } from 'child_process';
-import { isAuthorized, unauthorized } from '@/lib/auth';
+import { isAuthorized, unauthorized, getClientIp, checkRateLimit, isIpLocked, recordFailedAuth } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,7 +40,37 @@ const PRESET_ACTIONS: Record<string, { cmd: string; desc: string }> = {
 };
 
 export async function POST(req: NextRequest) {
-  if (!isAuthorized(req)) return unauthorized();
+  const ip = getClientIp(req);
+
+  // 1. Check IP lockout
+  const lockStatus = isIpLocked(ip);
+  if (lockStatus.locked) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: `IP Anda diblokir sementara karena terlalu banyak percobaan gagal. Coba lagi dalam ${lockStatus.remainingSec} detik.`,
+      },
+      { status: 429 }
+    );
+  }
+
+  // 2. Check Authorization
+  if (!isAuthorized(req)) {
+    recordFailedAuth(ip);
+    return unauthorized();
+  }
+
+  // 3. Rate limiting per IP (max 20 commands / minute)
+  const rateLimit = checkRateLimit(ip, 20, 60000);
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Rate limit tercapai. Maksimal 20 perintah per menit per IP.',
+      },
+      { status: 429 }
+    );
+  }
 
   try {
     const body = await req.json();
@@ -57,7 +87,15 @@ export async function POST(req: NextRequest) {
     }
 
     // Safety checks against hazardous destructive actions
-    if (/rm\s+-rf\s+\/(?!\w)/.test(targetCmd) || /mkfs\./.test(targetCmd) || /dd\s+if=/.test(targetCmd)) {
+    const isDangerous =
+      /rm\s+-rf\s+\/(?!\w)/.test(targetCmd) ||
+      /mkfs\./.test(targetCmd) ||
+      /dd\s+if=/.test(targetCmd) ||
+      /:(\(\)\s*\{|\(\)\{)/.test(targetCmd) || // fork bomb
+      />\s*\/dev\/(sd[a-z]|nvme|null)/.test(targetCmd) ||
+      /chmod\s+-R\s+777\s+\//.test(targetCmd);
+
+    if (isDangerous) {
       return NextResponse.json({ success: false, error: 'Perintah berbahaya diblokir oleh keamanan server.' }, { status: 403 });
     }
 

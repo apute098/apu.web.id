@@ -140,7 +140,7 @@ export function NetworkTab() {
                 Tailscale Mesh VPN Topology
               </h3>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-[#10b981]/15 text-[#10b981] border border-[#10b981]/30">
-                {tailscale.selfIp || '100.122.52.32'}
+                {tailscale.selfIp || '--'}
               </span>
             </div>
 
@@ -258,7 +258,7 @@ export function NetworkTab() {
         {/* Desktop Ports Table (>= sm screens) */}
         <div className="hidden sm:block doppelrand-shell">
           <div className="doppelrand-core p-0 overflow-hidden">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto scroll-fade-x">
               <table className="w-full text-left font-mono text-xs">
                 <thead className="bg-black/60 border-b border-white/[0.08] text-[11px] text-slate-400 select-none">
                   <tr>

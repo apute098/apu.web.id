@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync } from 'fs';
 import { execSync } from 'child_process';
+import { isAuthorized, unauthorized } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,9 +37,9 @@ function getCpuStats() {
     return {
       totalUsage: 0,
       cores: [],
-      model: 'Intel Core i5-7200U',
+      model: 'Intel(R) Core(TM) i3-7100 CPU @ 3.90GHz',
       coreCount: 4,
-      freqGhz: 2.5,
+      freqGhz: 3.9,
       temperatureC: 45,
     };
   }
@@ -133,19 +134,55 @@ function getCpuStats() {
 
 function getDetailedTemperatures() {
   const temps: Array<{ name: string; tempC: number; status: 'normal' | 'warm' | 'hot' }> = [];
-  
-  // Try reading lm-sensors or sysfs thermal zones
-  for (let i = 0; i < 6; i++) {
-    const tempFile = readProc(`/sys/class/thermal/thermal_zone${i}/temp`);
-    const typeFile = readProc(`/sys/class/thermal/thermal_zone${i}/type`);
-    if (tempFile && typeFile) {
-      const tempC = Math.round(Number(tempFile.trim()) / 100) / 10;
-      if (tempC > 0 && tempC < 120) {
-        temps.push({
-          name: typeFile.trim(),
-          tempC,
-          status: tempC > 80 ? 'hot' : tempC > 65 ? 'warm' : 'normal',
-        });
+  const seenNames = new Set<string>();
+
+  // 1. Read from hwmon (coretemp, k10temp, etc.)
+  for (let h = 0; h < 4; h++) {
+    for (let t = 1; t <= 8; t++) {
+      const inputPath = `/sys/class/hwmon/hwmon${h}/temp${t}_input`;
+      const labelPath = `/sys/class/hwmon/hwmon${h}/temp${t}_label`;
+      const rawTemp = readProc(inputPath);
+
+      if (rawTemp) {
+        const val = Number(rawTemp.trim());
+        const tempC = Math.round(val / 100) / 10; // e.g. 68000 -> 68.0
+
+        if (tempC > 0 && tempC < 125) {
+          const rawLabel = readProc(labelPath)?.trim();
+          const name = rawLabel || (t === 1 ? 'CPU Package' : `CPU Core ${t - 2}`);
+
+          if (!seenNames.has(name)) {
+            seenNames.add(name);
+            temps.push({
+              name,
+              tempC,
+              status: tempC > 80 ? 'hot' : tempC > 65 ? 'warm' : 'normal',
+            });
+          }
+        }
+      }
+    }
+  }
+
+  // 2. Scan sysfs thermal zones if hwmon had nothing
+  if (temps.length === 0) {
+    for (let i = 0; i < 6; i++) {
+      const tempFile = readProc(`/sys/class/thermal/thermal_zone${i}/temp`);
+      const typeFile = readProc(`/sys/class/thermal/thermal_zone${i}/type`);
+      if (tempFile && typeFile) {
+        const raw = Number(tempFile.trim());
+        const tempC = raw > 1000 ? Math.round(raw / 100) / 10 : Math.round(raw * 10) / 10;
+        if (tempC > 0 && tempC < 125) {
+          const name = typeFile.trim();
+          if (!seenNames.has(name)) {
+            seenNames.add(name);
+            temps.push({
+              name,
+              tempC,
+              status: tempC > 80 ? 'hot' : tempC > 65 ? 'warm' : 'normal',
+            });
+          }
+        }
       }
     }
   }
@@ -304,8 +341,8 @@ function getNetwork() {
       totalTxMB: 0,
       activeInterface: 'eth0',
       interfaces: [],
-      localIp: '192.168.1.4',
-      tailscaleIp: '100.122.52.32',
+      localIp: '',
+      tailscaleIp: '',
     };
   }
 
@@ -355,8 +392,8 @@ function getNetwork() {
     });
   }
 
-  let tailscaleIp = '100.122.52.32';
-  let localIp = '192.168.1.4';
+  let tailscaleIp = '';
+  let localIp = '';
 
   return {
     downloadKbps: Math.round(aggregateRx * 10) / 10,
@@ -404,7 +441,8 @@ function getSystemInfo() {
   };
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  if (!isAuthorized(req)) return unauthorized();
   try {
     const cpu = getCpuStats();
     const temperatures = getDetailedTemperatures();
@@ -415,18 +453,22 @@ export async function GET() {
     const system = getSystemInfo();
 
     let healthScore = 100;
-    if (cpu.totalUsage > 85) healthScore -= 25;
-    else if (cpu.totalUsage > 65) healthScore -= 10;
+    if (!cpu || cpu.coreCount === 0 || !ram || ram.totalGB === 0) {
+      healthScore = 50;
+    } else {
+      if (cpu.totalUsage > 85) healthScore -= 25;
+      else if (cpu.totalUsage > 65) healthScore -= 10;
 
-    if (ram.usagePercent > 90) healthScore -= 25;
-    else if (ram.usagePercent > 75) healthScore -= 10;
+      if (ram.usagePercent > 90) healthScore -= 25;
+      else if (ram.usagePercent > 75) healthScore -= 10;
 
-    if (cpu.temperatureC > 80) healthScore -= 20;
-    else if (cpu.temperatureC > 70) healthScore -= 10;
+      if (cpu.temperatureC > 80) healthScore -= 20;
+      else if (cpu.temperatureC > 70) healthScore -= 10;
 
-    const mainDisk = disks.find(d => d.mount === '/') || disks[0];
-    if (mainDisk && mainDisk.usagePercent > 90) healthScore -= 20;
-    else if (mainDisk && mainDisk.usagePercent > 80) healthScore -= 10;
+      const mainDisk = disks.find(d => d.mount === '/') || disks[0];
+      if (mainDisk && mainDisk.usagePercent > 90) healthScore -= 20;
+      else if (mainDisk && mainDisk.usagePercent > 80) healthScore -= 10;
+    }
 
     healthScore = Math.max(10, Math.min(100, healthScore));
 

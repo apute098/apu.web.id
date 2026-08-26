@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { execSync } from 'child_process';
 import { readFileSync } from 'fs';
+import { isAuthorized, unauthorized } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -87,7 +88,7 @@ function getListeningPorts(): ListeningPort[] {
 
 function getTailscaleStatus() {
   const peers: TailscalePeer[] = [];
-  let selfIp = '100.122.52.32';
+  let selfIp = '';
   let isOnline = false;
 
   try {
@@ -144,7 +145,8 @@ function getIngressRoutes(): IngressRoute[] {
   ];
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  if (!isAuthorized(req)) return unauthorized();
   try {
     const listeningPorts = getListeningPorts();
     const tailscale = getTailscaleStatus();

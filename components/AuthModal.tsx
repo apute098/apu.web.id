@@ -98,7 +98,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   type="password"
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
-                  placeholder="Masukkan PIN (Default: 574409)..."
+                  placeholder="Masukkan 6-digit Master PIN / Token..."
                   className="w-full px-4 py-3 bg-black/60 border border-white/[0.08] focus:border-[#00f2fe] rounded-full text-xs text-white placeholder:text-slate-600 font-mono outline-none transition-all"
                   autoFocus
                 />

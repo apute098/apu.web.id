@@ -40,12 +40,13 @@ const KNOWN_SERVICES: Array<{
   { unit: 'teamwork-preview.service', name: 'Teamwork Preview', scope: 'user', category: 'web', description: 'Real-time multi-agent teamwork UI (Port 3001)' },
 
   // Bots & Messaging
+  { unit: 'wa-bot-go.service', name: 'WhatsApp Bot (Go)', scope: 'user', category: 'bot', description: 'Whatsmeow WhatsApp AI Assistant & Media Service' },
+  { unit: 'agy-telegram.service', name: 'Agy Telegram Bot (Go)', scope: 'user', category: 'bot', description: 'Telegram Go gateway & ecosystem manager' },
   { unit: 'hermes-gateway.service', name: 'Hermes Agent Gateway', scope: 'system', category: 'bot', description: 'Autonomous agent messaging platform (Port 8644)' },
-  { unit: 'agy-telegram.service', name: 'Agy Telegram Bot', scope: 'user', category: 'bot', description: 'Telegram remote management and agent interface' },
   { unit: 'fb-bot.service', name: 'FB Messenger Bot', scope: 'user', category: 'bot', description: 'Facebook messenger webhook integration (Port 8805)' },
 
   // Core & Network
-  { unit: 'tailscaled.service', name: 'Tailscale Mesh VPN', scope: 'system', category: 'network', description: 'Secure mesh VPN node (100.122.52.32)' },
+  { unit: 'tailscaled.service', name: 'Tailscale Mesh VPN', scope: 'system', category: 'network', description: 'Secure mesh VPN node' },
   { unit: 'docker.service', name: 'Docker Engine', scope: 'system', category: 'core', description: 'Container runtime daemon' },
   { unit: 'opensandbox-server.service', name: 'OpenSandbox Server', scope: 'system', category: 'core', description: 'Secure isolated code execution backend (Port 8080)' },
   { unit: 'mihomo.service', name: 'Mihomo Proxy Kernel', scope: 'system', category: 'network', description: 'Core routing and outbound traffic proxy daemon (Port 9090)' },
@@ -124,7 +125,8 @@ function inspectService(item: typeof KNOWN_SERVICES[0]): ServiceItem {
   };
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  if (!isAuthorized(req)) return unauthorized();
   try {
     const services = KNOWN_SERVICES.map(inspectService);
     const summary = {

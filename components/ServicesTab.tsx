@@ -64,8 +64,12 @@ export function ServicesTab({
       return;
     }
 
-    triggerHaptic('medium');
-    const token = localStorage.getItem('apu_admin_token') || '574409';
+    const token = typeof window !== 'undefined' ? localStorage.getItem('apu_admin_token') : null;
+    if (!token) {
+      triggerHaptic('light');
+      onOpenAuthModal();
+      return;
+    }
     setActionInProgress(`${unit}-${action}`);
 
     try {

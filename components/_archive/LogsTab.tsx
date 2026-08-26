@@ -240,7 +240,7 @@ export function LogsTab({ initialUnit }: LogsTabProps) {
             </label>
           </div>
 
-          <div className="max-h-[600px] overflow-y-auto space-y-0.5 leading-relaxed text-slate-300 pr-2 select-text scrollbar-thin">
+          <div className="max-h-[600px] overflow-y-auto space-y-0.5 leading-relaxed text-slate-300 pr-2 select-text scrollbar-thin scroll-fade-y">
             {logs ? (
               logs.split('\n').map((line, i) => {
                 const isError = line.toLowerCase().includes('err') || line.toLowerCase().includes('fail') || line.toLowerCase().includes('exception');

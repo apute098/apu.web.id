@@ -44,7 +44,11 @@ export function TerminalTab({ isLocked, onOpenAuthModal }: TerminalTabProps) {
     const finalCmd = cmdToRun || command.trim();
     if (!finalCmd && !presetAction) return;
 
-    const token = localStorage.getItem('apu_admin_token') || '574409';
+    const token = typeof window !== 'undefined' ? localStorage.getItem('apu_admin_token') : null;
+    if (!token) {
+      onOpenAuthModal();
+      return;
+    }
     setLoading(true);
 
     try {
@@ -187,7 +191,7 @@ export function TerminalTab({ isLocked, onOpenAuthModal }: TerminalTabProps) {
             <span className="text-[10px] text-slate-500">{history.length} entries</span>
           </div>
 
-          <div className="max-h-[500px] overflow-y-auto space-y-4 pr-2 select-text scrollbar-thin">
+          <div className="max-h-[500px] overflow-y-auto space-y-4 pr-2 select-text scrollbar-thin scroll-fade-y">
             {history.map((item, idx) => (
               <div key={idx} className="space-y-1.5">
                 <div className="flex items-center justify-between text-slate-400 text-[11px] bg-black/40 px-3 py-1.5 rounded-xl border border-white/[0.06]">

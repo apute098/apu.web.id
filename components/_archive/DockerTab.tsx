@@ -49,8 +49,13 @@ export function DockerTab({ isLocked, onOpenAuthModal }: DockerTabProps) {
       return;
     }
 
+    const token = typeof window !== 'undefined' ? localStorage.getItem('apu_admin_token') : null;
+    if (!token) {
+      onOpenAuthModal();
+      return;
+    }
+
     if (action === 'logs') {
-      const token = localStorage.getItem('apu_admin_token') || '574409';
       try {
         const res = await fetch('/api/v1/docker', {
           method: 'POST',
@@ -71,7 +76,6 @@ export function DockerTab({ isLocked, onOpenAuthModal }: DockerTabProps) {
       return;
     }
 
-    const token = localStorage.getItem('apu_admin_token') || '574409';
     setActionLoading(`${containerId}-${action}`);
 
     try {

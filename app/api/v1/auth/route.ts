@@ -1,9 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MASTER_PIN, isAuthorized } from '@/lib/auth';
+import { MASTER_PIN, getClientIp, checkRateLimit, isIpLocked, recordFailedAuth, resetFailedAuth } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
+  const ip = getClientIp(req);
+
+  // Check IP Lockout
+  const lockStatus = isIpLocked(ip);
+  if (lockStatus.locked) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: `Terlalu banyak percobaan PIN salah. IP diblokir sementara selama ${lockStatus.remainingSec} detik.`,
+      },
+      { status: 429 }
+    );
+  }
+
+  // Rate limit: Max 10 login attempts per minute per IP
+  const rateLimit = checkRateLimit(ip, 10, 60000);
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Terlalu banyak permintaan login. Coba lagi dalam 1 menit.',
+      },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await req.json();
     const action = body.action || 'login';
@@ -15,6 +41,7 @@ export async function POST(req: NextRequest) {
       const cleanPin = String(pin || '').trim();
 
       if (cleanPin === MASTER_PIN || cleanPin === masterToken) {
+        resetFailedAuth(ip);
         return NextResponse.json({
           success: true,
           message: 'Autentikasi Master Admin Berhasil',
@@ -27,6 +54,7 @@ export async function POST(req: NextRequest) {
         });
       }
 
+      recordFailedAuth(ip);
       return NextResponse.json(
         {
           success: false,

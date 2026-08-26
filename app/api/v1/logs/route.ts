@@ -5,6 +5,7 @@ import { isAuthorized, unauthorized } from '@/lib/auth';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
+  if (!isAuthorized(req)) return unauthorized();
   try {
     const { searchParams } = new URL(req.url);
     const unit = searchParams.get('unit') || 'all';

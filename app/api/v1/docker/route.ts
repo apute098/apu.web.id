@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { execSync } from 'child_process';
 import { isAuthorized, unauthorized } from '@/lib/auth';
 
+
 export const dynamic = 'force-dynamic';
 
 export interface DockerContainer {
@@ -98,7 +99,8 @@ function getDockerInfo() {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  if (!isAuthorized(req)) return unauthorized();
   try {
     const docker = getDockerInfo();
     return NextResponse.json(
