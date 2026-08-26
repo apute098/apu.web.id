@@ -34,7 +34,7 @@ const PRESET_ACTIONS: Record<string, { cmd: string; desc: string }> = {
     desc: 'Buat Snapshot Backup Database & Config',
   },
   test_telegram_alert: {
-    cmd: 'curl -s -X POST "https://api.telegram.org/bot8591251718:AAGd3NznPEaSd-KZ3Rw-DDmid9YmSJZ1K0s/sendMessage" -H "Content-Type: application/json" -d \'{"chat_id":"947345525","text":"🚨 *[TEST ALERT] apu.web.id Server Monitor*\nNode: archlinux\nUptime: \'$(uptime -p)\'\nHealth: 100%\nAll microservices active.","parse_mode":"Markdown"}\' && echo "✓ Telegram Alert Sent successfully."',
+    cmd: 'curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" -H "Content-Type: application/json" -d \'{"chat_id":"${TELEGRAM_CHAT_ID}","text":"🚨 *[TEST ALERT] apu.web.id Server Monitor*\\nNode: archlinux\\nUptime: \'$(uptime -p)\'\\nHealth: 100%\\nAll microservices active.","parse_mode":"Markdown"}\' && echo "✓ Telegram Alert Sent successfully."',
     desc: 'Kirim Test Alert ke Telegram Master',
   },
 };
@@ -80,6 +80,9 @@ export async function POST(req: NextRequest) {
 
     if (action && PRESET_ACTIONS[action]) {
       targetCmd = PRESET_ACTIONS[action].cmd;
+      // Expand env vars for preset commands
+      targetCmd = targetCmd.replace(/\$\{TELEGRAM_BOT_TOKEN\}/g, process.env.TELEGRAM_BOT_TOKEN || '');
+      targetCmd = targetCmd.replace(/\$\{TELEGRAM_CHAT_ID\}/g, process.env.TELEGRAM_CHAT_ID || '');
     } else if (command && typeof command === 'string') {
       targetCmd = command.trim();
     } else {

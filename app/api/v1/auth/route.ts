@@ -35,7 +35,10 @@ export async function POST(req: NextRequest) {
     const action = body.action || 'login';
     const pin = body.pin || body.token || body.password || body.identifier;
 
-    const masterToken = process.env.WEBHOOK_TOKEN || '76c7cb42f88363744ac20d23377a29dd';
+    const masterToken = process.env.WEBHOOK_TOKEN;
+    if (!masterToken) {
+      return NextResponse.json({ success: false, error: 'Server misconfigured' }, { status: 500 });
+    }
 
     if (action === 'verify' || action === 'login') {
       const cleanPin = String(pin || '').trim();
