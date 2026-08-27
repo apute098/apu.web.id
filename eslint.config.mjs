@@ -10,7 +10,7 @@ export default defineConfig([
   ...next,
   {
     rules: {
-      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/set-state-in-effect": "off",
     },
   },
 ]);

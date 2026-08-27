@@ -16,9 +16,8 @@ export function useMetrics(options: UseMetricsOptions = {}) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchMetrics = useCallback(async (isBackground = false) => {
+  const fetchMetrics = useCallback(async () => {
     try {
-      if (!isBackground) setLoading(true);
       const res = await fetch('/api/v1/metrics', { cache: 'no-store' });
       const data = await res.json();
       if (data) {
@@ -37,16 +36,21 @@ export function useMetrics(options: UseMetricsOptions = {}) {
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Gagal mengambil metrik server');
     } finally {
-      if (!isBackground) setLoading(false);
+      setLoading(false);
     }
   }, []);
 
+  const manualRefetch = useCallback(() => {
+    setLoading(true);
+    return fetchMetrics();
+  }, [fetchMetrics]);
+
   useEffect(() => {
-    fetchMetrics();
+    void fetchMetrics();
     if (!autoPoll || pollingInterval <= 0) return;
 
     const interval = setInterval(() => {
-      fetchMetrics(true);
+      void fetchMetrics();
     }, pollingInterval);
 
     return () => clearInterval(interval);
@@ -57,6 +61,6 @@ export function useMetrics(options: UseMetricsOptions = {}) {
     history,
     loading,
     error,
-    refetch: fetchMetrics,
+    refetch: manualRefetch,
   };
 }

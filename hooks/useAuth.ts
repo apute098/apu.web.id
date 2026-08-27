@@ -9,7 +9,6 @@ export function useAuth() {
 
   const checkAuth = useCallback(async () => {
     try {
-      setLoading(true);
       const res = await fetch('/api/v1/auth', { cache: 'no-store' });
       const data = await res.json();
       setIsAuthenticated(Boolean(data.authenticated));
@@ -21,6 +20,7 @@ export function useAuth() {
   }, []);
 
   const loginWithPin = useCallback(async (pin: string) => {
+    setLoading(true);
     try {
       const res = await fetch('/api/v1/auth', {
         method: 'POST',
@@ -36,19 +36,23 @@ export function useAuth() {
       return { success: false, error: data.error || 'PIN Salah' };
     } catch (err: unknown) {
       return { success: false, error: err instanceof Error ? err.message : 'Gagal verifikasi' };
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   const logout = useCallback(async () => {
+    setLoading(true);
     try {
       await fetch('/api/v1/auth', { method: 'DELETE' });
     } finally {
       setIsAuthenticated(false);
+      setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    checkAuth();
+    void checkAuth();
   }, [checkAuth]);
 
   return {

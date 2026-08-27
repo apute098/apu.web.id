@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Activity,
   AlertTriangle,
@@ -39,7 +39,7 @@ export function LiveDashboard() {
   const [data, setData] = useState<Telemetry | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function loadTelemetry() {
+  const loadTelemetry = useCallback(async () => {
     try {
       const response = await fetch("/api/admin/telemetry", {
         cache: "no-store",
@@ -56,15 +56,17 @@ export function LiveDashboard() {
     } catch {
       setError("Tidak dapat mengambil data server");
     }
-  }
+  }, []);
 
   useEffect(() => {
-    loadTelemetry();
+    void loadTelemetry();
 
-    const interval = setInterval(loadTelemetry, 10_000);
+    const interval = setInterval(() => {
+      void loadTelemetry();
+    }, 10_000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [loadTelemetry]);
 
   if (error) {
     return (

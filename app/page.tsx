@@ -60,9 +60,9 @@ export default function Home() {
     });
   }, []);
 
-  const fetchSystemData = useCallback(async () => {
+  const fetchSystemData = useCallback(async (showSpinner = false) => {
     try {
-      setIsRefreshing(true);
+      if (showSpinner) setIsRefreshing(true);
       const res = await fetch('/api/v1/system-status');
       if (res.ok) {
         const json = await res.json();
@@ -72,9 +72,13 @@ export default function Home() {
     } catch (err) {
       console.error('Failed to fetch system status:', err);
     } finally {
-      setIsRefreshing(false);
+      if (showSpinner) setIsRefreshing(false);
     }
   }, [appendHistory]);
+
+  const handleManualRefresh = useCallback(() => {
+    return fetchSystemData(true);
+  }, [fetchSystemData]);
 
   // Telemetry stream / polling effect with auto-reconnect
   useEffect(() => {
@@ -103,7 +107,7 @@ export default function Home() {
           if (!isMounted) return;
           es.close();
           // Fallback poll once, then schedule SSE reconnect in 3s
-          fetchSystemData();
+          void fetchSystemData();
           if (refreshInterval === -1) {
             reconnectTimer = setTimeout(() => {
               if (isMounted && refreshInterval === -1) setupSSE();
@@ -111,25 +115,27 @@ export default function Home() {
           }
         };
       } catch {
-        fetchSystemData();
+        void fetchSystemData();
       }
     };
 
     if (refreshInterval === -1) {
-      fetchSystemData();
+      void fetchSystemData();
       setupSSE();
     } else if (refreshInterval > 0) {
-      fetchSystemData();
-      const interval = setInterval(fetchSystemData, refreshInterval);
+      void fetchSystemData();
+      const interval = setInterval(() => {
+        void fetchSystemData();
+      }, refreshInterval);
       return () => clearInterval(interval);
     } else {
-      fetchSystemData();
+      void fetchSystemData();
     }
 
     // Auto-refresh when tab comes into foreground / device wakes up
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        fetchSystemData();
+        void fetchSystemData();
         if (refreshInterval === -1 && (!eventSourceRef.current || eventSourceRef.current.readyState === EventSource.CLOSED)) {
           setupSSE();
         }
@@ -318,7 +324,7 @@ export default function Home() {
         }}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
         onOpenCmdPalette={() => setIsCmdPaletteOpen(true)}
-        onManualRefresh={fetchSystemData}
+        onManualRefresh={handleManualRefresh}
         isRefreshing={isRefreshing}
       />
 

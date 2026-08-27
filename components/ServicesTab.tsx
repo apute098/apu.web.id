@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Layers,
   Search,
@@ -35,9 +35,8 @@ export function ServicesTab({
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
 
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     try {
-      setLoading(true);
       const res = await fetch('/api/v1/services');
       if (res.ok) {
         const data = await res.json();
@@ -49,13 +48,13 @@ export function ServicesTab({
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchServices();
+    void fetchServices();
     const interval = setInterval(fetchServices, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchServices]);
 
   const handleServiceAction = async (unit: string, action: 'start' | 'stop' | 'restart', scope: 'system' | 'user') => {
     if (isLocked) {

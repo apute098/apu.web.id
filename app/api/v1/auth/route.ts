@@ -1,7 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MASTER_PIN, getClientIp, checkRateLimit, isIpLocked, recordFailedAuth, resetFailedAuth } from '@/lib/auth';
+import { MASTER_PIN, getClientIp, checkRateLimit, isIpLocked, recordFailedAuth, resetFailedAuth, isAuthorized } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
+
+export async function GET(req: NextRequest) {
+  const authorized = isAuthorized(req);
+  if (authorized) {
+    return NextResponse.json({
+      authenticated: true,
+      user: {
+        username: 'apu',
+        role: 'root_admin',
+        hostname: 'archlinux',
+      },
+    });
+  }
+  return NextResponse.json({ authenticated: false });
+}
+
+export async function DELETE() {
+  const response = NextResponse.json({
+    success: true,
+    message: 'Berhasil logout',
+  });
+  response.cookies.set('auth_pin', '', {
+    path: '/',
+    maxAge: 0,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  });
+  return response;
+}
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
@@ -45,7 +74,7 @@ export async function POST(req: NextRequest) {
 
       if (cleanPin === MASTER_PIN || cleanPin === masterToken) {
         resetFailedAuth(ip);
-        return NextResponse.json({
+        const response = NextResponse.json({
           success: true,
           message: 'Autentikasi Master Admin Berhasil',
           token: masterToken,
@@ -55,6 +84,16 @@ export async function POST(req: NextRequest) {
             hostname: 'archlinux',
           },
         });
+
+        // Set cookie for browser sessions and reverse proxy
+        response.cookies.set('auth_pin', cleanPin, {
+          path: '/',
+          maxAge: 30 * 24 * 60 * 60, // 30 days
+          sameSite: 'lax',
+          secure: process.env.NODE_ENV === 'production',
+        });
+
+        return response;
       }
 
       recordFailedAuth(ip);
@@ -68,10 +107,11 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: false, error: 'Aksi tidak dikenal' }, { status: 400 });
-  } catch (err: unknown) {
+  } catch {
     return NextResponse.json(
       { success: false, error: 'Terjadi kesalahan pada server autentikasi' },
       { status: 500 }
     );
   }
 }
+

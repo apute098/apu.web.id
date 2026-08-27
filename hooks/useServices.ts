@@ -19,9 +19,8 @@ export function useServices(options: UseServicesOptions = {}) {
   const [selectedCategory, setSelectedCategory] = useState<ServiceCategory>('all');
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
 
-  const fetchServices = useCallback(async (isBackground = false) => {
+  const fetchServices = useCallback(async () => {
     try {
-      if (!isBackground) setLoading(true);
       const res = await fetch('/api/v1/services', { cache: 'no-store' });
       const data = await res.json();
       if (data.success) {
@@ -34,9 +33,14 @@ export function useServices(options: UseServicesOptions = {}) {
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Koneksi ke server terputus');
     } finally {
-      if (!isBackground) setLoading(false);
+      setLoading(false);
     }
   }, []);
+
+  const manualRefetch = useCallback(() => {
+    setLoading(true);
+    return fetchServices();
+  }, [fetchServices]);
 
   const executeAction = useCallback(async (unit: string, action: ServiceAction, scope: 'system' | 'user' = 'user') => {
     const actionKey = `${unit}-${action}`;
@@ -49,7 +53,7 @@ export function useServices(options: UseServicesOptions = {}) {
       });
       const data = await res.json();
       if (data.success) {
-        await fetchServices(true);
+        await fetchServices();
         return { success: true, message: data.message };
       } else {
         return { success: false, error: data.error };
@@ -62,11 +66,11 @@ export function useServices(options: UseServicesOptions = {}) {
   }, [fetchServices]);
 
   useEffect(() => {
-    fetchServices();
+    void fetchServices();
     if (!autoPoll || pollingInterval <= 0) return;
 
     const interval = setInterval(() => {
-      fetchServices(true);
+      void fetchServices();
     }, pollingInterval);
 
     return () => clearInterval(interval);
@@ -93,6 +97,6 @@ export function useServices(options: UseServicesOptions = {}) {
     setSelectedCategory,
     actionInProgress,
     executeAction,
-    refetch: fetchServices,
+    refetch: manualRefetch,
   };
 }

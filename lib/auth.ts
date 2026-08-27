@@ -87,6 +87,7 @@ export function isAuthorized(req: NextRequest): boolean {
   const tgToken = req.headers.get('x-telegram-bot-api-secret-token') || '';
 
   const cleanAuth = auth.replace(/^Bearer\s+/i, '').trim();
+  const cookiePin = req.cookies.get('auth_pin')?.value || '';
 
   // Strict check against Master PIN or Secret Token
   if (cleanAuth && (cleanAuth === masterPin || cleanAuth === envToken)) {
@@ -98,6 +99,10 @@ export function isAuthorized(req: NextRequest): boolean {
   }
 
   if (tgToken && tgToken === envToken) {
+    return true;
+  }
+
+  if (cookiePin && (cookiePin === masterPin || cookiePin === envToken)) {
     return true;
   }
 
