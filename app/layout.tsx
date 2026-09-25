@@ -3,7 +3,7 @@ import './globals.css';
 
 export const dynamic = 'force-dynamic';
 
-const siteUrl = 'https://apu.web.id';
+const siteUrl = 'https://archlinux.tail0d5c92.ts.net';
 
 export const viewport: Viewport = {
   themeColor: '#030308',
@@ -16,9 +16,9 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: 'apu.web.id | Server Control & Monitoring Station',
+  title: 'Mission Control | apu.web.id',
   description:
-    'Dedicated Server Control, Real-Time Hardware Telemetry, Systemd Services Hub, Process Manager & AI Ecosystem Watchdog for Arch Linux node.',
+    'Kontrol server pribadi: telemetri hardware real-time, systemd services hub, shell diagnostik & AI ecosystem watchdog — HANYA via tailnet.',
   keywords: ['apu.web.id', 'server monitor', 'arch linux', 'systemd controller', '9router', 'process manager', 'homelab', 'pwa'],
   manifest: '/manifest.json',
   appleWebApp: {
@@ -36,17 +36,17 @@ export const metadata: Metadata = {
     type: 'website',
     url: siteUrl,
     siteName: 'apu.web.id',
-    title: 'apu.web.id | Server Control & Monitoring Station',
+    title: 'Mission Control | apu.web.id',
     description:
-      'Dedicated Server Control, Real-Time Hardware Telemetry, Systemd Services Hub, Process Manager & AI Ecosystem Watchdog.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'apu.web.id — Server Control Station' }],
+      'Kontrol server pribadi: telemetri hardware real-time, systemd services hub & shell diagnostik.',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'apu.web.id — Mission Control' }],
     locale: 'id_ID',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'apu.web.id | Server Control & Monitoring Station',
+    title: 'Mission Control | apu.web.id',
     description:
-      'Dedicated Server Control, Real-Time Hardware Telemetry, Systemd Services Hub, Process Manager & AI Ecosystem Watchdog.',
+      'Kontrol server pribadi: telemetri hardware real-time, systemd services hub & shell diagnostik.',
     images: ['/og-image.png'],
   },
 };

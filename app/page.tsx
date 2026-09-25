@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Navbar, ActiveTab } from '@/components/Navbar';
 import { OverviewTab } from '@/components/OverviewTab';
 import { ServicesTab } from '@/components/ServicesTab';
@@ -10,301 +10,102 @@ import { AgentHubTab } from '@/components/AgentHubTab';
 import { TerminalTab } from '@/components/TerminalTab';
 import { AuthModal } from '@/components/AuthModal';
 import { CommandPalette } from '@/components/CommandPalette';
-import { triggerHaptic } from '@/lib/haptics';
-import { RefreshCw } from 'lucide-react';
 
-const ORDERED_TABS: ActiveTab[] = [
-  'overview',
-  'services',
-  'agents',
-  'terminal',
-];
-
-export default function Home() {
+export default function MissionControl() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
   const [systemData, setSystemData] = useState<any>(null);
   const [historyData, setHistoryData] = useState<any[]>([]);
-  const [refreshInterval, setRefreshInterval] = useState<number>(-1);
+  const [refreshInterval, setRefreshInterval] = useState<number>(3000);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isCmdPaletteOpen, setIsCmdPaletteOpen] = useState<boolean>(false);
-  const [logModalUnit, setLogModalUnit] = useState<string | null>(null);
 
-  // Pull-to-refresh state
-  const [pullDistance, setPullDistance] = useState<number>(0);
-  const [isPulling, setIsPulling] = useState<boolean>(false);
-  const touchStartY = useRef<number>(0);
-  const touchStartX = useRef<number>(0);
-  const eventSourceRef = useRef<EventSource | null>(null);
-
-  // Auth / Lock state
   const [isLocked, setIsLocked] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('apu_admin_token');
-      return !token;
+      return !localStorage.getItem('apu_admin_token');
     }
     return true;
   });
 
-  const appendHistory = useCallback((json: any) => {
-    setHistoryData((prev) => {
-      const newPoint = {
-        time: new Date().toLocaleTimeString(),
-        cpu: json.cpu?.totalUsage ?? 0,
-        ram: json.ram?.usagePercent ?? 0,
-        rxKbps: json.network?.downloadKbps ?? 0,
-        txKbps: json.network?.uploadKbps ?? 0,
-      };
-      const updated = [...prev, newPoint];
-      return updated.slice(-30);
-    });
-  }, []);
-
-  const fetchSystemData = useCallback(async (showSpinner = false) => {
+  const fetchSystemData = useCallback(async () => {
     try {
-      if (showSpinner) setIsRefreshing(true);
-      const res = await fetch('/api/v1/system-status');
+      setIsRefreshing(true);
+      const token = typeof window !== 'undefined' ? localStorage.getItem('apu_admin_token') : null;
+      const res = await fetch('/api/v1/system-status', {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
       if (res.ok) {
         const json = await res.json();
         setSystemData(json);
-        appendHistory(json);
+        setHistoryData((prev) => {
+          const point = {
+            time: new Date().toLocaleTimeString(),
+            cpu: json.cpu?.totalUsage ?? 0,
+            ram: json.ram?.usagePercent ?? 0,
+            rxKbps: json.network?.downloadKbps ?? 0,
+            txKbps: json.network?.uploadKbps ?? 0,
+          };
+          return [...prev, point].slice(-30);
+        });
       }
-    } catch (err) {
-      console.error('Failed to fetch system status:', err);
+    } catch {
+      // diamkan: dashboard tetap render, status ditandai lewat badge
     } finally {
-      if (showSpinner) setIsRefreshing(false);
+      setIsRefreshing(false);
     }
-  }, [appendHistory]);
+  }, []);
 
-  const handleManualRefresh = useCallback(() => {
-    return fetchSystemData(true);
-  }, [fetchSystemData]);
-
-  // Telemetry stream / polling effect with auto-reconnect
   useEffect(() => {
-    let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
-    let isMounted = true;
+    void fetchSystemData();
+    if (refreshInterval <= 0) return;
+    const interval = setInterval(() => void fetchSystemData(), refreshInterval);
+    return () => clearInterval(interval);
+  }, [fetchSystemData, refreshInterval]);
 
-    const setupSSE = () => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-      }
-
-      try {
-        const es = new EventSource('/api/v1/stream');
-        eventSourceRef.current = es;
-
-        es.onmessage = (event) => {
-          if (!isMounted) return;
-          try {
-            const data = JSON.parse(event.data);
-            setSystemData(data);
-            appendHistory(data);
-          } catch {}
-        };
-
-        es.onerror = () => {
-          if (!isMounted) return;
-          es.close();
-          // Fallback poll once, then schedule SSE reconnect in 3s
-          void fetchSystemData();
-          if (refreshInterval === -1) {
-            reconnectTimer = setTimeout(() => {
-              if (isMounted && refreshInterval === -1) setupSSE();
-            }, 3000);
-          }
-        };
-      } catch {
-        void fetchSystemData();
-      }
-    };
-
-    if (refreshInterval === -1) {
-      void fetchSystemData();
-      setupSSE();
-    } else if (refreshInterval > 0) {
-      void fetchSystemData();
-      const interval = setInterval(() => {
-        void fetchSystemData();
-      }, refreshInterval);
-      return () => clearInterval(interval);
-    } else {
-      void fetchSystemData();
-    }
-
-    // Auto-refresh when tab comes into foreground / device wakes up
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        void fetchSystemData();
-        if (refreshInterval === -1 && (!eventSourceRef.current || eventSourceRef.current.readyState === EventSource.CLOSED)) {
-          setupSSE();
-        }
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('focus', handleVisibilityChange);
-
-    return () => {
-      isMounted = false;
-      if (reconnectTimer) clearTimeout(reconnectTimer);
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-        eventSourceRef.current = null;
-      }
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('focus', handleVisibilityChange);
-    };
-  }, [refreshInterval, fetchSystemData, appendHistory]);
-
-  // URL Hash router sync
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
-      if (ORDERED_TABS.includes(hash as ActiveTab)) {
-        setActiveTab(hash as ActiveTab);
-      }
+      const validTabs: ActiveTab[] = ['overview', 'services', 'agents', 'terminal'];
+      if (validTabs.includes(hash as ActiveTab)) setActiveTab(hash as ActiveTab);
     };
-
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   const switchTab = (tab: ActiveTab) => {
-    triggerHaptic('light');
     setActiveTab(tab);
-    if (typeof window !== 'undefined') {
-      window.location.hash = tab === 'overview' ? '' : tab;
-    }
+    if (typeof window !== 'undefined') window.location.hash = tab === 'overview' ? '' : tab;
   };
 
-  // Mobile Touch Gestures: Pull-to-Refresh & Horizontal Swipe
-  useEffect(() => {
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY.current = e.touches[0].clientY;
-      touchStartX.current = e.touches[0].clientX;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      const currentY = e.touches[0].clientY;
-      const dy = currentY - touchStartY.current;
-
-      if (window.scrollY === 0 && dy > 0) {
-        setIsPulling(true);
-        setPullDistance(Math.min(dy * 0.45, 100));
-      }
-    };
-
-    const handleTouchEnd = async (e: TouchEvent) => {
-      const touchEndY = e.changedTouches[0].clientY;
-      const touchEndX = e.changedTouches[0].clientX;
-      const dy = touchEndY - touchStartY.current;
-      const dx = touchEndX - touchStartX.current;
-
-      if (isPulling) {
-        if (pullDistance > 65) {
-          triggerHaptic('success');
-          await fetchSystemData();
-        }
-        setIsPulling(false);
-        setPullDistance(0);
-      }
-
-      if (Math.abs(dx) > 90 && Math.abs(dy) < 45 && !isPulling) {
-        const target = e.target as HTMLElement;
-        if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.closest('.overflow-x-auto'))) {
-          return;
-        }
-
-        const currentIndex = ORDERED_TABS.indexOf(activeTab);
-        if (dx < 0 && currentIndex < ORDERED_TABS.length - 1) {
-          switchTab(ORDERED_TABS[currentIndex + 1]);
-        } else if (dx > 0 && currentIndex > 0) {
-          switchTab(ORDERED_TABS[currentIndex - 1]);
-        }
-      }
-    };
-
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
-    window.addEventListener('touchend', handleTouchEnd, { passive: true });
-
-    return () => {
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [activeTab, isPulling, pullDistance, fetchSystemData]);
-
-  // Quick Action execution handler
   const handleTriggerAction = async (action: string) => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('apu_admin_token') : null;
     if (!token) {
-      triggerHaptic('light');
       setIsAuthModalOpen(true);
       return;
     }
-
-    triggerHaptic('medium');
     try {
       const res = await fetch('/api/v1/terminal', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ action }),
       });
-
-      if (res.status === 401) {
-        localStorage.removeItem('apu_admin_token');
-        setIsLocked(true);
-        setIsAuthModalOpen(true);
-        alert('Sesi otorisasi telah berakhir. Silakan masukkan PIN ulang.');
-        return;
-      }
-
       const data = await res.json();
       if (res.ok && data.success) {
-        triggerHaptic('success');
-        alert(`Sukses: ${data.stdout || 'Perintah berhasil dieksekusi.'}`);
-        fetchSystemData();
+        void fetchSystemData();
       } else {
-        triggerHaptic('error');
         alert(`Gagal: ${data.error || data.stderr || 'Terjadi kesalahan eksekusi'}`);
       }
     } catch (err: any) {
-      triggerHaptic('error');
       alert(`Error: ${err.message}`);
     }
   };
 
   return (
-    <div className="min-h-[100dvh] text-slate-100 flex flex-col font-sans selection:bg-cyan-400 selection:text-slate-950 bg-[#030308]">
-      {/* Pull-To-Refresh Indicator for Mobile */}
-      {pullDistance > 0 && (
-        <div
-          className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center pointer-events-none transition-all duration-150"
-          style={{ transform: `translateY(${Math.min(pullDistance, 80)}px)` }}
-        >
-          <div className="bg-[#080914]/90 border border-[#00f2fe]/40 rounded-full px-4 py-2 flex items-center gap-2 shadow-2xl backdrop-blur-xl">
-            <RefreshCw
-              className={`w-4 h-4 text-[#00f2fe] ${pullDistance > 65 ? 'animate-spin' : ''}`}
-              style={{ transform: `rotate(${pullDistance * 4}deg)` }}
-            />
-            <span className="text-xs font-mono font-bold text-slate-200">
-              {pullDistance > 65 ? 'Lepaskan untuk Refresh' : 'Tarik untuk Refresh'}
-            </span>
-          </div>
-        </div>
-      )}
+    <div className="min-h-screen text-slate-100 flex flex-col font-sans selection:bg-cyan-400 selection:text-slate-950 bg-[#05050d]">
+      <div className="fixed top-1/4 -left-1/4 w-[700px] h-[700px] rounded-full bg-cyan-500/5 blur-3xl pointer-events-none z-0" />
+      <div className="fixed bottom-1/4 -right-1/4 w-[600px] h-[600px] rounded-full bg-purple-500/5 blur-3xl pointer-events-none z-0" />
 
-      {/* Ambient Cyberpunk Lighting */}
-      <div className="ambient-glow-cyan top-1/4 -left-1/4" />
-      <div className="ambient-glow-violet bottom-1/4 -right-1/4" />
-
-      {/* Global Navbar with Mobile Bottom Thumb Dock */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={switchTab}
@@ -316,21 +117,18 @@ export default function Home() {
           if (locked) {
             localStorage.removeItem('apu_admin_token');
             setIsLocked(true);
-            triggerHaptic('medium');
           } else {
             setIsAuthModalOpen(true);
-            triggerHaptic('light');
           }
         }}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
         onOpenCmdPalette={() => setIsCmdPaletteOpen(true)}
-        onManualRefresh={handleManualRefresh}
+        onManualRefresh={fetchSystemData}
         isRefreshing={isRefreshing}
       />
 
-      {/* Main Content Area */}
-      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 pt-20 sm:pt-28 pb-28 sm:pb-16 transition-opacity duration-300">
-        {activeTab === 'overview' && (
+      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 pt-28 md:pt-32 pb-16">
+        {!isLocked && activeTab === 'overview' && (
           <OverviewTab
             systemData={systemData}
             historyData={historyData}
@@ -341,14 +139,11 @@ export default function Home() {
           />
         )}
 
-        {activeTab === 'services' && (
+        {!isLocked && activeTab === 'services' && (
           <ServicesTab
             isLocked={isLocked}
             onOpenAuthModal={() => setIsAuthModalOpen(true)}
-            onOpenLogModal={(unit) => {
-              setLogModalUnit(unit);
-              switchTab('terminal');
-            }}
+            onOpenLogModal={() => switchTab('terminal')}
           />
         )}
 
@@ -360,19 +155,37 @@ export default function Home() {
             onOpenAuthModal={() => setIsAuthModalOpen(true)}
           />
         )}
+
+        {isLocked && activeTab !== 'agents' && (
+          <div className="mx-auto max-w-md rounded-3xl border border-white/10 bg-slate-950/70 p-8 text-center backdrop-blur-md">
+            <p className="hud-chip inline-block text-cyan-300">TAILNET ONLY</p>
+            <h1 className="mt-4 text-2xl font-bold text-white">Mission Control terkunci</h1>
+            <p className="mt-2 text-sm text-slate-400">
+              Masukkan PIN admin untuk membuka telemetri, kontrol service, dan shell diagnostik.
+            </p>
+            <button
+              type="button"
+              onClick={() => setIsAuthModalOpen(true)}
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-5 py-2.5 text-sm font-semibold text-slate-50 transition hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-cyan-400 active:scale-[0.98]"
+            >
+              Unlock
+            </button>
+            <a href="/etalase" className="mt-4 block text-xs text-slate-500 transition hover:text-slate-300">
+              Lihat etalase karya →
+            </a>
+          </div>
+        )}
       </main>
 
-      {/* Auth / PIN Unlock Modal */}
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         onSuccess={() => {
           setIsLocked(false);
-          fetchSystemData();
+          void fetchSystemData();
         }}
       />
 
-      {/* Command Palette Modal */}
       <CommandPalette
         isOpen={isCmdPaletteOpen}
         onClose={() => setIsCmdPaletteOpen(false)}
@@ -381,14 +194,13 @@ export default function Home() {
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
       />
 
-      {/* Footer System Status Bar */}
-      <footer className="hidden sm:flex relative z-10 border-t border-white/[0.08] bg-[#05060f]/80 px-4 sm:px-8 py-4 text-[11px] font-mono text-slate-500 flex-col sm:flex-row items-center justify-between gap-2">
+      <footer className="relative z-10 border-t border-white/10 bg-slate-950/80 px-4 sm:px-8 py-4 text-[11px] font-mono text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
         <div className="flex items-center gap-3">
-          <span className="text-slate-400 font-bold">apu.web.id Server Control Station</span>
+          <span className="text-slate-400 font-bold">apu.web.id Mission Control</span>
           <span>•</span>
           <span>Node: archlinux</span>
           <span>•</span>
-          <span className="text-[#10b981]">SSE Telemetry Active</span>
+          <span className="text-emerald-400">Tailnet only</span>
         </div>
         <div>
           <span>Arch Linux x86_64 • 9Router Gateway • Next.js 16</span>

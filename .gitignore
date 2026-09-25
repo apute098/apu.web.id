@@ -20,3 +20,9 @@ tsconfig.tsbuildinfo
 # logs & editor
 *.log
 .DS_Store
+
+# React Bits vendor layer (MIT + Commons Clause) — source tidak di-redistribusi
+components/rb/
+
+# artefak export (jangan di-commit)
+voicecommand-root-ai-agent.zip
