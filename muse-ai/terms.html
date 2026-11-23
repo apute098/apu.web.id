@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="Terms of Service (Ketentuan Layanan) untuk aplikasi desktop Muse AI — tool pribadi untuk mengunggah video TikTok milik sendiri dan membaca statistiknya melalui API resmi TikTok." />
+    <link rel="icon" href="data:," />
+    <title>Muse AI Terms of Service</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f4f5f3;
+        --surface: #ffffff;
+        --text: #1c2420;
+        --muted: #5a665f;
+        --faint: #85918a;
+        --border: #dde2dd;
+        --border-strong: #c9d1c9;
+        --accent: #0e6b57;
+        --accent-soft: #e7f2ee;
+        --accent-text: #0a5545;
+        --warn-bg: #fdf6e9;
+        --warn-border: #e8d5a8;
+        --warn-text: #6b5410;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #101312;
+          --surface: #171b19;
+          --text: #e6ebe8;
+          --muted: #a3afa7;
+          --faint: #77837b;
+          --border: #262c28;
+          --border-strong: #343c37;
+          --accent: #3ec9a7;
+          --accent-soft: #14261f;
+          --accent-text: #7ddfc6;
+          --warn-bg: #26200f;
+          --warn-border: #4d3f1a;
+          --warn-text: #e3c878;
+        }
+      }
+
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 17px;
+        line-height: 1.75;
+      }
+
+      .wrap {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 48px 24px 72px;
+      }
+
+      /* ---------- Document header ---------- */
+      .doc-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent-text);
+        margin: 0 0 18px;
+      }
+      .doc-eyebrow::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border-strong);
+      }
+      h1 {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-size: 40px;
+        line-height: 1.15;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin: 0 0 10px;
+      }
+      .doc-subtitle {
+        font-size: 19px;
+        color: var(--muted);
+        margin: 0 0 32px;
+        line-height: 1.55;
+      }
+
+      .meta-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 4px 22px;
+        margin: 0 0 36px;
+      }
+      .meta-row {
+        display: grid;
+        grid-template-columns: 168px 1fr;
+        gap: 8px 20px;
+        padding: 13px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .meta-row:last-child { border-bottom: none; }
+      .meta-row dt {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--faint);
+        padding-top: 3px;
+      }
+      .meta-row dd {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .intro {
+        font-size: 17.5px;
+        margin: 0 0 8px;
+      }
+      .intro strong { font-weight: 650; }
+
+      /* ---------- Sections ---------- */
+      section {
+        margin-top: 40px;
+      }
+      h2 {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-size: 23px;
+        line-height: 1.3;
+        font-weight: 700;
+        margin: 0 0 12px;
+        display: flex;
+        gap: 14px;
+        align-items: baseline;
+      }
+      h2 .num {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--accent-text);
+        background: var(--accent-soft);
+        border-radius: 999px;
+        min-width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transform: translateY(-2px);
+      }
+      section p { margin: 0 0 14px; }
+      section p:last-child { margin-bottom: 0; }
+      ul {
+        margin: 0 0 14px;
+        padding-left: 22px;
+      }
+      li { margin-bottom: 8px; }
+      li:last-child { margin-bottom: 0; }
+      a { color: var(--accent-text); text-underline-offset: 3px; }
+
+      .callout {
+        background: var(--accent-soft);
+        border-radius: 10px;
+        padding: 18px 20px;
+        margin: 18px 0 4px;
+      }
+      .callout p { margin: 0; font-size: 16px; }
+      .callout .callout-title {
+        font-weight: 700;
+        font-size: 15px;
+        margin-bottom: 6px;
+      }
+
+      .asis {
+        background: var(--warn-bg);
+        border: 1px solid var(--warn-border);
+        border-radius: 10px;
+        padding: 18px 20px;
+        margin: 18px 0 4px;
+      }
+      .asis p { margin: 0; font-size: 16px; color: var(--warn-text); }
+      .asis .callout-title {
+        font-weight: 700;
+        font-size: 15px;
+        margin-bottom: 6px;
+        color: var(--warn-text);
+      }
+
+      hr.sep {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 48px 0 24px;
+      }
+      footer {
+        color: var(--faint);
+        font-size: 14.5px;
+        line-height: 1.6;
+      }
+      footer p { margin: 0 0 6px; }
+
+      @media (max-width: 560px) {
+        body { font-size: 16.5px; }
+        .wrap { padding: 32px 18px 56px; }
+        h1 { font-size: 32px; }
+        .doc-subtitle { font-size: 17px; }
+        .meta-row { grid-template-columns: 1fr; gap: 2px; }
+        .meta-row dt { padding-top: 0; }
+        h2 { font-size: 21px; }
+      }
+
+      @media print {
+        body { background: #fff; color: #000; }
+        .wrap { max-width: none; padding: 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+
+      <p class="doc-eyebrow">Dokumen Legal</p>
+      <h1>Terms of Service</h1>
+      <p class="doc-subtitle">Ketentuan Layanan untuk aplikasi <strong>Muse AI</strong> — tool desktop pribadi untuk akun TikTok milik pengguna sendiri.</p>
+
+      <dl class="meta-card">
+        <div class="meta-row">
+          <dt>Aplikasi</dt>
+          <dd>Muse AI</dd>
+        </div>
+        <div class="meta-row">
+          <dt>Jenis Aplikasi</dt>
+          <dd>Aplikasi desktop pribadi, dijalankan secara lokal</dd>
+        </div>
+        <div class="meta-row">
+          <dt>Platform Terkait</dt>
+          <dd>TikTok, melalui API resmi TikTok</dd>
+        </div>
+        <div class="meta-row">
+          <dt>Tanggal Berlaku</dt>
+          <dd>23 November 2026</dd>
+        </div>
+      </dl>
+
+      <p class="intro">
+        Dengan memasang, menjalankan, atau menggunakan Muse AI, Anda dianggap telah membaca,
+        memahami, dan menyetujui seluruh ketentuan dalam halaman ini. Jika Anda tidak menyetujui
+        ketentuan ini, jangan gunakan aplikasi ini.
+      </p>
+
+      <section>
+        <h2><span class="num">1</span>Tentang Muse AI</h2>
+        <p>
+          Muse AI adalah tool desktop pribadi yang membantu penggunanya untuk:
+        </p>
+        <ul>
+          <li>Mengunggah video ke akun TikTok milik pengguna sendiri; dan</li>
+          <li>Membaca statistik dan performa video milik pengguna sendiri, seperti jumlah penayangan dan interaksi.</li>
+        </ul>
+        <p>
+          Koneksi ke TikTok dilakukan melalui API resmi TikTok. Muse AI adalah tool pribadi
+          yang dibuat untuk pemakaian perorangan, bukan layanan publik dan bukan aplikasi resmi
+          dari TikTok atau ByteDance. Muse AI tidak berafiliasi dengan, tidak didukung oleh,
+          dan tidak disponsori oleh TikTok atau ByteDance.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">2</span>Pengoperasian Lokal</h2>
+        <p>
+          Muse AI dijalankan secara lokal di komputer pengguna. Proses masuk ke akun,
+          pemilihan file video, dan pengunggahan dilakukan dari perangkat pengguna sendiri
+          dan dikirim ke TikTok melalui API resminya.
+        </p>
+        <div class="callout">
+          <p class="callout-title">Berjalan di perangkat Anda</p>
+          <p>
+            Karena aplikasi berjalan lokal, pengguna bertanggung jawab atas keamanan perangkat,
+            akun, dan kredensial akses yang digunakan pada perangkat tersebut.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2><span class="num">3</span>Akses melalui API Resmi TikTok</h2>
+        <p>
+          Untuk dapat berfungsi, Muse AI memerlukan izin akses dari pengguna melalui mekanisme
+          otorisasi resmi TikTok. Dengan memberikan izin tersebut, pengguna mengizinkan Muse AI
+          untuk, atas nama pengguna:
+        </p>
+        <ul>
+          <li>Mengunggah video ke akun TikTok pengguna; dan</li>
+          <li>Membaca informasi dasar akun dan statistik video milik pengguna.</li>
+        </ul>
+        <p>
+          Pengguna dapat mencabut izin akses ini kapan saja melalui pengaturan akun TikTok.
+          Setelah izin dicabut, Muse AI tidak lagi dapat mengunggah video atau membaca
+          statistik dari akun tersebut.
+        </p>
+        <p>
+          Ketersediaan dan batasan fitur Muse AI mengikuti ketersediaan, kuota, dan kebijakan
+          API resmi TikTok yang berlaku dari waktu ke waktu.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">4</span>Penggunaan yang Diizinkan</h2>
+        <p>Pengguna hanya boleh menggunakan Muse AI untuk:</p>
+        <ul>
+          <li>Akun TikTok milik pengguna sendiri, atau akun yang secara sah berhak dikelola oleh pengguna;</li>
+          <li>Konten yang dibuat sendiri oleh pengguna, atau konten yang pengguna miliki hak sah untuk mengunggahnya; dan</li>
+          <li>Tujuan yang tidak melanggar hukum yang berlaku, Ketentuan Layanan TikTok, serta Pedoman Komunitas TikTok.</li>
+        </ul>
+        <p>Pengguna dilarang menggunakan Muse AI untuk:</p>
+        <ul>
+          <li>Mengakses atau mengelola akun milik orang lain tanpa izin;</li>
+          <li>Mengunggah konten yang melanggar hak cipta, hak privasi, atau hak pihak lain;</li>
+          <li>Melakukan spam, manipulasi interaksi, atau aktivitas lain yang dilarang oleh TikTok; dan</li>
+          <li>Menyalahgunakan API resmi TikTok di luar izin dan batasan yang diberikan.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2><span class="num">5</span>Tanggung Jawab atas Konten</h2>
+        <p>
+          <strong>Pengguna bertanggung jawab penuh atas seluruh konten yang diunggah melalui
+          Muse AI</strong>, termasuk video, judul, deskripsi, tagar, dan materi lain yang
+          menyertainya.
+        </p>
+        <p>Tanggung jawab tersebut meliputi, antara lain:</p>
+        <ul>
+          <li>Memastikan pengguna memiliki hak atas musik, gambar, video, dan materi lain di dalam konten;</li>
+          <li>Memastikan konten tidak melanggar hukum, Ketentuan Layanan TikTok, dan Pedoman Komunitas TikTok; dan</li>
+          <li>Menanggung segala akibat yang timbul dari konten tersebut, termasuk penghapusan konten, pembatasan, atau penangguhan akun oleh TikTok.</li>
+        </ul>
+        <p>
+          Muse AI hanya menyediakan sarana teknis untuk mengunggah dan membaca statistik.
+          Muse AI tidak membuat, tidak memilih, tidak meninjau, dan tidak menyetujui konten
+          yang diunggah pengguna.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">6</span>Layanan Disediakan &ldquo;Apa Adanya&rdquo;</h2>
+        <div class="asis">
+          <p class="callout-title">Tanpa jaminan</p>
+          <p>
+            Muse AI disediakan <strong>sebagaimana adanya (&ldquo;as is&rdquo;)</strong> dan
+            <strong>sebagaimana tersedia (&ldquo;as available&rdquo;)</strong>, tanpa jaminan
+            dalam bentuk apa pun, baik yang dinyatakan secara tegas maupun tersirat.
+          </p>
+        </div>
+        <p>Secara khusus, tidak ada jaminan bahwa:</p>
+        <ul>
+          <li>Aplikasi akan selalu berjalan tanpa gangguan, keterlambatan, atau kesalahan;</li>
+          <li>Pengunggahan video akan selalu berhasil atau diproses dengan cara tertentu oleh TikTok;</li>
+          <li>Statistik yang ditampilkan akan selalu lengkap, tepat waktu, atau bebas dari perbedaan dengan data di aplikasi TikTok; dan</li>
+          <li>Aplikasi akan selalu sesuai dengan kebutuhan tertentu pengguna.</li>
+        </ul>
+        <p>
+          Pengguna menggunakan Muse AI atas risiko dan pertimbangannya sendiri. Pengguna
+          disarankan untuk selalu memeriksa kembali hasil unggahan dan statistik langsung
+          di TikTok.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">7</span>Batasan Tanggung Jawab</h2>
+        <p>
+          Sejauh diizinkan oleh hukum yang berlaku, pengembang Muse AI tidak bertanggung jawab
+          atas kerugian tidak langsung, insidental, khusus, atau konsekuensial yang timbul dari
+          penggunaan atau ketidakmampuan menggunakan aplikasi ini, termasuk antara lain:
+        </p>
+        <ul>
+          <li>Kehilangan data, video, atau akses akun;</li>
+          <li>Penghapusan konten, pembatasan fitur, atau penangguhan akun oleh TikTok;</li>
+          <li>Gangguan, perubahan, atau penghentian API dan layanan TikTok; dan</li>
+          <li>Kegagalan perangkat, jaringan, atau layanan pihak ketiga yang digunakan pengguna.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2><span class="num">8</span>Layanan dan Ketentuan Pihak Ketiga</h2>
+        <p>
+          Penggunaan Muse AI juga tunduk pada ketentuan milik TikTok, termasuk Ketentuan
+          Layanan TikTok, Pedoman Komunitas TikTok, dan ketentuan bagi pengembang yang berlaku
+          untuk penggunaan API resmi TikTok. Apabila terdapat pertentangan antara ketentuan ini
+          dan ketentuan TikTok terkait penggunaan platform TikTok, ketentuan TikTok yang berlaku.
+        </p>
+        <p>
+          TikTok dapat mengubah, membatasi, atau menghentikan API dan layanannya kapan saja.
+          Perubahan tersebut dapat memengaruhi sebagian atau seluruh fungsi Muse AI tanpa
+          pemberitahuan terlebih dahulu.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">9</span>Berhenti Menggunakan Aplikasi</h2>
+        <p>
+          Pengguna dapat berhenti menggunakan Muse AI kapan saja dengan menghapus aplikasi
+          dari komputernya dan mencabut izin akses aplikasi melalui pengaturan akun TikTok.
+          Berhenti menggunakan aplikasi tidak menghapus video atau data yang telah terunggah
+          ke TikTok; pengelolaan konten tersebut dilakukan langsung melalui TikTok.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">10</span>Perubahan Ketentuan</h2>
+        <p>
+          Ketentuan ini dapat diperbarui dari waktu ke waktu, misalnya mengikuti perubahan
+          fitur aplikasi atau perubahan kebijakan API TikTok. Versi yang berlaku adalah versi
+          yang tercantum di halaman ini, beserta tanggal berlaku yang tertera di bagian atas
+          halaman. Dengan tetap menggunakan Muse AI setelah ketentuan diperbarui, pengguna
+          dianggap menyetujui ketentuan yang baru.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">11</span>Ketentuan Lain</h2>
+        <p>
+          Apabila suatu bagian dari ketentuan ini dinyatakan tidak berlaku atau tidak dapat
+          dilaksanakan, bagian lainnya tetap berlaku sepenuhnya. Ketentuan ini merupakan
+          keseluruhan kesepakatan antara pengguna dan pengembang Muse AI mengenai penggunaan
+          aplikasi ini.
+        </p>
+      </section>
+
+      <hr class="sep" />
+      <footer>
+        <p><strong>Muse AI — Terms of Service</strong></p>
+        <p>Berlaku sejak 23 November 2026. Muse AI adalah tool desktop pribadi dan bukan aplikasi resmi TikTok atau ByteDance.</p>
+      </footer>
+
+    </main>
+  </body>
+</html>
